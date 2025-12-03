@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Gemini Models</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #002855;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .success {
+            color: #28a745;
+        }
+        .info {
+            color: #002855;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Test Gemini API Models</h1>
+        <p>This page will test different Gemini model configurations to find which one works with your API key.</p>
+        
+        <button onclick="testAllModels()">Test All Model Configurations</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        // Test configurations
+        const testConfigs = [
+            { version: 'v1', model: 'gemini-pro' },
+            { version: 'v1beta', model: 'gemini-pro' },
+            { version: 'v1', model: 'gemini-1.5-flash' },
+            { version: 'v1beta', model: 'gemini-1.5-flash' },
+            { version: 'v1', model: 'gemini-1.5-flash-latest' },
+            { version: 'v1beta', model: 'gemini-1.5-flash-latest' },
+            { version: 'v1', model: 'gemini-1.5-pro' },
+            { version: 'v1beta', model: 'gemini-1.5-pro' },
+            { version: 'v1', model: 'gemini-1.5-pro-latest' },
+            { version: 'v1beta', model: 'gemini-1.5-pro-latest' }
+        ];
+        
+        async function testModel(version, model) {
+            const url = `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${CONFIG.GEMINI_API_KEY}`;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: 'Hello! Just testing if this model works.'
+                            }]
+                        }]
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return {
+                        success: true,
+                        version,
+                        model,
+                        response: data.candidates[0].content.parts[0].text.substring(0, 100)
+                    };
+                } else {
+                    const errorData = await response.json();
+                    return {
+                        success: false,
+                        version,
+                        model,
+                        error: errorData.error?.message || response.statusText
+                    };
+                }
+            } catch (error) {
+                return {
+                    success: false,
+                    version,
+                    model,
+                    error: error.message
+                };
+            }
+        }
+        
+        async function testAllModels() {
+            resultsDiv.innerHTML = '<span class="info">Testing all model configurations...\n\n</span>';
+            
+            let successCount = 0;
+            let workingConfigs = [];
+            
+            for (const config of testConfigs) {
+                resultsDiv.innerHTML += `<span class="info">Testing ${config.version}/models/${config.model}...</span>\n`;
+                
+                const result = await testModel(config.version, config.model);
+                
+                if (result.success) {
+                    successCount++;
+                    workingConfigs.push(`${result.version}/models/${result.model}`);
+                    resultsDiv.innerHTML += `<span class="success">✓ SUCCESS! Model responded with: "${result.response}..."</span>\n\n`;
+                } else {
+                    resultsDiv.innerHTML += `<span class="error">✗ FAILED: ${result.error}</span>\n\n`;
+                }
+                
+                // Small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            resultsDiv.innerHTML += '\n' + '='.repeat(80) + '\n\n';
+            resultsDiv.innerHTML += `<span class="info">SUMMARY:\n`;
+            resultsDiv.innerHTML += `Total configurations tested: ${testConfigs.length}\n`;
+            resultsDiv.innerHTML += `Successful: ${successCount}\n`;
+            resultsDiv.innerHTML += `Failed: ${testConfigs.length - successCount}\n\n`;
+            
+            if (workingConfigs.length > 0) {
+                resultsDiv.innerHTML += `<span class="success">✓ WORKING CONFIGURATIONS:\n`;
+                workingConfigs.forEach(config => {
+                    resultsDiv.innerHTML += `  - ${config}\n`;
+                });
+                resultsDiv.innerHTML += `\nRECOMMENDATION: Use one of the working configurations above in your code.</span>`;
+            } else {
+                resultsDiv.innerHTML += `<span class="error">✗ NO WORKING CONFIGURATIONS FOUND\n\n`;
+                resultsDiv.innerHTML += `Possible issues:\n`;
+                resultsDiv.innerHTML += `1. API key is invalid or expired\n`;
+                resultsDiv.innerHTML += `2. API key doesn't have access to these models\n`;
+                resultsDiv.innerHTML += `3. Gemini API billing is not enabled\n\n`;
+                resultsDiv.innerHTML += `Please check:\n`;
+                resultsDiv.innerHTML += `- Visit https://makersuite.google.com/app/apikey\n`;
+                resultsDiv.innerHTML += `- Verify your API key is correct\n`;
+                resultsDiv.innerHTML += `- Check if billing is enabled (some models require it)</span>`;
+            }
+        }
+    </script>
+</body>
+</html>

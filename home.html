@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus2College - Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="assets/bus2college_favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/bus2college_rounded_32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/bus2college_rounded_16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/bus2college_rounded_180.png">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="home-page">
+    <!-- Header with Logo and User Info -->
+    <header class="app-header">
+        <div class="header-left">
+            <img src="assets/logo-1.png" alt="Bus2College Logo" class="header-logo">
+            <div class="header-branding">
+                <h1 class="app-title">Bus2College</h1>
+                <p class="app-motto">Making College Applications Simple & Accessible to Everyone</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <span id="userNameDisplay" class="user-name"></span>
+                <span class="user-role">Student</span>
+            </div>
+            <button onclick="handleLogout()" class="btn-logout">Logout</button>
+        </div>
+    </header>
+
+    <!-- Main Container with Three Panels -->
+    <div class="main-container">
+        <!-- Left Navigation Panel -->
+        <nav class="left-nav" id="leftNavPanel">
+            <button class="btn-toggle-nav" id="toggleNavBtn" onclick="toggleNavPanel()" title="Collapse/Expand Navigation">
+                <span id="toggleNavIcon">◀</span>
+            </button>
+            <ul class="nav-menu">
+                <li>
+                    <a href="#" class="nav-link" data-page="student-info" onclick="navigateToPage(event, 'student-info')">
+                        <span class="nav-icon">👤</span>
+                        <span class="nav-text">Student Information</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link active" data-page="my-colleges" onclick="navigateToPage(event, 'my-colleges')">
+                        <span class="nav-icon">🎓</span>
+                        <span class="nav-text">My Colleges</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="common-app-essay" onclick="navigateToPage(event, 'common-app-essay')">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-text">My Common App Essay</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="supplemental-essays" onclick="navigateToPage(event, 'supplemental-essays')">
+                        <span class="nav-icon">📄</span>
+                        <span class="nav-text">My Supplemental Essays</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="my-activities" onclick="navigateToPage(event, 'my-activities')">
+                        <span class="nav-icon">🏆</span>
+                        <span class="nav-text">My Activities</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="my-recommenders" onclick="navigateToPage(event, 'my-recommenders')">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-text">My Recommenders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="daily-tracker" onclick="navigateToPage(event, 'daily-tracker')">
+                        <span class="nav-icon">📅</span>
+                        <span class="nav-text">Daily Activity Tracker</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="admissions-status" onclick="navigateToPage(event, 'admissions-status')">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Admissions Status Summary</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Center Content Panel -->
+        <main class="center-content">
+            <!-- Student Information Page -->
+            <div id="student-info" class="content-page">
+                <div class="page-title-with-help">
+                    <h2>Student Information</h2>
+                    <div class="page-action-icons">
+                        <button class="action-icon-btn" onclick="saveStudentInfo()" title="Save Information">
+                            <span class="action-icon">💾</span>
+                            <span class="action-label">Save</span>
+                        </button>
+                        <button class="action-icon-btn" onclick="exportStudentInfoToCommonApp()" title="Export to Common App">
+                            <span class="action-icon">📥</span>
+                            <span class="action-label">Export to Common App</span>
+                        </button>
+                        <button class="help-icon-btn" onclick="toggleHelpPopover('studentInfoHelp')" title="How to use this page">
+                            <span class="help-icon">?</span>
+                            <span class="action-label">How To</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Help Popover -->
+                <div class="help-popover" id="studentInfoHelpPopover" style="display: none;">
+                    <div class="help-popover-header">
+                        <span class="help-popover-title">💡 How to Use This Page</span>
+                        <button class="help-popover-close" onclick="closeHelpPopover('studentInfoHelp')">&times;</button>
+                    </div>
+                    <div class="help-popover-body">
+                        <div class="how-to-steps">
+                            <div class="how-to-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Fill Out Your Profile</h4>
+                                    <p>Enter your academic information including GPA, test scores, grade level, and state. This helps us provide personalized college recommendations.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Add Academic Interests</h4>
+                                    <p>List your academic interests and potential majors. This information will be used when suggesting colleges that match your goals.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Save Your Information</h4>
+                                    <p>Click "Save Information" when done. Your profile is automatically stored and used throughout the application to personalize your experience.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="how-to-tip">
+                            <strong>✨ Pro Tip:</strong> Keep your profile updated! As your test scores and GPA improve, update them here for the most accurate college recommendations.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <p>Manage your personal information and academic profile.</p>
+                    <div class="student-info-form">
+                        <div class="form-group">
+                            <label for="studentName">Full Name</label>
+                            <input type="text" id="studentName" class="form-input" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentEmail">Email</label>
+                            <input type="email" id="studentEmail" class="form-input" placeholder="Enter your email" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentGrade">Grade</label>
+                            <select id="studentGrade" class="form-select">
+                                <option value="">Select grade...</option>
+                                <option value="9">9th Grade</option>
+                                <option value="10">10th Grade</option>
+                                <option value="11">11th Grade</option>
+                                <option value="12">12th Grade</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentGPA">GPA (4.0 scale)</label>
+                            <input type="number" id="studentGPA" class="form-input" min="0" max="4.0" step="0.01" placeholder="e.g., 3.85">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentSAT">SAT Score</label>
+                            <input type="number" id="studentSAT" class="form-input" min="400" max="1600" placeholder="e.g., 1450">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentACT">ACT Score</label>
+                            <input type="number" id="studentACT" class="form-input" min="1" max="36" placeholder="e.g., 32">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentState">State</label>
+                            <select id="studentState" class="form-select">
+                                <option value="">Select state...</option>
+                                <option value="AL">Alabama</option>
+                                <option value="AK">Alaska</option>
+                                <option value="AZ">Arizona</option>
+                                <option value="AR">Arkansas</option>
+                                <option value="CA">California</option>
+                                <option value="CO">Colorado</option>
+                                <option value="CT">Connecticut</option>
+                                <option value="DE">Delaware</option>
+                                <option value="FL">Florida</option>
+                                <option value="GA">Georgia</option>
+                                <option value="HI">Hawaii</option>
+                                <option value="ID">Idaho</option>
+                                <option value="IL">Illinois</option>
+                                <option value="IN">Indiana</option>
+                                <option value="IA">Iowa</option>
+                                <option value="KS">Kansas</option>
+                                <option value="KY">Kentucky</option>
+                                <option value="LA">Louisiana</option>
+                                <option value="ME">Maine</option>
+                                <option value="MD">Maryland</option>
+                                <option value="MA">Massachusetts</option>
+                                <option value="MI">Michigan</option>
+                                <option value="MN">Minnesota</option>
+                                <option value="MS">Mississippi</option>
+                                <option value="MO">Missouri</option>
+                                <option value="MT">Montana</option>
+                                <option value="NE">Nebraska</option>
+                                <option value="NV">Nevada</option>
+                                <option value="NH">New Hampshire</option>
+                                <option value="NJ">New Jersey</option>
+                                <option value="NM">New Mexico</option>
+                                <option value="NY">New York</option>
+                                <option value="NC">North Carolina</option>
+                                <option value="ND">North Dakota</option>
+                                <option value="OH">Ohio</option>
+                                <option value="OK">Oklahoma</option>
+                                <option value="OR">Oregon</option>
+                                <option value="PA">Pennsylvania</option>
+                                <option value="RI">Rhode Island</option>
+                                <option value="SC">South Carolina</option>
+                                <option value="SD">South Dakota</option>
+                                <option value="TN">Tennessee</option>
+                                <option value="TX">Texas</option>
+                                <option value="UT">Utah</option>
+                                <option value="VT">Vermont</option>
+                                <option value="VA">Virginia</option>
+                                <option value="WA">Washington</option>
+                                <option value="WV">West Virginia</option>
+                                <option value="WI">Wisconsin</option>
+                                <option value="WY">Wyoming</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentAddress">Street Address</label>
+                            <input type="text" id="studentAddress" class="form-input" placeholder="Enter street address">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentCity">City</label>
+                            <input type="text" id="studentCity" class="form-input" placeholder="Enter city">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentZip">ZIP Code</label>
+                            <input type="text" id="studentZip" class="form-input" placeholder="Enter ZIP code">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentPhone">Phone Number</label>
+                            <input type="tel" id="studentPhone" class="form-input" placeholder="e.g., (555) 123-4567">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentDateOfBirth">Date of Birth</label>
+                            <input type="date" id="studentDateOfBirth" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentCitizenship">Citizenship Status</label>
+                            <select id="studentCitizenship" class="form-select">
+                                <option value="">Select citizenship status...</option>
+                                <option value="us-citizen">U.S. Citizen</option>
+                                <option value="us-national">U.S. National</option>
+                                <option value="us-dual">U.S. Dual Citizen</option>
+                                <option value="permanent-resident">Permanent Resident</option>
+                                <option value="refugee">Refugee/Asylee</option>
+                                <option value="other">Other Non-Citizen</option>
+                            </select>
+                        </div>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--navy-blue); font-weight: 300;">Parent/Guardian Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="parent1Name">Parent/Guardian 1 - Full Name</label>
+                            <input type="text" id="parent1Name" class="form-input" placeholder="Enter full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="parent1Relationship">Relationship</label>
+                            <select id="parent1Relationship" class="form-select">
+                                <option value="">Select relationship...</option>
+                                <option value="mother">Mother</option>
+                                <option value="father">Father</option>
+                                <option value="stepmother">Stepmother</option>
+                                <option value="stepfather">Stepfather</option>
+                                <option value="legal-guardian">Legal Guardian</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="parent1Email">Email</label>
+                            <input type="email" id="parent1Email" class="form-input" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="parent1Phone">Phone Number</label>
+                            <input type="tel" id="parent1Phone" class="form-input" placeholder="e.g., (555) 123-4567">
+                        </div>
+                        <div class="form-group">
+                            <label for="parent1Occupation">Occupation</label>
+                            <input type="text" id="parent1Occupation" class="form-input" placeholder="Enter occupation">
+                        </div>
+                        <div class="form-group">
+                            <label for="parent1Employer">Employer</label>
+                            <input type="text" id="parent1Employer" class="form-input" placeholder="Enter employer name">
+                        </div>
+                        <div class="form-group">
+                            <label for="parent1Education">Highest Level of Education</label>
+                            <select id="parent1Education" class="form-select">
+                                <option value="">Select education level...</option>
+                                <option value="high-school">High School</option>
+                                <option value="some-college">Some College</option>
+                                <option value="associates">Associate's Degree</option>
+                                <option value="bachelors">Bachelor's Degree</option>
+                                <option value="masters">Master's Degree</option>
+                                <option value="doctorate">Doctorate</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="parent1College">College/University Attended (if applicable)</label>
+                            <input type="text" id="parent1College" class="form-input" placeholder="Enter college name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="parent2Name">Parent/Guardian 2 - Full Name (Optional)</label>
+                            <input type="text" id="parent2Name" class="form-input" placeholder="Enter full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="parent2Relationship">Relationship</label>
+                            <select id="parent2Relationship" class="form-select">
+                                <option value="">Select relationship...</option>
+                                <option value="mother">Mother</option>
+                                <option value="father">Father</option>
+                                <option value="stepmother">Stepmother</option>
+                                <option value="stepfather">Stepfather</option>
+                                <option value="legal-guardian">Legal Guardian</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="parent2Email">Email</label>
+                            <input type="email" id="parent2Email" class="form-input" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="parent2Phone">Phone Number</label>
+                            <input type="tel" id="parent2Phone" class="form-input" placeholder="e.g., (555) 123-4567">
+                        </div>
+                        <div class="form-group">
+                            <label for="parent2Occupation">Occupation</label>
+                            <input type="text" id="parent2Occupation" class="form-input" placeholder="Enter occupation">
+                        </div>
+                        <div class="form-group">
+                            <label for="parent2Employer">Employer</label>
+                            <input type="text" id="parent2Employer" class="form-input" placeholder="Enter employer name">
+                        </div>
+                        <div class="form-group">
+                            <label for="parent2Education">Highest Level of Education</label>
+                            <select id="parent2Education" class="form-select">
+                                <option value="">Select education level...</option>
+                                <option value="high-school">High School</option>
+                                <option value="some-college">Some College</option>
+                                <option value="associates">Associate's Degree</option>
+                                <option value="bachelors">Bachelor's Degree</option>
+                                <option value="masters">Master's Degree</option>
+                                <option value="doctorate">Doctorate</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="parent2College">College/University Attended (if applicable)</label>
+                            <input type="text" id="parent2College" class="form-input" placeholder="Enter college name">
+                        </div>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--navy-blue); font-weight: 300;">Family Financial Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="householdIncome">Annual Household Income</label>
+                            <select id="householdIncome" class="form-select">
+                                <option value="">Select income range...</option>
+                                <option value="0-30000">$0 - $30,000</option>
+                                <option value="30001-48000">$30,001 - $48,000</option>
+                                <option value="48001-75000">$48,001 - $75,000</option>
+                                <option value="75001-110000">$75,001 - $110,000</option>
+                                <option value="110001-200000">$110,001 - $200,000</option>
+                                <option value="200001+">$200,001+</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="householdSize">Household Size</label>
+                            <input type="number" id="householdSize" class="form-input" min="1" placeholder="Number of people in household">
+                        </div>
+                        <div class="form-group">
+                            <label for="siblingsInCollege">Number of Siblings Currently in College</label>
+                            <input type="number" id="siblingsInCollege" class="form-input" min="0" placeholder="Enter number">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentInterests">Academic Interests</label>
+                            <textarea id="studentInterests" class="form-textarea" rows="3" placeholder="e.g., Computer Science, Engineering, Business..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Colleges Page (Default) -->
+            <div id="my-colleges" class="content-page active">
+                <div class="page-title-with-help">
+                    <h2>My Colleges</h2>
+                    <div class="page-action-icons">
+                        <button class="action-icon-btn" onclick="addCollege()" title="Add College">
+                            <span class="action-icon">+</span>
+                            <span class="action-label">Add College</span>
+                        </button>
+                        <button class="action-icon-btn" onclick="showCommonAppPanel()" title="Common App Integration">
+                            <span class="action-icon">🎓</span>
+                            <span class="action-label">Common App</span>
+                        </button>
+                        <button class="help-icon-btn" onclick="toggleHelpPopover('myCollegesHelp')" title="How to use this page">
+                            <span class="help-icon">?</span>
+                            <span class="action-label">How To</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Help Popover -->
+                <div class="help-popover" id="myCollegesHelpPopover" style="display: none;">
+                    <div class="help-popover-header">
+                        <span class="help-popover-title">💡 How to Use This Page</span>
+                        <button class="help-popover-close" onclick="closeHelpPopover('myCollegesHelp')">&times;</button>
+                    </div>
+                    <div class="help-popover-body">
+                        <div class="how-to-steps">
+                            <div class="how-to-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Add Colleges</h4>
+                                    <p>Click "+ Add College" to manually add schools to your list, or use "Common App Integration" for AI-powered suggestions based on your profile.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Categorize Your Colleges</h4>
+                                    <p>For each college, select whether it's a Safety, Target, or Reach school. Also specify the application type (Common App, Coalition, etc.).</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Track Application Status</h4>
+                                    <p>Set deadlines and update application status as you progress. The system will help you stay organized and on track.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="how-to-tip">
+                            <strong>✨ Pro Tip:</strong> Aim for a balanced list with 2-3 safety schools, 4-5 target schools, and 2-3 reach schools.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <p>Track and manage your college list here.</p>
+                    <div id="collegesList" class="data-list">
+                        <p class="empty-state">No colleges added yet. Click "Add College" to get started!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Common App Essay Page -->
+            <div id="common-app-essay" class="content-page">
+                <div class="page-title-with-help">
+                    <h2>My Common App Essay</h2>
+                    <div class="page-action-icons">
+                        <button class="action-icon-btn" onclick="saveEssay('common-app')" title="Save Essay">
+                            <span class="action-icon">💾</span>
+                            <span class="action-label">Save Essay</span>
+                        </button>
+                        <button class="action-icon-btn" onclick="exportCommonAppEssay()" title="Export to Common App">
+                            <span class="action-icon">📥</span>
+                            <span class="action-label">Export to Common App</span>
+                        </button>
+                        <button class="action-icon-btn" onclick="clearEditors()" title="Clear All">
+                            <span class="action-icon">🗑️</span>
+                            <span class="action-label">Clear All</span>
+                        </button>
+                        <button class="help-icon-btn" onclick="toggleHelpPopover('commonAppHelp')" title="How to use this page">
+                            <span class="help-icon">?</span>
+                            <span class="action-label">How To</span>
+                        </button>
+                    </div>
+                </div>
+                <p class="page-subtitle">Write and refine your Common Application essay with AI assistance. Word limit: 250-650 words.</p>
+                
+                <!-- Help Popover -->
+                <div class="help-popover" id="commonAppHelpPopover" style="display: none;">
+                    <div class="help-popover-header">
+                        <span class="help-popover-title">💡 How to Use This Page</span>
+                        <button class="help-popover-close" onclick="closeHelpPopover('commonAppHelp')">&times;</button>
+                    </div>
+                    <div class="help-popover-body">
+                        <div class="how-to-steps">
+                            <div class="how-to-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Select a Prompt</h4>
+                                    <p>Choose one of the Common App essay prompts from the dropdown. Read the full prompt description to ensure you understand what's being asked.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Write Your Draft</h4>
+                                    <p>Type your essay in the "Your Draft" editor. Keep an eye on the word count (250-650 words). The counter will turn green when you're in the ideal range.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Get AI Feedback</h4>
+                                    <p>Click "Get AI Feedback" to receive detailed suggestions on content, structure, grammar, and voice. Review the Essay Health Score to see areas for improvement.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Save & Export</h4>
+                                    <p>Click "Save Essay" to store your work (saved automatically to your browser). Use "Export Essay" to download. Click "Clear All" to start over.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="how-to-tip">
+                            <strong>✨ Pro Tip:</strong> Save your work frequently! You can get AI feedback multiple times as you revise your essay.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <div id="commonAppCollegesInfo" class="info-banner-grey">
+                        <p style="margin: 0; font-size: 14px;">📋 <strong>Your Common App Colleges:</strong> <span id="commonAppCollegesList">Loading...</span></p>
+                        <p style="margin: 5px 0 0 0; font-size: 13px; opacity: 0.8;">This essay will be sent to all colleges listed above that accept the Common Application.</p>
+                    </div>
+                    
+                    <div class="essay-section">
+                        <div class="prompt-selection-container">
+                            <div class="prompt-dropdown-section">
+                                <label for="commonAppPrompt">Select an Essay Prompt:</label>
+                                <select id="commonAppPrompt" class="form-select-compact" onchange="updatePromptDescription()">
+                                    <option value="">Choose a prompt...</option>
+                                </select>
+                            </div>
+                            <div id="promptDescription" class="prompt-description-side" style="display: none;">
+                                <strong>Full Prompt:</strong>
+                                <p id="promptDescriptionText"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="dual-editor-container">
+                            <div class="editor-panel">
+                                <div class="editor-header">
+                                    <h4>✍️ Your Draft</h4>
+                                    <div class="essay-word-count">
+                                        <span id="essayWordCount">0</span> / 650 words
+                                    </div>
+                                </div>
+                                <div id="studentDraftEditor" class="rich-text-editor" contenteditable="true" data-placeholder="Start writing your essay here..."></div>
+                            </div>
+                            
+                            <div class="editor-panel">
+                                <div class="editor-header">
+                                    <h4>🤖 AI Feedback & Suggestions</h4>
+                                    <button class="btn-get-feedback" onclick="requestAIFeedback('common-app')">Get AI Feedback</button>
+                                </div>
+                                
+                                <!-- Essay Health Meter -->
+                                <div id="essayHealthMeter" class="health-meter-container" style="display: none;">
+                                    <div class="health-meter-label">
+                                        <span class="health-label-text">Essay Health:</span>
+                                        <span id="healthScoreText" class="health-score">--</span>
+                                    </div>
+                                    <div class="health-meter-bar">
+                                        <div id="healthMeterFill" class="health-meter-fill" style="width: 0%;"></div>
+                                    </div>
+                                    <div class="health-indicators">
+                                        <span id="healthIndicatorContent" class="health-indicator">
+                                            <span class="indicator-label">📝 Content</span>
+                                            <span class="indicator-score">--</span>
+                                        </span>
+                                        <span id="healthIndicatorStructure" class="health-indicator">
+                                            <span class="indicator-label">🏗️ Structure</span>
+                                            <span class="indicator-score">--</span>
+                                        </span>
+                                        <span id="healthIndicatorGrammar" class="health-indicator">
+                                            <span class="indicator-label">✍️ Grammar</span>
+                                            <span class="indicator-score">--</span>
+                                        </span>
+                                        <span id="healthIndicatorVoice" class="health-indicator">
+                                            <span class="indicator-label">🎭 Voice</span>
+                                            <span class="indicator-score">--</span>
+                                        </span>
+                                        <span id="healthIndicatorPlagiarism" class="health-indicator">
+                                            <span class="indicator-label">🔍 Originality</span>
+                                            <span class="indicator-score">--</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div id="aiFeedbackEditor" class="rich-text-editor readonly" contenteditable="false" data-placeholder="Click 'Get AI Feedback' to receive detailed suggestions and corrections..."></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Supplemental Essays Page -->
+            <div id="supplemental-essays" class="content-page">
+                <div class="page-title-with-help">
+                    <h2>My Supplemental Essays</h2>
+                    <div class="page-action-icons">
+                        <button class="action-icon-btn" onclick="addSupplementalEssay()" title="Add Supplemental Essay">
+                            <span class="action-icon">+</span>
+                            <span class="action-label">Add Essay</span>
+                        </button>
+                        <button class="help-icon-btn" onclick="toggleHelpPopover('supplementalEssaysHelp')" title="How to use this page">
+                            <span class="help-icon">?</span>
+                            <span class="action-label">How To</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Help Popover -->
+                <div class="help-popover" id="supplementalEssaysHelpPopover" style="display: none;">
+                    <div class="help-popover-header">
+                        <span class="help-popover-title">💡 How to Use This Page</span>
+                        <button class="help-popover-close" onclick="closeHelpPopover('supplementalEssaysHelp')">&times;</button>
+                    </div>
+                    <div class="help-popover-body">
+                        <div class="how-to-steps">
+                            <div class="how-to-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Add Essays by College</h4>
+                                    <p>Click "+ Add Supplemental Essay" to create entries for college-specific essays. Each college may require multiple supplemental essays.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Track Essay Details</h4>
+                                    <p>For each essay, record the prompt, word limit, and deadline. Keep drafts organized by college to stay on top of requirements.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Monitor Progress</h4>
+                                    <p>Update status as you complete drafts, get feedback, and finalize essays. Use the AI assistant for help with revisions.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="how-to-tip">
+                            <strong>✨ Pro Tip:</strong> Start supplemental essays early! Many colleges reuse prompts from year to year.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <p>Manage supplemental essays for each college.</p>
+                    <div id="supplementalEssaysList" class="data-list">
+                        <p class="empty-state">No supplemental essays added yet. Click "Add Supplemental Essay" to begin!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Activities Page -->
+            <div id="my-activities" class="content-page">
+                <div class="page-title-with-help">
+                    <h2>My Activities</h2>
+                    <div class="page-action-icons">
+                        <button class="action-icon-btn" onclick="addActivity()" title="Add Activity">
+                            <span class="action-icon">+</span>
+                            <span class="action-label">Add Activity</span>
+                        </button>
+                        <button class="help-icon-btn" onclick="toggleHelpPopover('activitiesHelp')" title="How to use this page">
+                            <span class="help-icon">?</span>
+                            <span class="action-label">How To</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Help Popover -->
+                <div class="help-popover" id="activitiesHelpPopover" style="display: none;">
+                    <div class="help-popover-header">
+                        <span class="help-popover-title">💡 How to Use This Page</span>
+                        <button class="help-popover-close" onclick="closeHelpPopover('activitiesHelp')">&times;</button>
+                    </div>
+                    <div class="help-popover-body">
+                        <div class="how-to-steps">
+                            <div class="how-to-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Add Your Activities</h4>
+                                    <p>Click "+ Add Activity" to record extracurriculars, sports, clubs, volunteer work, jobs, and honors. Add up to 10 activities for Common App.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Include Key Details</h4>
+                                    <p>For each activity, provide your role, hours per week, weeks per year, and a brief description highlighting your impact and achievements.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Prioritize & Order</h4>
+                                    <p>List activities in order of importance to you. Place your most meaningful and time-intensive activities at the top.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="how-to-tip">
+                            <strong>✨ Pro Tip:</strong> Focus on depth over breadth! Colleges value sustained commitment and leadership in a few activities over superficial involvement in many.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <p>Track your extracurricular activities, honors, and achievements.</p>
+                    <div id="activitiesList" class="data-list">
+                        <p class="empty-state">No activities added yet. Click "Add Activity" to start building your list!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Recommenders Page -->
+            <div id="my-recommenders" class="content-page">
+                <div class="page-title-with-help">
+                    <h2>My Recommenders</h2>
+                    <div class="page-action-icons">
+                        <button class="action-icon-btn" onclick="addRecommender()" title="Add Recommender">
+                            <span class="action-icon">+</span>
+                            <span class="action-label">Add Recommender</span>
+                        </button>
+                        <button class="help-icon-btn" onclick="toggleHelpPopover('recommendersHelp')" title="How to use this page">
+                            <span class="help-icon">?</span>
+                            <span class="action-label">How To</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Help Popover -->
+                <div class="help-popover" id="recommendersHelpPopover" style="display: none;">
+                    <div class="help-popover-header">
+                        <span class="help-popover-title">💡 How to Use This Page</span>
+                        <button class="help-popover-close" onclick="closeHelpPopover('recommendersHelp')">&times;</button>
+                    </div>
+                    <div class="help-popover-body">
+                        <div class="how-to-steps">
+                            <div class="how-to-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Add Your Recommenders</h4>
+                                    <p>Click "+ Add Recommender" to add teachers, counselors, or mentors. Most colleges require 2-3 letters of recommendation.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Provide Contact Info</h4>
+                                    <p>Record each recommender's name, title, email, and subject they teach. This helps you stay organized when sending requests.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Track Request Status</h4>
+                                    <p>Update the status as you request letters, follow up, and confirm submissions. Set reminders for polite follow-ups if needed.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="how-to-tip">
+                            <strong>✨ Pro Tip:</strong> Ask teachers early (spring of junior year or early senior year) and provide them with a resume and information about your goals!
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <p>Manage your letters of recommendation and track submission status.</p>
+                    <div id="recommendersList" class="data-list">
+                        <p class="empty-state">No recommenders added yet. Click "Add Recommender" to get started!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Activity Tracker Page -->
+            <div id="daily-tracker" class="content-page">
+                <div class="page-title-with-help">
+                    <h2>Daily Activity Tracker</h2>
+                    <div class="page-action-icons">
+                        <button class="action-icon-btn" onclick="addDailyActivity()" title="Log Today's Activity">
+                            <span class="action-icon">+</span>
+                            <span class="action-label">Log Activity</span>
+                        </button>
+                        <button class="help-icon-btn" onclick="toggleHelpPopover('dailyTrackerHelp')" title="How to use this page">
+                            <span class="help-icon">?</span>
+                            <span class="action-label">How To</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Help Popover -->
+                <div class="help-popover" id="dailyTrackerHelpPopover" style="display: none;">
+                    <div class="help-popover-header">
+                        <span class="help-popover-title">💡 How to Use This Page</span>
+                        <button class="help-popover-close" onclick="closeHelpPopover('dailyTrackerHelp')">&times;</button>
+                    </div>
+                    <div class="help-popover-body">
+                        <div class="how-to-steps">
+                            <div class="how-to-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Log Daily Activities</h4>
+                                    <p>Click "+ Log Today's Activity" to record what you worked on each day - essays, applications, research, visits, etc.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Add Notes & Details</h4>
+                                    <p>Include specific notes about progress, questions that arose, or next steps. This helps you remember where you left off.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Review Your Progress</h4>
+                                    <p>Look back at your activity log to see how much you've accomplished and identify areas that need more attention.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="how-to-tip">
+                            <strong>✨ Pro Tip:</strong> Spend at least 30 minutes daily on college applications during peak season. Consistency is key!
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <p>Log your daily college application activities and stay on track.</p>
+                    <div id="dailyActivitiesList" class="data-list">
+                        <p class="empty-state">No activities logged yet. Click "Log Today's Activity" to begin!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admissions Status Summary Page -->
+            <div id="admissions-status" class="content-page">
+                <div class="page-title-with-help">
+                    <h2>Admissions Status Summary</h2>
+                    <button class="help-icon-btn" onclick="toggleHelpPopover('admissionsStatusHelp')" title="How to use this page">
+                        <span class="help-icon">?</span>
+                        <span class="action-label">How To</span>
+                    </button>
+                </div>
+                
+                <!-- Help Popover -->
+                <div class="help-popover" id="admissionsStatusHelpPopover" style="display: none;">
+                    <div class="help-popover-header">
+                        <span class="help-popover-title">💡 How to Use This Page</span>
+                        <button class="help-popover-close" onclick="closeHelpPopover('admissionsStatusHelp')">&times;</button>
+                    </div>
+                    <div class="help-popover-body">
+                        <div class="how-to-steps">
+                            <div class="how-to-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>View Application Overview</h4>
+                                    <p>See a quick summary of all your applications categorized by status: Not Started, In Progress, Submitted, and Completed.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Track Upcoming Deadlines</h4>
+                                    <p>Review your nearest deadlines to prioritize work. The system automatically sorts by date to keep you on track.</p>
+                                </div>
+                            </div>
+                            <div class="how-to-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Monitor Completion</h4>
+                                    <p>Use this dashboard to ensure all applications are progressing. Update statuses in the "My Colleges" page as you submit applications.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="how-to-tip">
+                            <strong>✨ Pro Tip:</strong> Check this page daily during application season to stay aware of approaching deadlines and avoid last-minute stress!
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <p>Overview of your application statuses and deadlines.</p>
+                    <div id="admissionsStatusSummary" class="status-summary">
+                        <div class="status-card">
+                            <h3>Applications</h3>
+                            <div class="status-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Not Started:</span>
+                                    <span class="stat-value" id="statsNotStarted">0</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">In Progress:</span>
+                                    <span class="stat-value" id="statsInProgress">0</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Submitted:</span>
+                                    <span class="stat-value" id="statsSubmitted">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="status-card">
+                            <h3>Upcoming Deadlines</h3>
+                            <div id="upcomingDeadlines" class="deadlines-list">
+                                <p class="empty-state">No upcoming deadlines</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right AI Chat Panel -->
+        <aside class="right-chat" id="rightChatPanel">
+            <div class="chat-header" onclick="toggleChatPanel()">
+                <h3>🤖 AI Assistant</h3>
+                <div class="chat-header-actions">
+                    <button class="btn-clear-chat" onclick="event.stopPropagation(); clearChatHistory()" title="Clear chat">🗑️</button>
+                    <button class="btn-toggle-chat" id="toggleChatBtn" title="Collapse/Expand">
+                        <span id="toggleChatIcon">◀</span>
+                    </button>
+                </div>
+            </div>
+            <div id="chatContent" class="chat-content">
+                <div id="chatMessages" class="chat-messages">
+                    <div class="chat-message ai-message">
+                        <p>Hello! I'm your Bus2College AI assistant. I'm here to help you with:</p>
+                        <ul>
+                            <li>Essay writing and feedback</li>
+                            <li>College application questions</li>
+                            <li>Choosing the right colleges</li>
+                            <li>Application timeline advice</li>
+                        </ul>
+                        <p>Ask me anything!</p>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <textarea id="chatInput" class="chat-input" placeholder="Ask me anything about college applications..." rows="3"></textarea>
+                    <button id="sendChatBtn" class="btn-send-chat" onclick="sendChatMessage()">Send</button>
+                </div>
+                <div id="chatStatus" class="chat-status"></div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- College Suggestion Modal - Initial Prompt -->
+    <div id="collegeSuggestionModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeCollegeSuggestionModal()">&times;</span>
+            <h2>🎓 College Suggestions</h2>
+            <p>Based on your scores and interests, we can suggest 3 suitable safety, target, and reach schools for you.</p>
+            <p><strong>Would you like to avail this feature?</strong></p>
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="startCollegeSuggestionFlow()">Yes, Suggest Colleges</button>
+                <button class="btn-secondary" onclick="showManualCollegeEntry()">No, I'll Add Manually</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- College Questionnaire Modal -->
+    <div id="collegeQuestionnaireModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="modal-close" onclick="closeCollegeQuestionnaireModal()">&times;</span>
+            <h2>Tell Us About Yourself</h2>
+            <p class="modal-subtitle">Answer these questions to help us find the best colleges for you.</p>
+            
+            <div class="questionnaire-container">
+                <!-- Question 1: GPA -->
+                <div id="question1" class="question-slide active">
+                    <div class="question-number">Question 1 of 5</div>
+                    <h3>What is your current or expected GPA?</h3>
+                    <p class="question-help">Enter on a 4.0 scale (e.g., 3.7, 3.85, 4.0)</p>
+                    <input type="number" id="gpaInput" class="questionnaire-input" min="0" max="4.0" step="0.01" placeholder="e.g., 3.85">
+                    <div class="question-actions">
+                        <button class="btn-primary" onclick="nextQuestion(1)">Next</button>
+                    </div>
+                </div>
+
+                <!-- Question 2: Test Score Type -->
+                <div id="question2" class="question-slide">
+                    <div class="question-number">Question 2 of 5</div>
+                    <h3>Which standardized test score do you have?</h3>
+                    <p class="question-help">Select the test you took or plan to take</p>
+                    <div class="test-type-selection">
+                        <label class="test-type-option">
+                            <input type="radio" name="testType" value="SAT" onclick="showTestScoreInput('SAT')" checked>
+                            <span class="test-label">SAT</span>
+                        </label>
+                        <label class="test-type-option">
+                            <input type="radio" name="testType" value="ACT" onclick="showTestScoreInput('ACT')">
+                            <span class="test-label">ACT</span>
+                        </label>
+                    </div>
+                    <div id="satScoreInput" class="test-score-input">
+                        <p class="question-help" style="margin-top: 15px;">Enter your total SAT score (400-1600)</p>
+                        <input type="number" id="satInput" class="questionnaire-input" min="400" max="1600" step="10" placeholder="e.g., 1450">
+                    </div>
+                    <div id="actScoreInput" class="test-score-input" style="display: none;">
+                        <p class="question-help" style="margin-top: 15px;">Enter your composite ACT score (1-36)</p>
+                        <input type="number" id="actInput" class="questionnaire-input" min="1" max="36" step="1" placeholder="e.g., 32">
+                    </div>
+                    <div class="question-actions">
+                        <button class="btn-secondary" onclick="previousQuestion(2)">Back</button>
+                        <button class="btn-primary" onclick="nextQuestion(2)">Next</button>
+                    </div>
+                </div>
+
+                <!-- Question 3: State Preference -->
+                <div id="question3" class="question-slide">
+                    <div class="question-number">Question 3 of 5</div>
+                    <h3>Are you comfortable attending college out-of-state?</h3>
+                    <p class="question-help">This helps us suggest colleges within your preferred geographic area</p>
+                    <div class="test-type-selection">
+                        <label class="test-type-option">
+                            <input type="radio" name="statePreference" value="any" onclick="hideStateDropdown()" checked>
+                            <span class="test-label">Any State</span>
+                        </label>
+                        <label class="test-type-option">
+                            <input type="radio" name="statePreference" value="instate" onclick="showStateDropdown()">
+                            <span class="test-label">In-State Only</span>
+                        </label>
+                    </div>
+                    <div id="stateDropdownContainer" style="display: none; margin-top: 15px;">
+                        <p class="question-help">Select your state:</p>
+                        <select id="stateSelect" class="questionnaire-input">
+                            <option value="">Choose your state...</option>
+                            <option value="AL">Alabama</option>
+                            <option value="AK">Alaska</option>
+                            <option value="AZ">Arizona</option>
+                            <option value="AR">Arkansas</option>
+                            <option value="CA">California</option>
+                            <option value="CO">Colorado</option>
+                            <option value="CT">Connecticut</option>
+                            <option value="DE">Delaware</option>
+                            <option value="FL">Florida</option>
+                            <option value="GA">Georgia</option>
+                            <option value="HI">Hawaii</option>
+                            <option value="ID">Idaho</option>
+                            <option value="IL">Illinois</option>
+                            <option value="IN">Indiana</option>
+                            <option value="IA">Iowa</option>
+                            <option value="KS">Kansas</option>
+                            <option value="KY">Kentucky</option>
+                            <option value="LA">Louisiana</option>
+                            <option value="ME">Maine</option>
+                            <option value="MD">Maryland</option>
+                            <option value="MA">Massachusetts</option>
+                            <option value="MI">Michigan</option>
+                            <option value="MN">Minnesota</option>
+                            <option value="MS">Mississippi</option>
+                            <option value="MO">Missouri</option>
+                            <option value="MT">Montana</option>
+                            <option value="NE">Nebraska</option>
+                            <option value="NV">Nevada</option>
+                            <option value="NH">New Hampshire</option>
+                            <option value="NJ">New Jersey</option>
+                            <option value="NM">New Mexico</option>
+                            <option value="NY">New York</option>
+                            <option value="NC">North Carolina</option>
+                            <option value="ND">North Dakota</option>
+                            <option value="OH">Ohio</option>
+                            <option value="OK">Oklahoma</option>
+                            <option value="OR">Oregon</option>
+                            <option value="PA">Pennsylvania</option>
+                            <option value="RI">Rhode Island</option>
+                            <option value="SC">South Carolina</option>
+                            <option value="SD">South Dakota</option>
+                            <option value="TN">Tennessee</option>
+                            <option value="TX">Texas</option>
+                            <option value="UT">Utah</option>
+                            <option value="VT">Vermont</option>
+                            <option value="VA">Virginia</option>
+                            <option value="WA">Washington</option>
+                            <option value="WV">West Virginia</option>
+                            <option value="WI">Wisconsin</option>
+                            <option value="WY">Wyoming</option>
+                        </select>
+                    </div>
+                    <div class="question-actions">
+                        <button class="btn-secondary" onclick="previousQuestion(3)">Back</button>
+                        <button class="btn-primary" onclick="nextQuestion(3)">Next</button>
+                    </div>
+                </div>
+
+                <!-- Question 4: Interests -->
+                <div id="question4" class="question-slide">
+                    <div class="question-number">Question 4 of 5</div>
+                    <h3>What are your fields of interest?</h3>
+                    <p class="question-help">Select all that apply or type your own</p>
+                    <div class="interests-grid">
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Computer Science"> Computer Science
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Engineering"> Engineering
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Business"> Business
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Medicine"> Medicine
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Life Sciences"> Life Sciences
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Social Sciences"> Social Sciences
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Arts & Humanities"> Arts & Humanities
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Mathematics"> Mathematics
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Physics"> Physics
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Law"> Law
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Education"> Education
+                        </label>
+                        <label class="interest-checkbox">
+                            <input type="checkbox" value="Psychology"> Psychology
+                        </label>
+                    </div>
+                    <textarea id="otherInterestsInput" class="questionnaire-textarea" placeholder="Other interests (optional)..." rows="2"></textarea>
+                    <div class="question-actions">
+                        <button class="btn-secondary" onclick="previousQuestion(4)">Back</button>
+                        <button class="btn-primary" onclick="nextQuestion(4)">Next</button>
+                    </div>
+                </div>
+
+                <!-- Question 5: Additional Preferences -->
+                <div id="question5" class="question-slide">
+                    <div class="question-number">Question 5 of 5</div>
+                    <h3>Any additional preferences?</h3>
+                    <p class="question-help">School size, location type, programs, etc. (optional)</p>
+                    <textarea id="additionalPrefsInput" class="questionnaire-textarea" placeholder="e.g., Large university, urban setting, strong research programs..." rows="4"></textarea>
+                    <div class="question-actions">
+                        <button class="btn-secondary" onclick="previousQuestion(5)">Back</button>
+                        <button class="btn-primary" onclick="submitQuestionnaire()">Find Colleges</button>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loadingSlide" class="question-slide">
+                    <div class="loading-container">
+                        <div class="spinner"></div>
+                        <h3>Finding Perfect Colleges for You...</h3>
+                        <p>Analyzing your profile and searching for the best matches...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- College Results Modal -->
+    <div id="collegeResultsModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="modal-close" onclick="closeCollegeResultsModal()">&times;</span>
+            <h2>🎯 Recommended Colleges for You</h2>
+            <p class="modal-subtitle">Based on your profile, here are our suggestions:</p>
+            
+            <div id="collegeResultsContainer">
+                <!-- Results will be populated here -->
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeCollegeResultsModal()">Close</button>
+                <button class="btn-primary" onclick="addSelectedColleges()">Add Selected to My List</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual College Entry Modal -->
+    <div id="manualCollegeModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeManualCollegeModal()">&times;</span>
+            <h2>Add College Manually</h2>
+            <form id="manualCollegeForm" onsubmit="return saveManualCollege(event)">
+                <div class="form-group">
+                    <label for="collegeName">College Name *</label>
+                    <div class="searchable-dropdown">
+                        <input type="text" id="collegeNameSearch" class="college-search-input" 
+                               placeholder="Search for a college..." autocomplete="off" 
+                               oninput="filterColleges()" onfocus="showCollegeDropdown()" required>
+                        <div id="collegeDropdown" class="college-dropdown" style="display: none;"></div>
+                        <input type="hidden" id="collegeName" required>
+                    </div>
+                    <small class="form-help">Start typing to search from 200+ US colleges</small>
+                </div>
+                <div class="form-group">
+                    <label for="collegeLocation">Location</label>
+                    <input type="text" id="collegeLocation" placeholder="e.g., Stanford, CA" readonly>
+                    <small class="form-help">Auto-filled based on college selection</small>
+                </div>
+                <div class="form-group">
+                    <label for="collegeType">College Type *</label>
+                    <select id="collegeType" required>
+                        <option value="">Select type...</option>
+                        <option value="Safety">Safety</option>
+                        <option value="Target">Target</option>
+                        <option value="Reach">Reach</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="deadlineType">Deadline Type</label>
+                    <select id="deadlineType" onchange="updateDeadlineBasedOnType()">
+                        <option value="regular">Regular Decision</option>
+                        <option value="early">Early Decision/Action</option>
+                        <option value="custom">Custom Date</option>
+                    </select>
+                    <small class="form-help">Select deadline type for auto-fill</small>
+                </div>
+                <div class="form-group">
+                    <label for="applicationDeadline">Application Deadline</label>
+                    <input type="date" id="applicationDeadline">
+                    <small class="form-help">Auto-filled based on college and deadline type</small>
+                </div>
+                <div class="form-group">
+                    <label for="applicationStatus">Application Status</label>
+                    <select id="applicationStatus">
+                        <option value="Not Started">Not Started</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Waitlisted">Waitlisted</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeManualCollegeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Add College</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit College Modal -->
+    <div id="editCollegeModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeEditCollegeModal()">&times;</span>
+            <h2>Edit College</h2>
+            <form id="editCollegeForm" onsubmit="return saveEditCollege(event)">
+                <div class="form-group">
+                    <label for="editCollegeName">College Name</label>
+                    <input type="text" id="editCollegeName" class="form-input" readonly style="background-color: #f5f5f5;">
+                    <small class="form-help">College name cannot be changed</small>
+                </div>
+                <div class="form-group">
+                    <label for="editDeadlineType">Deadline Type</label>
+                    <select id="editDeadlineType" onchange="updateEditDeadlineBasedOnType()">
+                        <option value="regular">Regular Decision</option>
+                        <option value="early">Early Decision/Action</option>
+                    </select>
+                    <small class="form-help">Select deadline type to update deadline</small>
+                </div>
+                <div class="form-group">
+                    <label for="editApplicationDeadline">Application Deadline</label>
+                    <input type="date" id="editApplicationDeadline" readonly style="background-color: #f5f5f5;">
+                    <small class="form-help">Auto-filled based on deadline type</small>
+                </div>
+                <div class="form-group">
+                    <label for="editApplicationStatus">Application Status *</label>
+                    <select id="editApplicationStatus" required>
+                        <option value="Not Started">Not Started</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Waitlisted">Waitlisted</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <input type="hidden" id="editCollegeIndex">
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeEditCollegeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Common App Integration Modal -->
+    <div id="commonAppIntegrationModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="modal-close" onclick="closeCommonAppPanel()">&times;</span>
+            <h2>🎓 Common App Integration</h2>
+            <p class="modal-subtitle">Manage your Common Application colleges and essays</p>
+            
+            <div class="common-app-stats-section">
+                <h3>Your Common App Colleges</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="caStatsTotal">0</div>
+                        <div class="stat-label">Common App Colleges</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="caStatsPercentage">0%</div>
+                        <div class="stat-label">of Your List</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="common-app-features">
+                <h3>Available Features</h3>
+                
+                <div class="feature-section">
+                    <h4>📋 College List Management</h4>
+                    <p>Export your Common App colleges to CSV format for easy tracking and planning.</p>
+                    <button class="btn-common-app-export" onclick="exportToCommonAppFormat()">
+                        Export College List
+                    </button>
+                </div>
+                
+                <div class="feature-section">
+                    <h4>📝 Essay Sync</h4>
+                    <p>Export and import your Common App essay to work on it in different platforms.</p>
+                    <div class="feature-buttons">
+                        <button class="btn-primary" onclick="exportCommonAppEssay()">
+                            Export Essay
+                        </button>
+                        <button class="btn-secondary" onclick="importCommonAppEssay()">
+                            Import Essay
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="feature-section">
+                    <h4>🔗 Direct Links</h4>
+                    <p>Each Common App college in your list now has a direct "Apply via Common App" button linking to the college's Common Application page.</p>
+                </div>
+                
+                <div class="feature-section">
+                    <h4>✅ Status Tracking</h4>
+                    <p>Track your Common App submission status separately for each college. Visit the "My Colleges" page to see which colleges accept Common App (marked with a "CA" badge).</p>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeCommonAppPanel()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="js/college-database.js"></script>
+    <script src="js/common-app-integration.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/ai-chat.js"></script>
+    <script src="js/data-handler.js"></script>
+    <script src="js/colleges.js"></script>
+    <script>
+        // Initialize app on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            loadUserData();
+            initializeNavPanelState();
+        });
+
+        // Allow Enter key to send chat messages (Shift+Enter for new line)
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendChatMessage();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

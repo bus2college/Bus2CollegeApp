@@ -1,0 +1,17 @@
+# API Keys and Configuration
+js/config.js
+
+# Data files
+data/*.xlsx
+data/*.xls
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
