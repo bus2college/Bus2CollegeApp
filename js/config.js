@@ -14,7 +14,7 @@
 // ==================================================================
 
 const CONFIG = {
-    GEMINI_API_KEY: '',
+    GEMINI_API_KEY: ' ',
     OpenAI_API_KEY: '',
     CLAUDE_API_KEY: '',
     APP_NAME: 'Bus2College',
