@@ -11,18 +11,18 @@ function toggleNavPanel() {
     // Update icon
     toggleIcon.textContent = isCollapsed ? '▶' : '◀';
     
-    // Save state to localStorage
+    // Save state to Firestore
     const user = getCurrentUser();
     if (user) {
-        localStorage.setItem(`bus2college_nav_collapsed_${user.id}`, isCollapsed);
+        saveNavPanelState(isCollapsed);
     }
 }
 
 // Initialize navigation panel state on load
-function initializeNavPanelState() {
+async function initializeNavPanelState() {
     const user = getCurrentUser();
     if (user) {
-        const isCollapsed = localStorage.getItem(`bus2college_nav_collapsed_${user.id}`) === 'true';
+        const isCollapsed = await loadNavPanelState();
         if (isCollapsed) {
             const navPanel = document.getElementById('leftNavPanel');
             const toggleIcon = document.getElementById('toggleNavIcon');
@@ -60,12 +60,12 @@ function navigateToPage(event, pageId) {
 }
 
 // Load data for specific page
-function loadPageData(pageId) {
+async function loadPageData(pageId) {
     const user = getCurrentUser();
     if (!user) return;
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+    const userData = await loadUserData();
+    if (!userData) return;
     
     switch(pageId) {
         case 'student-info':
@@ -154,7 +154,7 @@ function loadStudentInfo(studentInfo) {
     }
 }
 
-function saveStudentInfo() {
+async function saveStudentInfo() {
     const button = event.currentTarget;
     button.classList.add('expanded');
     
@@ -206,12 +206,13 @@ function saveStudentInfo() {
         lastUpdated: new Date().toISOString()
     };
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-    userData.studentInfo = studentInfo;
+    const success = await saveStudentInfoToFirebase(studentInfo);
     
-    localStorage.setItem(userDataKey, JSON.stringify(userData));
-    alert('Student information saved successfully!');
+    if (success) {
+        alert('Student information saved successfully!');
+    } else {
+        alert('Failed to save student information. Please try again.');
+    }
     
     // Collapse button after save
     button.classList.remove('expanded');
@@ -742,11 +743,8 @@ function requestAIFeedback(type) {
     }
     
     // Check if any API key is configured
-    const hasOpenAI = typeof CONFIG !== 'undefined' && CONFIG.OpenAI_API_KEY && CONFIG.OpenAI_API_KEY !== 'your-openai-api-key-here';
-    const hasClaude = typeof CONFIG !== 'undefined' && CONFIG.CLAUDE_API_KEY && CONFIG.CLAUDE_API_KEY !== 'your-claude-api-key-here';
-    
-    if (!hasOpenAI && !hasClaude) {
-        alert('Please configure your AI API key in js/config.js file first!\n\nOption 1 - OpenAI (Recommended):\n✓ Free $5 credit\n✓ Get key at: https://platform.openai.com/api-keys\n\nOption 2 - Anthropic Claude:\n✓ High quality\n✓ Get key at: https://console.anthropic.com/\n\nAdd your key to js/config.js');
+    if (typeof CONFIG === 'undefined' || (!CONFIG.API_ENDPOINT && !CONFIG.GEMINI_API_KEY)) {
+        alert('Please configure API in js/config.js file first!\n\nFor secure setup, deploy the backend API following instructions in bus2college-api/README.md');
         return;
     }
     
@@ -763,21 +761,24 @@ async function getEssayFeedback(essayContent, promptText) {
     try {
         const wordCount = essayContent.trim().split(/\s+/).length;
         
-        // Determine which API to use
-        const hasOpenAI = CONFIG.OpenAI_API_KEY && CONFIG.OpenAI_API_KEY !== 'your-openai-api-key-here';
-        const hasClaude = CONFIG.CLAUDE_API_KEY && CONFIG.CLAUDE_API_KEY !== 'your-claude-api-key-here';
+        // Create messages for AI
+        const messages = [
+            {
+                role: 'system',
+                content: 'You are an expert college admissions essay reviewer. Provide detailed, constructive feedback on essays.'
+            },
+            {
+                role: 'user',
+                content: `Please review this college essay and provide detailed feedback.\n\nPrompt: ${promptText}\n\nEssay (${wordCount} words):\n${essayContent}\n\nProvide feedback on: 1) Content & Story, 2) Structure & Flow, 3) Language & Style, 4) Overall Impact, 5) Specific Suggestions for Improvement.`
+            }
+        ];
         
-        let feedback;
-        
-        if (hasOpenAI) {
-            // Use OpenAI API
-            feedback = await callAI([{role: 'system', content: 'You are an expert college admissions essay reviewer...'}, {role: 'user', content: `Please review...`}], {model: 'gpt-4o-mini', temperature: 0.7, max_tokens: 3000}); // OLD: getOpenAIFeedback(essayContent, promptText, wordCount);
-        } else if (hasClaude) {
-            // Use Anthropic Claude API
-            feedback = await callAI([...], {...}); // OLD: getClaudeFeedback(essayContent, promptText, wordCount);
-        } else {
-            throw new Error('No API key configured');
-        }
+        // Use secure API client
+        const feedback = await callAI(messages, {
+            model: 'gpt-4o-mini',
+            temperature: 0.7,
+            max_tokens: 1500
+        });
         
         // Display feedback in modal
         showEssayFeedbackModal('success', feedback);
@@ -820,19 +821,24 @@ async function getEssayFeedbackInline(essayContent, promptText) {
     try {
         const wordCount = essayContent.trim().split(/\s+/).length;
         
-        // Determine which API to use
-        const hasOpenAI = CONFIG.OpenAI_API_KEY && CONFIG.OpenAI_API_KEY !== 'your-openai-api-key-here';
-        const hasClaude = CONFIG.CLAUDE_API_KEY && CONFIG.CLAUDE_API_KEY !== 'your-claude-api-key-here';
+        // Create messages for AI
+        const messages = [
+            {
+                role: 'system',
+                content: 'You are an expert college admissions essay reviewer. Provide detailed, constructive feedback on essays.'
+            },
+            {
+                role: 'user',
+                content: `Please review this college essay and provide detailed feedback.\n\nPrompt: ${promptText}\n\nEssay (${wordCount} words):\n${essayContent}\n\nProvide feedback on: 1) Content & Story, 2) Structure & Flow, 3) Language & Style, 4) Overall Impact, 5) Specific Suggestions for Improvement.`
+            }
+        ];
         
-        let feedback;
-        
-        if (hasOpenAI) {
-            feedback = await callAI([{role: 'system', content: 'You are an expert college admissions essay reviewer...'}, {role: 'user', content: `Please review...`}], {model: 'gpt-4o-mini', temperature: 0.7, max_tokens: 3000}); // OLD: getOpenAIFeedback(essayContent, promptText, wordCount);
-        } else if (hasClaude) {
-            feedback = await callAI([...], {...}); // OLD: getClaudeFeedback(essayContent, promptText, wordCount);
-        } else {
-            throw new Error('No API key configured');
-        }
+        // Use secure API client
+        const feedback = await callAI(messages, {
+            model: 'gpt-4o-mini',
+            temperature: 0.7,
+            max_tokens: 1500
+        });
         
         // Calculate and display health score
         const healthScore = calculateEssayHealth(feedback, essayContent, wordCount);
@@ -1373,18 +1379,18 @@ function toggleHowToUse(sectionId) {
     const isCollapsed = content.classList.toggle('collapsed');
     toggle.classList.toggle('collapsed', isCollapsed);
     
-    // Save state to localStorage
+    // Save state to Firestore
     const user = getCurrentUser();
     if (user) {
-        localStorage.setItem(`bus2college_howto_${sectionId}_${user.id}`, isCollapsed);
+        saveHowToSectionState(sectionId, isCollapsed);
     }
 }
 
 // Initialize How to Use section state
-function initializeHowToUseState(sectionId) {
+async function initializeHowToUseState(sectionId) {
     const user = getCurrentUser();
     if (user) {
-        const isCollapsed = localStorage.getItem(`bus2college_howto_${sectionId}_${user.id}`) === 'true';
+        const isCollapsed = await loadHowToSectionState(sectionId);
         if (isCollapsed) {
             const content = document.getElementById(sectionId + 'Content');
             const toggle = document.getElementById(sectionId + 'Toggle');
