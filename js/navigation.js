@@ -771,10 +771,10 @@ async function getEssayFeedback(essayContent, promptText) {
         
         if (hasOpenAI) {
             // Use OpenAI API
-            feedback = await getOpenAIFeedback(essayContent, promptText, wordCount);
+            feedback = await callAI([{role: 'system', content: 'You are an expert college admissions essay reviewer...'}, {role: 'user', content: `Please review...`}], {model: 'gpt-4o-mini', temperature: 0.7, max_tokens: 3000}); // OLD: getOpenAIFeedback(essayContent, promptText, wordCount);
         } else if (hasClaude) {
             // Use Anthropic Claude API
-            feedback = await getClaudeFeedback(essayContent, promptText, wordCount);
+            feedback = await callAI([...], {...}); // OLD: getClaudeFeedback(essayContent, promptText, wordCount);
         } else {
             throw new Error('No API key configured');
         }
@@ -827,9 +827,9 @@ async function getEssayFeedbackInline(essayContent, promptText) {
         let feedback;
         
         if (hasOpenAI) {
-            feedback = await getOpenAIFeedback(essayContent, promptText, wordCount);
+            feedback = await callAI([{role: 'system', content: 'You are an expert college admissions essay reviewer...'}, {role: 'user', content: `Please review...`}], {model: 'gpt-4o-mini', temperature: 0.7, max_tokens: 3000}); // OLD: getOpenAIFeedback(essayContent, promptText, wordCount);
         } else if (hasClaude) {
-            feedback = await getClaudeFeedback(essayContent, promptText, wordCount);
+            feedback = await callAI([...], {...}); // OLD: getClaudeFeedback(essayContent, promptText, wordCount);
         } else {
             throw new Error('No API key configured');
         }
