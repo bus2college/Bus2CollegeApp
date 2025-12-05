@@ -312,17 +312,26 @@ async function exportToExcel() {
 // Initialize - check if user is already logged in on page load
 document.addEventListener('DOMContentLoaded', () => {
     // Use Firebase's onAuthStateChanged to avoid race conditions
+    let hasRedirected = false; // Prevent multiple redirects
+    
     auth.onAuthStateChanged((user) => {
-        const isIndexPage = window.location.pathname.includes('index.html') || window.location.pathname === '/';
+        if (hasRedirected) return; // Only redirect once
+        
+        const isIndexPage = window.location.pathname.includes('index.html') || 
+                           window.location.pathname === '/' || 
+                           window.location.pathname === '/Bus2College/' ||
+                           window.location.pathname === '/Bus2College/index.html';
         const isHomePage = window.location.pathname.includes('home.html');
         
         // If on index.html (login page) and user is logged in, redirect to home
         if (isIndexPage && user) {
+            hasRedirected = true;
             window.location.href = 'home.html';
         }
         
         // If on home.html and user is NOT logged in, redirect to login page
         if (isHomePage && !user) {
+            hasRedirected = true;
             window.location.href = 'index.html';
         }
     });
