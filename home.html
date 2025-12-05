@@ -1398,17 +1398,16 @@
     <script>
         // Initialize app on page load
         window.addEventListener('DOMContentLoaded', async function() {
-            // Check if user is authenticated
-            const user = await checkAuth();
-            if (!user) {
-                window.location.href = 'index.html';
-                return;
-            }
+            // Auth check is now handled by auth-firebase.js
+            // Just wait for auth state to be ready
+            const user = auth.currentUser || await checkAuth();
             
-            // Display user name
-            const userNameDisplay = document.getElementById('userNameDisplay');
-            if (userNameDisplay && user.displayName) {
-                userNameDisplay.textContent = user.displayName;
+            if (user) {
+                // Display user name
+                const userNameDisplay = document.getElementById('userNameDisplay');
+                if (userNameDisplay && user.displayName) {
+                    userNameDisplay.textContent = user.displayName;
+                }
             }
             
             // Initialize navigation panel state

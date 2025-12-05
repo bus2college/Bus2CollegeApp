@@ -310,22 +310,20 @@ async function exportToExcel() {
 }
 
 // Initialize - check if user is already logged in on page load
-document.addEventListener('DOMContentLoaded', async () => {
-    // If on index.html (login page), check if already logged in
-    if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
-        const user = await checkAuth();
-        if (user) {
-            // Already logged in, redirect to home
+document.addEventListener('DOMContentLoaded', () => {
+    // Use Firebase's onAuthStateChanged to avoid race conditions
+    auth.onAuthStateChanged((user) => {
+        const isIndexPage = window.location.pathname.includes('index.html') || window.location.pathname === '/';
+        const isHomePage = window.location.pathname.includes('home.html');
+        
+        // If on index.html (login page) and user is logged in, redirect to home
+        if (isIndexPage && user) {
             window.location.href = 'home.html';
         }
-    }
-    
-    // If on home.html, require authentication
-    if (window.location.pathname.includes('home.html')) {
-        const user = await checkAuth();
-        if (!user) {
-            // Not logged in, redirect to login page
+        
+        // If on home.html and user is NOT logged in, redirect to login page
+        if (isHomePage && !user) {
             window.location.href = 'index.html';
         }
-    }
+    });
 });
