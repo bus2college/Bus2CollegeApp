@@ -4,15 +4,12 @@
 // Provides integration with Common Application platform
 
 // Save Common App Essay
-function saveEssay(essayType) {
+async function saveEssay(essayType) {
     const user = getCurrentUser();
     if (!user) {
         alert('Please log in to save your essay');
         return;
     }
-
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
 
     if (essayType === 'common-app') {
         // Get essay content from editor
@@ -33,39 +30,80 @@ function saveEssay(essayType) {
         const plainText = tempDiv.textContent || tempDiv.innerText || '';
         const wordCount = plainText.trim().split(/\s+/).filter(w => w.length > 0).length;
 
-        // Save essay
-        userData.commonAppEssay = {
+        // Prepare essay data
+        const essayData = {
             content: essayContent,
             prompt: selectedPrompt,
             wordCount: wordCount,
             lastModified: new Date().toISOString()
         };
 
-        localStorage.setItem(userDataKey, JSON.stringify(userData));
-        alert(`✅ Essay saved successfully!\n\nWord count: ${wordCount} words\nLast saved: ${new Date().toLocaleString()}`);
+        try {
+            // Save to Firebase Firestore
+            await db.collection('userData').doc(user.id).set({
+                commonAppEssay: essayData
+            }, { merge: true });
+
+            // Also save to localStorage as backup
+            const userDataKey = `bus2college_data_${user.id}`;
+            const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+            userData.commonAppEssay = essayData;
+            localStorage.setItem(userDataKey, JSON.stringify(userData));
+
+            alert(`✅ Essay saved to cloud successfully!\n\nWord count: ${wordCount} words\nLast saved: ${new Date().toLocaleString()}`);
+        } catch (error) {
+            console.error('Error saving essay:', error);
+            alert('❌ Error saving essay to cloud. Please try again.');
+        }
     }
 }
 
 // Load Common App Essay
-function loadEssay() {
+async function loadEssay() {
     const user = getCurrentUser();
     if (!user) return;
 
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-    const essay = userData.commonAppEssay;
+    try {
+        // Load from Firebase first
+        const userDoc = await db.collection('userData').doc(user.id).get();
+        let essay = null;
+        
+        if (userDoc.exists) {
+            const data = userDoc.data();
+            essay = data.commonAppEssay;
+        }
+        
+        // Fallback to localStorage if Firebase doesn't have it
+        if (!essay) {
+            const userDataKey = `bus2college_data_${user.id}`;
+            const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+            essay = userData.commonAppEssay;
+        }
 
-    if (essay) {
-        const essayEditor = document.getElementById('studentDraftEditor');
-        const promptSelect = document.getElementById('commonAppPrompt');
-        
-        if (essayEditor && essay.content) {
-            essayEditor.innerHTML = essay.content;
+        if (essay) {
+            const essayEditor = document.getElementById('studentDraftEditor');
+            const promptSelect = document.getElementById('commonAppPrompt');
+            
+            if (essayEditor && essay.content) {
+                essayEditor.innerHTML = essay.content;
+                // Trigger word count update
+                if (typeof updateWordCount === 'function') {
+                    updateWordCount();
+                }
+            }
+            
+            if (promptSelect && essay.prompt) {
+                promptSelect.value = essay.prompt;
+                // Trigger prompt description update
+                if (typeof updatePromptDescription === 'function') {
+                    updatePromptDescription();
+                }
+            }
+            
+            console.log('Essay loaded successfully');
         }
-        
-        if (promptSelect && essay.prompt) {
-            promptSelect.value = essay.prompt;
-        }
+    } catch (error) {
+        console.error('Error loading essay:', error);
     }
 }
 
