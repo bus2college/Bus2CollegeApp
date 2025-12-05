@@ -9,6 +9,11 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/bus2college_rounded_16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/bus2college_rounded_180.png">
     <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
 <body class="login-page">
     <div class="login-container">
@@ -103,7 +108,26 @@
         </div>
     </div>
 
+    <!-- Firebase Configuration -->
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDqcvtVCjVFXOwNlTLLq6qgRX99v_7Vkko",
+            authDomain: "bus2collegeregistration.firebaseapp.com",
+            projectId: "bus2collegeregistration",
+            storageBucket: "bus2collegeregistration.firebasestorage.app",
+            messagingSenderId: "588639414178",
+            appId: "1:588639414178:web:18053adc2803623a13b4fb",
+            measurementId: "G-5274C83FHE"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="js/auth-firebase.js"></script>
 </body>
 </html>
