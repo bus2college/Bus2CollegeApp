@@ -3,6 +3,72 @@
 // ==================================================================
 // Provides integration with Common Application platform
 
+// Save Common App Essay
+function saveEssay(essayType) {
+    const user = getCurrentUser();
+    if (!user) {
+        alert('Please log in to save your essay');
+        return;
+    }
+
+    const userDataKey = `bus2college_data_${user.id}`;
+    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+
+    if (essayType === 'common-app') {
+        // Get essay content from editor
+        const essayEditor = document.getElementById('studentDraftEditor');
+        const promptSelect = document.getElementById('commonAppPrompt');
+        
+        if (!essayEditor || !promptSelect) {
+            alert('Error: Essay editor not found');
+            return;
+        }
+
+        const essayContent = essayEditor.innerHTML;
+        const selectedPrompt = parseInt(promptSelect.value);
+
+        // Get word count
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = essayContent;
+        const plainText = tempDiv.textContent || tempDiv.innerText || '';
+        const wordCount = plainText.trim().split(/\s+/).filter(w => w.length > 0).length;
+
+        // Save essay
+        userData.commonAppEssay = {
+            content: essayContent,
+            prompt: selectedPrompt,
+            wordCount: wordCount,
+            lastModified: new Date().toISOString()
+        };
+
+        localStorage.setItem(userDataKey, JSON.stringify(userData));
+        alert(`✅ Essay saved successfully!\n\nWord count: ${wordCount} words\nLast saved: ${new Date().toLocaleString()}`);
+    }
+}
+
+// Load Common App Essay
+function loadEssay() {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    const userDataKey = `bus2college_data_${user.id}`;
+    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+    const essay = userData.commonAppEssay;
+
+    if (essay) {
+        const essayEditor = document.getElementById('studentDraftEditor');
+        const promptSelect = document.getElementById('commonAppPrompt');
+        
+        if (essayEditor && essay.content) {
+            essayEditor.innerHTML = essay.content;
+        }
+        
+        if (promptSelect && essay.prompt) {
+            promptSelect.value = essay.prompt;
+        }
+    }
+}
+
 // Official Common App Essay Prompts (2024-2025)
 function getCommonAppPrompts() {
     return [
