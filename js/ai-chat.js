@@ -32,11 +32,8 @@ async function sendChatMessage() {
     }
     
     // Check if any API key is configured
-    const hasOpenAI = typeof CONFIG !== 'undefined' && CONFIG.OpenAI_API_KEY && CONFIG.OpenAI_API_KEY !== 'your-openai-api-key-here';
-    const hasClaude = typeof CONFIG !== 'undefined' && CONFIG.CLAUDE_API_KEY && CONFIG.CLAUDE_API_KEY !== 'your-claude-api-key-here';
-    
-    if (!hasOpenAI && !hasClaude) {
-        alert('Please configure your AI API key in js/config.js file first!\n\nOption 1 - OpenAI (Recommended):\n✓ Free $5 credit\n✓ Get key at: https://platform.openai.com/api-keys\n\nOption 2 - Anthropic Claude:\n✓ High quality\n✓ Get key at: https://console.anthropic.com/');
+    if (typeof CONFIG === 'undefined' || (!CONFIG.API_ENDPOINT && !CONFIG.GEMINI_API_KEY)) {
+        alert('Please configure API in js/config.js file first!\n\nFor secure setup, deploy the backend API.');
         return;
     }
     
@@ -56,19 +53,8 @@ async function sendChatMessage() {
     });
     
     try {
-        // Determine which API to use
-        const hasOpenAI = CONFIG.OpenAI_API_KEY && CONFIG.OpenAI_API_KEY !== 'your-openai-api-key-here';
-        const hasClaude = CONFIG.CLAUDE_API_KEY && CONFIG.CLAUDE_API_KEY !== 'your-claude-api-key-here';
-        
-        let aiMessage;
-        
-        if (hasOpenAI) {
-            // Call OpenAI API
-            aiMessage = await callOpenAIChat(conversationHistory);
-        } else if (hasClaude) {
-            // Call Claude API
-            aiMessage = await callClaudeChat(conversationHistory);
-        }
+        // Use the secure API client
+        const aiMessage = await callAI(conversationHistory);
         
         // Add AI response to conversation history
         conversationHistory.push({

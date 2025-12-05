@@ -14,17 +14,16 @@
 // ==================================================================
 
 const CONFIG = {
-    // Anthropic Claude API Key
-    // Get yours at: https://console.anthropic.com/
-    CLAUDE_API_KEY: 'your-api-key-here',
+    // Google Gemini API Key (FREE - 60 requests/minute)
+    GEMINI_API_KEY: 'AIzaSyAva9meJVlOWeo-VEC3_niewYwmvXEwKvg',
     
-    // Alternative: You can also use Google Gemini API
-    // Get yours at: https://makersuite.google.com/app/apikey
-    // GEMINI_API_KEY: 'your-gemini-api-key-here',
+    // Secure API Endpoint (optional - for OpenAI via backend)
+    API_ENDPOINT: 'https://bus2college-api.vercel.app/api/openai-proxy',
     
-    // Model Configuration (optional - defaults to claude-3-5-sonnet)
-    MODEL: 'claude-3-5-sonnet-20241022',
+    // Use Gemini (free) instead of secure backend
+    USE_SECURE_API: false,
     
-    // Max tokens for essay feedback (optional - default 3000)
-    MAX_TOKENS: 3000
+    // Application Settings
+    APP_NAME: 'Bus2College',
+    APP_VERSION: '1.0.0'
 };

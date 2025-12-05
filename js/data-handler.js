@@ -2,40 +2,51 @@
 // Data Handler - Excel Integration
 // ===================================
 
-// Note: This is a simplified version using localStorage
-// For full Excel integration, we would need SheetJS library
-// and file system access or file download/upload functionality
-
-// Get user data from localStorage
-function getUserData() {
+// Get user data from Firestore
+async function getUserDataFromFirestore() {
     const user = getCurrentUser();
     if (!user) return null;
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = localStorage.getItem(userDataKey);
-    
-    if (!userData) {
-        // Initialize if doesn't exist
-        initializeUserData(user.id);
-        return getUserData();
+    try {
+        const doc = await db.collection('userData').doc(user.id).get();
+        if (doc.exists) {
+            return doc.data();
+        } else {
+            // Initialize if doesn't exist
+            const emptyData = {
+                studentInfo: {},
+                colleges: [],
+                essays: {},
+                activities: [],
+                recommenders: [],
+                dailyActivities: []
+            };
+            await db.collection('userData').doc(user.id).set(emptyData);
+            return emptyData;
+        }
+    } catch (error) {
+        console.error('Error loading user data:', error);
+        return null;
     }
-    
-    return JSON.parse(userData);
 }
 
-// Save user data to localStorage
-function saveUserData(data) {
+// Save user data to Firestore
+async function saveUserDataToFirestore(data) {
     const user = getCurrentUser();
     if (!user) return false;
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    localStorage.setItem(userDataKey, JSON.stringify(data));
-    return true;
+    try {
+        await db.collection('userData').doc(user.id).set(data, { merge: true });
+        return true;
+    } catch (error) {
+        console.error('Error saving user data:', error);
+        return false;
+    }
 }
 
 // Export data to Excel file (using SheetJS)
-function exportToExcel(dataType) {
-    const userData = getUserData();
+async function exportToExcel(dataType) {
+    const userData = await getUserDataFromFirestore();
     if (!userData) {
         alert('No data to export');
         return;
