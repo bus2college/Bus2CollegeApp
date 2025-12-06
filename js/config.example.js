@@ -15,7 +15,7 @@
 
 const CONFIG = {
     // Google Gemini API Key (FREE - 60 requests/minute)
-    GEMINI_API_KEY: 'AIzaSyAva9meJVlOWeo-VEC3_niewYwmvXEwKvg',
+    GEMINI_API_KEY: 'your-gemini-api-key-here',
     
     // Secure API Endpoint (optional - for OpenAI via backend)
     // Set to your secure backend endpoint (leave empty if not using a backend)
