@@ -21,8 +21,8 @@
 // ==================================================================
 
 const CONFIG = {
-    // Netlify Function Endpoint (secure backend)
-    API_ENDPOINT: 'https://bus2college-api.netlify.app/.netlify/functions/openai-proxy',
+    // Secure API Endpoint (secure backend). Leave empty when not using a backend.
+    API_ENDPOINT: '',
     
     // Application Settings
     APP_NAME: 'Bus2College',

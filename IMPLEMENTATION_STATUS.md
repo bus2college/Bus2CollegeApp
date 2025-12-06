@@ -177,7 +177,7 @@ When ready to deploy to your public domain:
    - Set up database
 
 2. **Hosting Options**
-   - Vercel, Netlify (for frontend)
+   - Netlify (for frontend)
    - AWS, Railway, Render (for backend)
    - Or use a full-stack platform
 

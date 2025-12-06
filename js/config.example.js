@@ -18,7 +18,8 @@ const CONFIG = {
     GEMINI_API_KEY: 'AIzaSyAva9meJVlOWeo-VEC3_niewYwmvXEwKvg',
     
     // Secure API Endpoint (optional - for OpenAI via backend)
-    API_ENDPOINT: 'https://bus2college-api.vercel.app/api/openai-proxy',
+    // Set to your secure backend endpoint (leave empty if not using a backend)
+    API_ENDPOINT: '',
     
     // Use Gemini (free) instead of secure backend
     USE_SECURE_API: false,

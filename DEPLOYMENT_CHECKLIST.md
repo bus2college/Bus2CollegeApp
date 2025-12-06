@@ -107,10 +107,9 @@ cd bus2college
 # Update API base URL to production backend
 ```
 
-#### Option B: Vercel
+#### Option B: (removed)
 ```bash
-# vercel deploy
-# Configure environment variables
+# Option removed
 ```
 
 #### Option C: GitHub Pages

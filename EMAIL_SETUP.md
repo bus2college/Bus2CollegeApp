@@ -143,7 +143,7 @@ app.listen(3000, () => console.log('Server running on port 3000'));
 
 ```javascript
 function sendPasswordEmail(email, password, name) {
-    fetch('http://your-backend.com/api/forgot-password', {
+    fetch('https://your-backend.com/api/forgot-password', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
