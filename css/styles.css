@@ -2,14 +2,14 @@
    Bus2College - Main Styles
    =================================== */
 
-/* Color Scheme */
+/* Color Scheme - Bright Day Mode */
 :root {
-    --navy-blue: #002855;
+    --navy-blue: #4A90E2;
     --yellow: #FFD700;
-    --orange: #C8511F;
-    --light-gray: #f5f5f5;
-    --medium-gray: #e0e0e0;
-    --dark-gray: #333;
+    --orange: #FF8C42;
+    --light-gray: #f8f9fa;
+    --medium-gray: #dee2e6;
+    --dark-gray: #495057;
     --white: #ffffff;
     --success: #28a745;
     --error: #dc3545;
@@ -334,7 +334,7 @@ body {
 }
 
 .btn-toggle-nav:hover {
-    background: #003366;
+    background: #5AA0F2;
 }
 
 .left-nav.collapsed .btn-toggle-nav {
@@ -1060,11 +1060,11 @@ body {
 /* Right AI Chat Panel */
 .right-chat {
     width: 350px;
-    background-color: #f8f9fa;
+    background-color: #ffffff;
     border-left: 2px solid var(--medium-gray);
     display: flex;
     flex-direction: column;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.03);
     transition: width 0.3s ease;
     position: relative;
 }
@@ -1105,7 +1105,7 @@ body {
 }
 
 .chat-header:hover {
-    background-color: #003366;
+    background-color: #5AA0F2;
 }
 
 .chat-header h3 {

@@ -1,0 +1,273 @@
+// ===================================
+// Supabase Authentication Management
+// ===================================
+
+// Initialize Supabase client (configured in HTML files)
+// const supabase is created in index.html and home.html
+
+// Toggle between login and register forms
+function showLoginForm() {
+    document.getElementById('loginForm').classList.add('active');
+    document.getElementById('registerForm').classList.remove('active');
+    hideMessage();
+}
+
+function showRegisterForm() {
+    document.getElementById('registerForm').classList.add('active');
+    document.getElementById('loginForm').classList.remove('active');
+    hideMessage();
+}
+
+// Show message to user
+function showMessage(message, type) {
+    const messageBox = document.getElementById('messageBox');
+    messageBox.textContent = message;
+    messageBox.className = `message-box ${type}`;
+}
+
+function hideMessage() {
+    const messageBox = document.getElementById('messageBox');
+    messageBox.className = 'message-box';
+}
+
+// Handle user registration with Supabase
+async function handleRegister(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('registerName').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+    const grade = document.getElementById('registerGrade').value;
+    
+    // Validation
+    if (password !== confirmPassword) {
+        showMessage('Passwords do not match!', 'error');
+        return false;
+    }
+    
+    if (password.length < 6) {
+        showMessage('Password must be at least 6 characters long!', 'error');
+        return false;
+    }
+    
+    try {
+        // Create user with Supabase Auth
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    full_name: name,
+                    grade: grade
+                }
+            }
+        });
+        
+        if (authError) throw authError;
+        
+        // Store additional user data in users table
+        const { error: profileError } = await supabase
+            .from('users')
+            .insert([{
+                id: authData.user.id,
+                name: name,
+                email: email,
+                grade: grade,
+                registration_date: new Date().toISOString(),
+                last_login: new Date().toISOString()
+            }]);
+        
+        if (profileError) throw profileError;
+        
+        // Initialize user data structure
+        const { error: dataError } = await supabase
+            .from('user_data')
+            .insert([{
+                user_id: authData.user.id,
+                student_info: {},
+                colleges: [],
+                essays: {},
+                activities: [],
+                recommenders: [],
+                daily_activities: []
+            }]);
+        
+        if (dataError) throw dataError;
+        
+        showMessage('Registration successful! Please check your email to verify your account.', 'success');
+        
+        // Auto-login after registration (if email verification is disabled)
+        setTimeout(() => {
+            window.location.href = 'home.html';
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Registration error:', error);
+        let errorMessage = 'Registration failed. ';
+        
+        if (error.message.includes('User already registered')) {
+            errorMessage += 'This email is already registered.';
+        } else if (error.message.includes('Invalid email')) {
+            errorMessage += 'Please provide a valid email address.';
+        } else {
+            errorMessage += error.message;
+        }
+        
+        showMessage(errorMessage, 'error');
+    }
+    
+    return false;
+}
+
+// Handle user login with Supabase
+async function handleLogin(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    
+    if (!email || !password) {
+        showMessage('Please enter both email and password.', 'error');
+        return false;
+    }
+    
+    try {
+        // Sign in with Supabase
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+        
+        if (error) throw error;
+        
+        // Update last login timestamp
+        await supabase
+            .from('users')
+            .update({ last_login: new Date().toISOString() })
+            .eq('id', data.user.id);
+        
+        showMessage('Login successful! Redirecting...', 'success');
+        
+        // Redirect to home page
+        setTimeout(() => {
+            window.location.href = 'home.html';
+        }, 1000);
+        
+    } catch (error) {
+        console.error('Login error:', error);
+        let errorMessage = 'Login failed. ';
+        
+        if (error.message.includes('Invalid login credentials')) {
+            errorMessage += 'Invalid email or password.';
+        } else if (error.message.includes('Email not confirmed')) {
+            errorMessage += 'Please verify your email first.';
+        } else {
+            errorMessage += error.message;
+        }
+        
+        showMessage(errorMessage, 'error');
+    }
+    
+    return false;
+}
+
+// Handle logout
+async function handleLogout() {
+    try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        
+        // Clear any local storage
+        sessionStorage.clear();
+        localStorage.removeItem('chatHistory');
+        
+        // Redirect to login page
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error logging out: ' + error.message);
+    }
+}
+
+// Forgot password modal functions
+function showForgotPasswordModal() {
+    document.getElementById('forgotPasswordModal').style.display = 'block';
+}
+
+function closeForgotPasswordModal() {
+    document.getElementById('forgotPasswordModal').style.display = 'none';
+    document.getElementById('forgotPasswordForm').reset();
+}
+
+// Handle forgot password
+async function handleForgotPassword(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('forgotPasswordEmail').value.trim();
+    
+    if (!email) {
+        alert('Please enter your email address.');
+        return false;
+    }
+    
+    try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + '/reset-password.html'
+        });
+        
+        if (error) throw error;
+        
+        alert('Password reset email sent! Please check your inbox.');
+        closeForgotPasswordModal();
+        
+    } catch (error) {
+        console.error('Password reset error:', error);
+        alert('Error sending reset email: ' + error.message);
+    }
+    
+    return false;
+}
+
+// Check authentication status on page load (for home.html)
+async function checkAuthStatus() {
+    try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) throw error;
+        
+        if (!session) {
+            // Not logged in, redirect to login page
+            window.location.href = 'index.html';
+            return null;
+        }
+        
+        // Get user data from users table
+        const { data: userData, error: userError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+        
+        if (userError) throw userError;
+        
+        return {
+            user: session.user,
+            profile: userData
+        };
+        
+    } catch (error) {
+        console.error('Auth check error:', error);
+        window.location.href = 'index.html';
+        return null;
+    }
+}
+
+// Initialize auth listener
+supabase.auth.onAuthStateChange((event, session) => {
+    console.log('Auth state changed:', event);
+    
+    if (event === 'SIGNED_OUT') {
+        window.location.href = 'index.html';
+    }
+});
