@@ -21,14 +21,19 @@
 // ==================================================================
 
 const CONFIG = {
-    // Secure API Endpoint (secure backend). Leave empty when not using a backend.
-    API_ENDPOINT: '',
+    // Supabase Edge Function endpoint for secure OpenAI API calls
+    // After deploying the edge function, update this URL
+    API_ENDPOINT: 'https://yvvpqrtesmkpvtlpwaap.supabase.co/functions/v1/openai-chat',
+    
+    // Alternative: Google Gemini API (simpler setup, no backend needed)
+    // Get free key at: https://makersuite.google.com/app/apikey
+    GEMINI_API_KEY: '',
     
     // Application Settings
     APP_NAME: 'Bus2College',
     APP_VERSION: '1.0.0',
     
-    // Use secure API
+    // Use secure API (set to false to use Gemini directly)
     USE_SECURE_API: true
 };
 
