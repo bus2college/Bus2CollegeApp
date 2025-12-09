@@ -61,36 +61,41 @@ function navigateToPage(event, pageId) {
 
 // Load data for specific page
 async function loadPageData(pageId) {
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     if (!user) return;
-    
-    const userData = await loadUserData();
-    if (!userData) return;
     
     switch(pageId) {
         case 'student-info':
-            loadStudentInfo(userData.studentInfo || {});
+            const studentInfo = await loadStudentInfoFromSupabase();
+            loadStudentInfo(studentInfo);
             break;
         case 'my-colleges':
-            loadCollegesList(userData.colleges || []);
+            const colleges = await loadCollegesFromSupabase();
+            loadCollegesList(colleges);
             break;
         case 'common-app-essay':
-            loadCommonAppEssay(userData.commonAppEssay || {});
+            // TODO: Load from Supabase
+            loadCommonAppEssay({});
             break;
         case 'supplemental-essays':
-            loadSupplementalEssays(userData.supplementalEssays || []);
+            // TODO: Load from Supabase
+            loadSupplementalEssays([]);
             break;
         case 'my-activities':
-            loadActivities(userData.activities || []);
+            const activities = await loadActivitiesFromSupabase();
+            loadActivities(activities);
             break;
         case 'my-recommenders':
-            loadRecommenders(userData.recommenders || []);
+            const recommenders = await loadRecommendersFromSupabase();
+            loadRecommenders(recommenders);
             break;
         case 'daily-tracker':
-            loadDailyTracker(userData.dailyTracker || []);
+            const dailyActivities = await loadDailyActivitiesFromSupabase();
+            loadDailyTracker(dailyActivities);
             break;
         case 'admissions-status':
-            loadAdmissionsStatus(userData);
+            // TODO: Load from Supabase
+            loadAdmissionsStatus({});
             break;
     }
 }
@@ -100,8 +105,8 @@ async function loadPageData(pageId) {
 // ===================================
 // loadCollegesList function is now in colleges.js
 
-function loadStudentInfo(studentInfo) {
-    const user = getCurrentUser();
+async function loadStudentInfo(studentInfo) {
+    const user = await getCurrentUser();
     if (!user) return;
     
     // Pre-fill email from user account

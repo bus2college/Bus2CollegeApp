@@ -1387,15 +1387,14 @@
     <script>
         // Initialize app on page load
         window.addEventListener('DOMContentLoaded', async function() {
-            // Auth check is now handled by auth-supabase.js
-            // Just wait for auth state to be ready
-            const user = auth.currentUser || await checkAuth();
+            // Check authentication status
+            const authData = await checkAuthStatus();
             
-            if (user) {
+            if (authData) {
                 // Display user name
                 const userNameDisplay = document.getElementById('userNameDisplay');
-                if (userNameDisplay && user.displayName) {
-                    userNameDisplay.textContent = user.displayName;
+                if (userNameDisplay && authData.profile) {
+                    userNameDisplay.textContent = authData.profile.name || authData.user.email;
                 }
             }
             

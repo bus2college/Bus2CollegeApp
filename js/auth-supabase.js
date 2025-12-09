@@ -242,6 +242,32 @@ async function checkAuthStatus() {
     }
 }
 
+// Get current user (helper function for compatibility)
+async function getCurrentUser() {
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return null;
+        
+        // Get profile data from users table
+        const { data: profile } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+        
+        return {
+            id: user.id,
+            email: user.email,
+            name: profile?.name || '',
+            grade: profile?.grade || '',
+            ...profile
+        };
+    } catch (error) {
+        console.error('Error getting current user:', error);
+        return null;
+    }
+}
+
 // Initialize auth listener
 supabase.auth.onAuthStateChange((event, session) => {
     console.log('Auth state changed:', event);

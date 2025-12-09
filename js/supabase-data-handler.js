@@ -336,3 +336,29 @@ async function loadUserPreferences() {
         return {};
     }
 }
+
+/**
+ * Save navigation panel state
+ */
+async function saveNavPanelState(isCollapsed) {
+    try {
+        const preferences = await loadUserPreferences();
+        preferences.nav_panel_collapsed = isCollapsed;
+        await saveUserPreferences(preferences);
+    } catch (error) {
+        console.error('Error saving nav panel state:', error);
+    }
+}
+
+/**
+ * Load navigation panel state
+ */
+async function loadNavPanelState() {
+    try {
+        const preferences = await loadUserPreferences();
+        return preferences.nav_panel_collapsed || false;
+    } catch (error) {
+        console.error('Error loading nav panel state:', error);
+        return false;
+    }
+}
