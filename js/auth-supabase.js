@@ -53,6 +53,7 @@ async function handleRegister(event) {
     
     try {
         // Create user with Supabase Auth
+        // The database trigger will automatically create entries in users and user_data tables
         const { data: authData, error: authError } = await supabase.auth.signUp({
             email: email,
             password: password,
@@ -66,38 +67,16 @@ async function handleRegister(event) {
         
         if (authError) throw authError;
         
-        // Store additional user data in users table
-        const { error: profileError } = await supabase
-            .from('users')
-            .insert([{
-                id: authData.user.id,
-                name: name,
-                email: email,
-                grade: grade,
-                registration_date: new Date().toISOString(),
-                last_login: new Date().toISOString()
-            }]);
+        // Check if user was created
+        if (!authData.user) {
+            showMessage('Registration successful! Please check your email to verify your account before logging in.', 'success');
+            setTimeout(() => showLoginForm(), 3000);
+            return false;
+        }
         
-        if (profileError) throw profileError;
+        showMessage('Registration successful! Redirecting...', 'success');
         
-        // Initialize user data structure
-        const { error: dataError } = await supabase
-            .from('user_data')
-            .insert([{
-                user_id: authData.user.id,
-                student_info: {},
-                colleges: [],
-                essays: {},
-                activities: [],
-                recommenders: [],
-                daily_activities: []
-            }]);
-        
-        if (dataError) throw dataError;
-        
-        showMessage('Registration successful! Please check your email to verify your account.', 'success');
-        
-        // Auto-login after registration (if email verification is disabled)
+        // Redirect after successful registration
         setTimeout(() => {
             window.location.href = 'home.html';
         }, 2000);
