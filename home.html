@@ -1387,7 +1387,7 @@
     <script>
         // Initialize app on page load
         window.addEventListener('DOMContentLoaded', async function() {
-            // Auth check is now handled by auth-firebase.js
+            // Auth check is now handled by auth-supabase.js
             // Just wait for auth state to be ready
             const user = auth.currentUser || await checkAuth();
             
