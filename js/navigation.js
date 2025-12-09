@@ -206,7 +206,7 @@ async function saveStudentInfo() {
         lastUpdated: new Date().toISOString()
     };
     
-    const success = await saveStudentInfoToFirebase(studentInfo);
+    const success = await saveStudentInfoToSupabase(studentInfo);
     
     if (success) {
         alert('Student information saved successfully!');
