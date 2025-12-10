@@ -655,18 +655,13 @@ function addSelectedColleges() {
         return;
     }
     
-    // Save to user data
-    const user = getCurrentUser();
+    // Save to Supabase
+    const user = await getCurrentUser();
     if (user) {
-        const userDataKey = `bus2college_data_${user.id}`;
-        const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-        
-        if (!userData.colleges) {
-            userData.colleges = [];
-        }
+        const colleges = await loadCollegesFromSupabase() || [];
         
         // Check for duplicates and only add new colleges
-        const existingNames = new Set(userData.colleges.map(c => c.name));
+        const existingNames = new Set(colleges.map(c => c.name));
         const newColleges = selectedColleges.filter(c => !existingNames.has(c.name));
         const duplicates = selectedColleges.length - newColleges.length;
         
@@ -675,11 +670,11 @@ function addSelectedColleges() {
             return;
         }
         
-        userData.colleges.push(...newColleges);
-        localStorage.setItem(userDataKey, JSON.stringify(userData));
+        colleges.push(...newColleges);
+        await saveCollegesToSupabase(colleges);
         
         // Reload colleges list
-        loadCollegesList(userData.colleges);
+        loadCollegesList(colleges);
         
         closeCollegeResultsModal();
         
@@ -830,7 +825,7 @@ document.addEventListener('click', function(event) {
 });
 
 // Save manually entered college
-function saveManualCollege(event) {
+async function saveManualCollege(event) {
     event.preventDefault();
     
     const collegeName = document.getElementById('collegeName').value.trim();
@@ -851,28 +846,23 @@ function saveManualCollege(event) {
         addedDate: new Date().toISOString()
     };
     
-    // Save to user data
-    const user = getCurrentUser();
+    // Save to Supabase
+    const user = await getCurrentUser();
     if (user) {
-        const userDataKey = `bus2college_data_${user.id}`;
-        const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-        
-        if (!userData.colleges) {
-            userData.colleges = [];
-        }
+        const colleges = await loadCollegesFromSupabase() || [];
         
         // Check for duplicate
-        const existingCollege = userData.colleges.find(c => c.name === collegeName);
+        const existingCollege = colleges.find(c => c.name === collegeName);
         if (existingCollege) {
             alert(`${collegeName} is already in your list!`);
             return false;
         }
         
-        userData.colleges.push(college);
-        localStorage.setItem(userDataKey, JSON.stringify(userData));
+        colleges.push(college);
+        await saveCollegesToSupabase(colleges);
         
         // Reload colleges list
-        loadCollegesList(userData.colleges);
+        loadCollegesList(colleges);
         
         closeManualCollegeModal();
         
