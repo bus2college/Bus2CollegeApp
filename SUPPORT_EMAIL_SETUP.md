@@ -7,7 +7,7 @@ This guide explains how to set up automatic email notifications when users submi
 When a user submits a message via the Support page contact form:
 1. Message is saved to `support_messages` table in Supabase
 2. Database trigger automatically fires
-3. Edge Function sends email to `admin@bus2college.com`
+3. Edge Function sends email to `support@bus2college.com`
 4. Admin receives notification with user's message and can reply directly
 
 ## Setup Steps
@@ -64,7 +64,7 @@ Run the SQL in `create-support-webhook.sql` in your Supabase SQL Editor:
 2. Fill out and submit the contact form
 3. Check that:
    - Message appears in `support_messages` table
-   - Email is received at admin@bus2college.com
+   - Email is received at support@bus2college.com
 
 ## Alternative: Simple Email Solution (No Edge Function)
 
@@ -83,8 +83,8 @@ const response = await fetch('https://api.resend.com/emails', {
     'Authorization': 'Bearer YOUR_RESEND_API_KEY'
   },
   body: JSON.stringify({
-    from: 'support@bus2college.com',
-    to: 'admin@bus2college.com',
+    from: 'noreply@bus2college.com',
+    to: 'support@bus2college.com',
     subject: `Support: ${formData.subject}`,
     html: `<h3>From: ${formData.name}</h3><p>${formData.message}</p>`
   })
@@ -95,7 +95,7 @@ const response = await fetch('https://api.resend.com/emails', {
 
 1. Change the form in `support.html` to:
 ```html
-<form action="https://formsubmit.co/admin@bus2college.com" method="POST">
+<form action="https://formsubmit.co/support@bus2college.com" method="POST">
   <input type="text" name="name" required>
   <input type="email" name="email" required>
   <input type="text" name="subject" required>
@@ -121,7 +121,7 @@ Go to Supabase Dashboard → Database → Webhooks:
 
 ## Email Template
 
-The email sent to admin@bus2college.com includes:
+The email sent to support@bus2college.com includes:
 - User's name and email
 - Subject category
 - Full message

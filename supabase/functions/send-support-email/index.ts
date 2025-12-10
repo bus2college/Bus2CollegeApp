@@ -5,7 +5,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY') // Email service API key
-const ADMIN_EMAIL = 'admin@bus2college.com'
+const ADMIN_EMAIL = 'support@bus2college.com'
 
 serve(async (req) => {
   // Handle CORS

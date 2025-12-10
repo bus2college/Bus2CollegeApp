@@ -1,5 +1,5 @@
 -- Create database trigger to call Edge Function when new support message is inserted
--- This will automatically send an email to admin@bus2college.com
+-- This will automatically send an email to support@bus2college.com
 
 -- First, create the trigger function
 CREATE OR REPLACE FUNCTION public.notify_admin_new_support_message()
