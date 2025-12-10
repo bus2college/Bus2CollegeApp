@@ -615,7 +615,7 @@ function toggleCollegeSelection(collegeId, cardElement) {
 }
 
 // Add selected colleges to My Colleges list
-function addSelectedColleges() {
+async function addSelectedColleges() {
     const selectedColleges = [];
     
     // Get all checked checkboxes
