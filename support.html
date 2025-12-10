@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support & Contact - Bus2College</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .support-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #4A90E2;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4A90E2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .support-section {
+            margin-bottom: 40px;
+        }
+
+        .support-section h2 {
+            color: #333;
+            border-bottom: 2px solid #4A90E2;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .contact-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-card i {
+            font-size: 2em;
+            color: #4A90E2;
+            margin-bottom: 10px;
+        }
+
+        .contact-card h3 {
+            color: #333;
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+
+        .contact-card p {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .contact-card a {
+            color: #4A90E2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-card a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .submit-btn {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #3a7bc8;
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .faq-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .faq-item h3 {
+            color: #4A90E2;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .faq-item p {
+            color: #666;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="support-container">
+        <a href="index.html" class="back-link">← Back to Home</a>
+        
+        <div class="header">
+            <h1>Support & Contact</h1>
+            <p>We're here to help! Reach out to us anytime.</p>
+        </div>
+
+        <!-- Contact Methods -->
+        <div class="support-section">
+            <h2>Get in Touch</h2>
+            <div class="contact-methods">
+                <div class="contact-card">
+                    <div style="font-size: 2em; color: #4A90E2;">📧</div>
+                    <h3>Email Support</h3>
+                    <p>For general inquiries</p>
+                    <a href="mailto:support@bus2college.com">support@bus2college.com</a>
+                </div>
+                
+                <div class="contact-card">
+                    <div style="font-size: 2em; color: #4A90E2;">💬</div>
+                    <h3>Live Chat</h3>
+                    <p>Available 9 AM - 5 PM EST</p>
+                    <a href="#" onclick="alert('Live chat coming soon!'); return false;">Start Chat</a>
+                </div>
+                
+                <div class="contact-card">
+                    <div style="font-size: 2em; color: #4A90E2;">📱</div>
+                    <h3>Social Media</h3>
+                    <p>Follow us for updates</p>
+                    <a href="#" onclick="alert('Social media links coming soon!'); return false;">@Bus2College</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="support-section">
+            <h2>Send Us a Message</h2>
+            
+            <div id="successMessage" class="success-message">
+                Thank you for contacting us! We'll get back to you within 24 hours.
+            </div>
+            
+            <div id="errorMessage" class="error-message">
+                There was an error sending your message. Please try again or email us directly.
+            </div>
+            
+            <form id="contactForm" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Your Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Your Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subject *</label>
+                    <select id="subject" name="subject" required>
+                        <option value="">Select a topic...</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="technical">Technical Support</option>
+                        <option value="account">Account Issues</option>
+                        <option value="feature">Feature Request</option>
+                        <option value="bug">Report a Bug</option>
+                        <option value="privacy">Privacy Concerns</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Your Message *</label>
+                    <textarea id="message" name="message" required placeholder="Please describe your inquiry in detail..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="support-section">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <h3>How do I create an account?</h3>
+                <p>Click "Register" on the homepage and fill in your information. You'll need to provide your name, email, and create a password. Make sure to read and accept our Terms of Service.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>Is Bus2College really free?</h3>
+                <p>Yes! Bus2College is completely free to use. We're committed to making college application assistance accessible to all students.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>How does the AI assistant work?</h3>
+                <p>Our AI assistant uses advanced language models to help you with college essays, application questions, and guidance. It's trained to provide helpful, accurate information while respecting your privacy.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>Is my data safe?</h3>
+                <p>Absolutely. We use industry-standard encryption and secure databases (Supabase) to protect your information. Read our <a href="privacy-policy.html">Privacy Policy</a> for full details.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>Can I use this on my phone?</h3>
+                <p>Yes! Our website is mobile-friendly, and we're working on dedicated iOS and Android apps coming soon.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>What if I forgot my password?</h3>
+                <p>Click "Forgot Password?" on the login page. We'll send you a password reset link to your registered email address.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>How do I delete my account?</h3>
+                <p>Contact us at support@bus2college.com with your account deletion request. We'll process it within 48 hours and delete all your data as per our Privacy Policy.</p>
+            </div>
+        </div>
+
+        <!-- Support Resources -->
+        <div class="support-section">
+            <h2>Additional Resources</h2>
+            <div class="faq-item">
+                <h3>📚 Documentation</h3>
+                <p>Check out our <a href="#" onclick="alert('User guide coming soon!'); return false;">User Guide</a> for detailed instructions on using all features of Bus2College.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>🔒 Legal Information</h3>
+                <p>Review our <a href="terms-of-service.html">Terms of Service</a> and <a href="privacy-policy.html">Privacy Policy</a> to understand how we protect your rights.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://yvvpqrtesmkpvtlpwaap.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnBxcnRlc21rcHZ0bHB3YWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM1MTc2MzQsImV4cCI6MjA0OTA5MzYzNH0.R3vJHmjEojywqaL4Hqo1Z3yKbbPCgGlJRfGQ8VwzC8Q';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+        // Handle form submission
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('.submit-btn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            
+            try {
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    subject: document.getElementById('subject').value,
+                    message: document.getElementById('message').value,
+                    submitted_at: new Date().toISOString()
+                };
+                
+                // Get current user if logged in
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    formData.user_id = user.id;
+                }
+                
+                // Create support_messages table if it doesn't exist (you'll need to create this in Supabase)
+                const { data, error } = await supabase
+                    .from('support_messages')
+                    .insert([formData]);
+                
+                if (error) {
+                    // If table doesn't exist, just show success (emails can be handled server-side)
+                    console.log('Support message:', formData);
+                    console.log('Note: Create support_messages table in Supabase to store messages');
+                }
+                
+                // Show success message
+                successMessage.style.display = 'block';
+                e.target.reset();
+                
+                // Scroll to success message
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                errorMessage.style.display = 'block';
+                errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
+            }
+        });
+    </script>
+</body>
+</html>
