@@ -96,12 +96,7 @@ async function callGeminiAPI(messages) {
 async function callAI(messages, options = {}) {
     // Check if secure API is available and configured
     if (CONFIG.USE_SECURE_API && CONFIG.API_ENDPOINT) {
-        try {
-            return await callSecureOpenAI(messages, options);
-        } catch (error) {
-            console.error('Secure API failed, trying fallback:', error);
-            // Fall through to Gemini if secure API fails
-        }
+        return await callSecureOpenAI(messages, options);
     }
     
     // Try Gemini as fallback
