@@ -208,20 +208,19 @@ async function exportToCommonAppFormat() {
 }
 
 // Export Common App essay
-function exportCommonAppEssay() {
+async function exportCommonAppEssay() {
     const button = event.currentTarget;
     button.classList.add('expanded');
     
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     if (!user) {
         alert('Please log in to export your essay');
         button.classList.remove('expanded');
         return;
     }
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-    const essay = userData.commonAppEssay || {};
+    const essays = await loadEssaysFromSupabase() || {};
+    const essay = essays.commonApp || {};
     
     if (!essay.content || !essay.content.trim()) {
         alert('No Common App essay found. Please write your essay first.');
@@ -300,17 +299,17 @@ function downloadEssay(fullContent, plainText) {
 }
 
 // Import Common App essay (from file)
-function importCommonAppEssay() {
+async function importCommonAppEssay() {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.txt,.doc,.docx';
     
-    input.onchange = e => {
+    input.onchange = async e => {
         const file = e.target.files[0];
         if (!file) return;
         
         const reader = new FileReader();
-        reader.onload = event => {
+        reader.onload = async event => {
             const content = event.target.result;
             
             // Extract essay content (skip metadata if present)
@@ -319,20 +318,19 @@ function importCommonAppEssay() {
                 essayText = content.split('-----------------------------------')[1].trim();
             }
             
-            // Save to user data
-            const user = getCurrentUser();
+            // Save to Supabase
+            const user = await getCurrentUser();
             if (user) {
-                const userDataKey = `bus2college_data_${user.id}`;
-                const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+                const essays = await loadEssaysFromSupabase() || {};
                 
-                userData.commonAppEssay = {
-                    ...userData.commonAppEssay,
+                essays.commonApp = {
+                    ...essays.commonApp,
                     content: essayText,
                     lastModified: new Date().toISOString(),
                     importedAt: new Date().toISOString()
                 };
                 
-                localStorage.setItem(userDataKey, JSON.stringify(userData));
+                await saveEssaysToSupabase(essays);
                 
                 // Update UI if on essay page
                 const essayTextarea = document.getElementById('commonAppEssay');
@@ -351,13 +349,11 @@ function importCommonAppEssay() {
 }
 
 // Track Common App submission status
-function updateCommonAppStatus(collegeName, status) {
-    const user = getCurrentUser();
+async function updateCommonAppStatus(collegeName, status) {
+    const user = await getCurrentUser();
     if (!user) return false;
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-    const colleges = userData.colleges || [];
+    const colleges = await loadCollegesFromSupabase() || [];
     
     const collegeIndex = colleges.findIndex(c => c.name === collegeName);
     if (collegeIndex !== -1) {
@@ -370,7 +366,7 @@ function updateCommonAppStatus(collegeName, status) {
             updatedAt: new Date().toISOString()
         };
         
-        localStorage.setItem(userDataKey, JSON.stringify(userData));
+        await saveCollegesToSupabase(colleges);
         return true;
     }
     
@@ -378,13 +374,11 @@ function updateCommonAppStatus(collegeName, status) {
 }
 
 // Get Common App statistics
-function getCommonAppStats() {
-    const user = getCurrentUser();
+async function getCommonAppStats() {
+    const user = await getCurrentUser();
     if (!user) return null;
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-    const colleges = userData.colleges || [];
+    const colleges = await loadCollegesFromSupabase() || [];
     
     const commonAppColleges = colleges.filter(c => {
         const dbCollege = getCollegeByName(c.name);
