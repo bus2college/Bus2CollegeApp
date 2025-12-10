@@ -17,10 +17,15 @@ async function callSecureOpenAI(messages, options = {}) {
     } = options;
 
     try {
+        // Get Supabase anon key from the global supabase client
+        const anonKey = supabase.supabaseKey;
+        
         const response = await fetch(CONFIG.API_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${anonKey}`,
+                'apikey': anonKey
             },
             body: JSON.stringify({
                 messages,
