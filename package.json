@@ -1,7 +1,9 @@
 {
-  "name": "bus2college-functions",
+  "name": "bus2college-app",
   "version": "1.0.0",
-  "dependencies": {
-    "node-fetch": "^2.6.1"
+  "description": "Bus2College - College Application Assistant",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bus2college/Bus2CollegeApp.git"
   }
 }
