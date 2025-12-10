@@ -105,12 +105,14 @@ async function saveEssaysToSupabase(essays) {
         const userId = await getCurrentUserId();
         if (!userId) throw new Error('No user logged in');
         
+        console.log('saveEssaysToSupabase - userId:', userId, 'essays:', essays);
         const { error } = await supabase
             .from('user_data')
             .update({ essays: essays })
             .eq('user_id', userId);
         
         if (error) throw error;
+        console.log('saveEssaysToSupabase - SUCCESS');
         return true;
     } catch (error) {
         console.error('Error saving essays:', error);
@@ -133,6 +135,7 @@ async function loadEssaysFromSupabase() {
             .single();
         
         if (error) throw error;
+        console.log('loadEssaysFromSupabase - loaded:', data?.essays);
         return data?.essays || {};
     } catch (error) {
         console.error('Error loading essays:', error);
@@ -293,48 +296,22 @@ async function loadAllUserData() {
 
 /**
  * Save user preferences (UI state)
+ * NOTE: Disabled - user_preferences table doesn't exist
  */
 async function saveUserPreferences(preferences) {
-    try {
-        const userId = await getCurrentUserId();
-        if (!userId) throw new Error('No user logged in');
-        
-        const { error } = await supabase
-            .from('user_preferences')
-            .upsert({
-                user_id: userId,
-                ...preferences,
-                updated_at: new Date().toISOString()
-            });
-        
-        if (error) throw error;
-        return true;
-    } catch (error) {
-        console.error('Error saving preferences:', error);
-        throw error;
-    }
+    // TODO: Create user_preferences table in Supabase or use localStorage
+    console.warn('saveUserPreferences called but table does not exist');
+    return true;
 }
 
 /**
  * Load user preferences
+ * NOTE: Disabled - user_preferences table doesn't exist
  */
 async function loadUserPreferences() {
-    try {
-        const userId = await getCurrentUserId();
-        if (!userId) throw new Error('No user logged in');
-        
-        const { data, error } = await supabase
-            .from('user_preferences')
-            .select('*')
-            .eq('user_id', userId)
-            .single();
-        
-        if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows returned
-        return data || {};
-    } catch (error) {
-        console.error('Error loading preferences:', error);
-        return {};
-    }
+    // TODO: Create user_preferences table in Supabase or use localStorage
+    console.warn('loadUserPreferences called but table does not exist');
+    return {};
 }
 
 /**

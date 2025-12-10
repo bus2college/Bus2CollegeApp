@@ -74,8 +74,9 @@ async function loadPageData(pageId) {
             loadCollegesList(colleges);
             break;
         case 'common-app-essay':
-            // TODO: Load from Supabase
-            loadCommonAppEssay({});
+            const essays = await loadEssaysFromSupabase() || {};
+            console.log('Loading Common App essay from Supabase:', essays.commonApp);
+            loadCommonAppEssay(essays.commonApp || {});
             break;
         case 'supplemental-essays':
             // TODO: Load from Supabase
@@ -337,6 +338,7 @@ function downloadStudentInfo(text) {
 }
 
 async function loadCommonAppEssay(essay) {
+    console.log('loadCommonAppEssay called with:', essay);
     const promptSelect = document.getElementById('commonAppPrompt');
     const studentDraftEditor = document.getElementById('studentDraftEditor');
     const aiFeedbackEditor = document.getElementById('aiFeedbackEditor');
@@ -373,6 +375,9 @@ async function loadCommonAppEssay(essay) {
         if (essay.prompt) {
             promptSelect.value = essay.prompt;
             updatePromptDescription();
+        } else {
+            // No prompt selected - ensure editor is disabled
+            updatePromptDescription();
         }
     }
     
@@ -403,6 +408,9 @@ function updatePromptDescription() {
     const promptSelect = document.getElementById('commonAppPrompt');
     const descriptionDiv = document.getElementById('promptDescription');
     const descriptionText = document.getElementById('promptDescriptionText');
+    const studentDraftEditor = document.getElementById('studentDraftEditor');
+    
+    console.log('updatePromptDescription called - prompt value:', promptSelect?.value);
     
     if (!promptSelect || !descriptionDiv) return;
     
@@ -410,12 +418,30 @@ function updatePromptDescription() {
     const fullPrompt = selectedOption.getAttribute('data-full');
     
     if (fullPrompt && promptSelect.value) {
+        console.log('Enabling editor - prompt selected');
         if (descriptionText) {
             descriptionText.textContent = fullPrompt;
         }
         descriptionDiv.style.display = 'block';
+        
+        // Enable the essay editor when prompt is selected
+        if (studentDraftEditor) {
+            studentDraftEditor.contentEditable = 'true';
+            studentDraftEditor.classList.remove('editor-disabled');
+            studentDraftEditor.setAttribute('data-placeholder', 'Start writing your essay here...');
+            console.log('Editor enabled - contentEditable:', studentDraftEditor.contentEditable);
+        }
     } else {
+        console.log('Disabling editor - no prompt selected');
         descriptionDiv.style.display = 'none';
+        
+        // Disable the essay editor when no prompt is selected
+        if (studentDraftEditor) {
+            studentDraftEditor.contentEditable = 'false';
+            studentDraftEditor.classList.add('editor-disabled');
+            studentDraftEditor.setAttribute('data-placeholder', 'Please select a prompt above to start writing...');
+            console.log('Editor disabled - contentEditable:', studentDraftEditor.contentEditable);
+        }
     }
 }
 
@@ -656,22 +682,33 @@ function addDailyActivity() {
 }
 
 async function saveEssay(type) {
+    console.log('saveEssay called with type:', type);
     const button = event.currentTarget;
     button.classList.add('expanded');
     
     const user = await getCurrentUser();
     if (!user) {
+        console.log('saveEssay - No user logged in');
         button.classList.remove('expanded');
         return;
     }
     
+    console.log('saveEssay - Loading essays from Supabase...');
     const essays = await loadEssaysFromSupabase() || {};
+    console.log('saveEssay - Current essays:', essays);
     
     if (type === 'common-app') {
         const prompt = document.getElementById('commonAppPrompt').value;
         const studentDraftEditor = document.getElementById('studentDraftEditor');
         const aiFeedbackEditor = document.getElementById('aiFeedbackEditor');
         const healthScoreText = document.getElementById('healthScoreText');
+        
+        // Validate prompt selection
+        if (!prompt) {
+            alert('⚠️ Please select an essay prompt before saving.');
+            button.classList.remove('expanded');
+            return;
+        }
         
         if (!studentDraftEditor) {
             button.classList.remove('expanded');
@@ -696,8 +733,10 @@ async function saveEssay(type) {
             lastModified: new Date().toISOString()
         };
         
+        console.log('Saving Common App essay to Supabase:', essays.commonApp);
         await saveEssaysToSupabase(essays);
-        alert('Common App essay saved successfully!');
+        console.log('Common App essay saved successfully to Supabase');
+        alert('✅ Common App essay saved to Supabase! [v2024-12-09]');
     }
     
     // Collapse button after save
@@ -732,6 +771,12 @@ function requestAIFeedback(type) {
     const promptSelect = document.getElementById('commonAppPrompt');
     const selectedPrompt = promptSelect ? promptSelect.options[promptSelect.selectedIndex] : null;
     const promptText = selectedPrompt ? selectedPrompt.getAttribute('data-full') : '';
+    
+    // Validate prompt selection first
+    if (!promptSelect || !promptSelect.value) {
+        alert('⚠️ Please select an essay prompt before requesting AI feedback.');
+        return;
+    }
     
     if (!studentDraftEditor) return;
     

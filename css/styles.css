@@ -598,6 +598,14 @@ body {
     color: #333;
 }
 
+.rich-text-editor.editor-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+    background: #f5f5f5;
+    user-select: none;
+}
+
 .rich-text-editor[contenteditable="true"]:focus {
     outline: none;
     background: #fafafa;

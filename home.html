@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Bus2College - Dashboard</title>
     <link rel="icon" type="image/x-icon" href="assets/bus2college_favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/bus2college_rounded_32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/bus2college_rounded_16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/bus2college_rounded_180.png">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=1733789001">
 </head>
 <body class="home-page">
     <!-- Header with Logo and User Info -->
@@ -488,7 +491,16 @@
                         </button>
                     </div>
                 </div>
-                <p class="page-subtitle">Write and refine your Common Application essay with AI assistance. Word limit: 250-650 words.</p>
+                <p class="page-subtitle">
+                    <strong>📝 Workflow:</strong> 
+                    <span style="color: #667eea;">①</span> Select a prompt → 
+                    <span style="color: #667eea;">②</span> Write your draft → 
+                    <span style="color: #667eea;">③</span> Get AI feedback → 
+                    <span style="color: #667eea;">④</span> Revise → 
+                    <span style="color: #667eea;">⑤</span> Save & Export
+                    <br>
+                    <span style="font-size: 13px; opacity: 0.8;">Write and refine your Common Application essay with AI assistance. Word limit: 250-650 words.</span>
+                </p>
                 
                 <!-- Help Popover -->
                 <div class="help-popover" id="commonAppHelpPopover" style="display: none;">
@@ -501,8 +513,8 @@
                             <div class="how-to-step">
                                 <div class="step-number">1</div>
                                 <div class="step-content">
-                                    <h4>Select a Prompt</h4>
-                                    <p>Choose one of the Common App essay prompts from the dropdown. Read the full prompt description to ensure you understand what's being asked.</p>
+                                    <h4>Select a Prompt (Required)</h4>
+                                    <p>Choose one of the 7 Common App essay prompts from the dropdown. Read the full prompt description carefully. You must select a prompt before writing your essay.</p>
                                 </div>
                             </div>
                             <div class="how-to-step">
@@ -523,7 +535,7 @@
                                 <div class="step-number">4</div>
                                 <div class="step-content">
                                     <h4>Save & Export</h4>
-                                    <p>Click "Save Essay" to store your work (saved automatically to your browser). Use "Export Essay" to download. Click "Clear All" to start over.</p>
+                                    <p>Click "Save Essay" to store your work in the cloud. Use "Export Essay" to download for Common App upload. Click "Clear All" to start over.</p>
                                 </div>
                             </div>
                         </div>
@@ -542,7 +554,7 @@
                     <div class="essay-section">
                         <div class="prompt-selection-container">
                             <div class="prompt-dropdown-section">
-                                <label for="commonAppPrompt">Select an Essay Prompt:</label>
+                                <label for="commonAppPrompt">Select an Essay Prompt <span style="font-size: 12px; color: #e53e3e; font-weight: bold;">*Required</span>:</label>
                                 <select id="commonAppPrompt" class="form-select-compact" onchange="updatePromptDescription()">
                                     <option value="">Choose a prompt...</option>
                                 </select>
@@ -561,7 +573,7 @@
                                         <span id="essayWordCount">0</span> / 650 words
                                     </div>
                                 </div>
-                                <div id="studentDraftEditor" class="rich-text-editor" contenteditable="true" data-placeholder="Start writing your essay here..."></div>
+                                <div id="studentDraftEditor" class="rich-text-editor editor-disabled" contenteditable="false" data-placeholder="Please select a prompt above to start writing..."></div>
                             </div>
                             
                             <div class="editor-panel">
@@ -1374,17 +1386,17 @@
         const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
     </script>
     
-    <script src="js/xlsx.full.min.js"></script>
-    <script src="js/college-database.js"></script>
-    <script src="js/common-app-integration.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/secure-api-client.js"></script>
-    <script src="js/supabase-data-handler.js"></script>
-    <script src="js/auth-supabase.js"></script>
-    <script src="js/navigation.js"></script>
-    <script src="js/ai-chat.js"></script>
-    <script src="js/data-handler.js"></script>
-    <script src="js/colleges.js"></script>
+    <script src="js/xlsx.full.min.js?v=1733789001"></script>
+    <script src="js/college-database.js?v=1733789001"></script>
+    <script src="js/common-app-integration.js?v=1733789001"></script>
+    <script src="js/config.js?v=1733789001"></script>
+    <script src="js/secure-api-client.js?v=1733789001"></script>
+    <script src="js/supabase-data-handler.js?v=1733789001"></script>
+    <script src="js/auth-supabase.js?v=1733789001"></script>
+    <script src="js/navigation.js?v=1733789001"></script>
+    <script src="js/ai-chat.js?v=1733789001"></script>
+    <script src="js/data-handler.js?v=1733789001"></script>
+    <script src="js/colleges.js?v=1733789001"></script>
     <script>
         // Initialize app on page load
         window.addEventListener('DOMContentLoaded', async function() {
