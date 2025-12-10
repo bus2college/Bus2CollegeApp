@@ -303,11 +303,3 @@ function initializeChatPanelState() {
         }
     }
 }
-
-// Initialize both chat and panel state on page load
-if (typeof window !== 'undefined') {
-    window.addEventListener('DOMContentLoaded', () => {
-        initializeChat();
-        initializeChatPanelState();
-    });
-}
