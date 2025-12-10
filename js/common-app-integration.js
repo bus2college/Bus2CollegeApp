@@ -5,7 +5,7 @@
 
 // Save Common App Essay
 async function saveEssay(essayType) {
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     if (!user) {
         alert('Please log in to save your essay');
         return;
@@ -39,10 +39,11 @@ async function saveEssay(essayType) {
         };
 
         try {
-            // Save to Firebase Firestore
-            await db.collection('userData').doc(user.id).set({
-                commonAppEssay: essayData
-            }, { merge: true });
+            // Save to Supabase
+            const { error } = await supabase
+                .from('user_data')
+                .update({ essays: { commonApp: essayData } })
+                .eq('user_id', user.id);
 
             // Also save to localStorage as backup
             const userDataKey = `bus2college_data_${user.id}`;
@@ -50,6 +51,8 @@ async function saveEssay(essayType) {
             userData.commonAppEssay = essayData;
             localStorage.setItem(userDataKey, JSON.stringify(userData));
 
+            if (error) throw error;
+            
             alert(`✅ Essay saved to cloud successfully!\n\nWord count: ${wordCount} words\nLast saved: ${new Date().toLocaleString()}`);
         } catch (error) {
             console.error('Error saving essay:', error);
@@ -60,25 +63,20 @@ async function saveEssay(essayType) {
 
 // Load Common App Essay
 async function loadEssay() {
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     if (!user) return;
 
     try {
-        // Load from Firebase first
-        const userDoc = await db.collection('userData').doc(user.id).get();
-        let essay = null;
+        // Load from Supabase
+        const { data, error } = await supabase
+            .from('user_data')
+            .select('essays')
+            .eq('user_id', user.id)
+            .single();
         
-        if (userDoc.exists) {
-            const data = userDoc.data();
-            essay = data.commonAppEssay;
-        }
+        if (error) throw error;
         
-        // Fallback to localStorage if Firebase doesn't have it
-        if (!essay) {
-            const userDataKey = `bus2college_data_${user.id}`;
-            const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-            essay = userData.commonAppEssay;
-        }
+        const essay = data?.essays?.commonApp || null;
 
         if (essay) {
             const essayEditor = document.getElementById('studentDraftEditor');
@@ -156,16 +154,15 @@ function acceptsCommonApp(collegeName) {
 }
 
 // Export college list to Common App format (CSV)
-function exportToCommonAppFormat() {
-    const user = getCurrentUser();
+async function exportToCommonAppFormat() {
+    const user = await getCurrentUser();
     if (!user) {
         alert('Please log in to export your college list');
         return;
     }
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-    const colleges = userData.colleges || [];
+    // Load colleges from Supabase
+    const colleges = await loadCollegesFromSupabase() || [];
     
     if (colleges.length === 0) {
         alert('No colleges to export. Please add colleges to your list first.');
