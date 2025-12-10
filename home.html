@@ -39,13 +39,13 @@
             </button>
             <ul class="nav-menu">
                 <li>
-                    <a href="#" class="nav-link" data-page="student-info" onclick="navigateToPage(event, 'student-info')">
+                    <a href="#" class="nav-link active" data-page="student-info" onclick="navigateToPage(event, 'student-info')">
                         <span class="nav-icon">👤</span>
                         <span class="nav-text">Student Information</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link active" data-page="my-colleges" onclick="navigateToPage(event, 'my-colleges')">
+                    <a href="#" class="nav-link" data-page="my-colleges" onclick="navigateToPage(event, 'my-colleges')">
                         <span class="nav-icon">🎓</span>
                         <span class="nav-text">My Colleges</span>
                     </a>
@@ -1403,11 +1403,23 @@
             await initializeNavPanelState();
             
             // Load default page (Student Info)
+            // First, ensure all pages are hidden and all nav links are inactive
+            document.querySelectorAll('.content-page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            
+            // Activate Student Info page and nav link
             const studentInfoPage = document.getElementById('student-info');
+            const studentInfoLink = document.querySelector('.nav-link[data-page="student-info"]');
+            
             if (studentInfoPage) {
                 studentInfoPage.classList.add('active');
-                await loadPageData('student-info');
             }
+            if (studentInfoLink) {
+                studentInfoLink.classList.add('active');
+            }
+            
+            // Load the data
+            await loadPageData('student-info');
         });
 
         // Allow Enter key to send chat messages (Shift+Enter for new line)
