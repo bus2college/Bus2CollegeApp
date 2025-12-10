@@ -163,7 +163,7 @@ async function saveStudentInfo() {
     const button = event.currentTarget;
     button.classList.add('expanded');
     
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     if (!user) {
         button.classList.remove('expanded');
         return;
@@ -223,20 +223,18 @@ async function saveStudentInfo() {
     button.classList.remove('expanded');
 }
 
-function exportStudentInfoToCommonApp() {
+async function exportStudentInfoToCommonApp() {
     const button = event.currentTarget;
     button.classList.add('expanded');
     
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     if (!user) {
         alert('Please log in to export your information.');
         button.classList.remove('expanded');
         return;
     }
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-    const info = userData.studentInfo || {};
+    const info = await loadStudentInfoFromSupabase() || {};
     
     // Format the data for Common App
     let exportText = `COMMON APPLICATION - STUDENT INFORMATION\n`;
@@ -338,17 +336,15 @@ function downloadStudentInfo(text) {
     alert('Student information downloaded!\n\nOpen the file and use it to fill in your Common App profile at commonapp.org');
 }
 
-function loadCommonAppEssay(essay) {
+async function loadCommonAppEssay(essay) {
     const promptSelect = document.getElementById('commonAppPrompt');
     const studentDraftEditor = document.getElementById('studentDraftEditor');
     const aiFeedbackEditor = document.getElementById('aiFeedbackEditor');
     
-    // Load Common App colleges list
-    const user = getCurrentUser();
+    // Load Common App colleges list from Supabase
+    const user = await getCurrentUser();
     if (user) {
-        const userDataKey = `bus2college_data_${user.id}`;
-        const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-        const colleges = userData.colleges || [];
+        const colleges = await loadCollegesFromSupabase() || [];
         
         // Filter Common App colleges
         const commonAppColleges = colleges.filter(c => {
@@ -659,18 +655,17 @@ function addDailyActivity() {
     button.classList.remove('expanded');
 }
 
-function saveEssay(type) {
+async function saveEssay(type) {
     const button = event.currentTarget;
     button.classList.add('expanded');
     
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     if (!user) {
         button.classList.remove('expanded');
         return;
     }
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+    const essays = await loadEssaysFromSupabase() || {};
     
     if (type === 'common-app') {
         const prompt = document.getElementById('commonAppPrompt').value;
@@ -693,7 +688,7 @@ function saveEssay(type) {
             }
         }
         
-        userData.commonAppEssay = {
+        essays.commonApp = {
             prompt: prompt,
             content: studentDraftEditor.innerHTML,
             aiFeedback: aiFeedbackEditor ? aiFeedbackEditor.innerHTML : '',
@@ -701,7 +696,7 @@ function saveEssay(type) {
             lastModified: new Date().toISOString()
         };
         
-        localStorage.setItem(userDataKey, JSON.stringify(userData));
+        await saveEssaysToSupabase(essays);
         alert('Common App essay saved successfully!');
     }
     
@@ -788,17 +783,16 @@ async function getEssayFeedback(essayContent, promptText) {
         // Display feedback in modal
         showEssayFeedbackModal('success', feedback);
         
-        // Save feedback to user data
-        const user = getCurrentUser();
+        // Save feedback to essays data
+        const user = await getCurrentUser();
         if (user) {
-            const userDataKey = `bus2college_data_${user.id}`;
-            const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+            const essays = await loadEssaysFromSupabase() || {};
             
-            if (!userData.essayFeedbackHistory) {
-                userData.essayFeedbackHistory = [];
+            if (!essays.feedbackHistory) {
+                essays.feedbackHistory = [];
             }
             
-            userData.essayFeedbackHistory.push({
+            essays.feedbackHistory.push({
                 timestamp: new Date().toISOString(),
                 essayType: 'Common App',
                 wordCount: wordCount,
@@ -807,11 +801,11 @@ async function getEssayFeedback(essayContent, promptText) {
             });
             
             // Keep only last 10 feedback sessions
-            if (userData.essayFeedbackHistory.length > 10) {
-                userData.essayFeedbackHistory = userData.essayFeedbackHistory.slice(-10);
+            if (essays.feedbackHistory.length > 10) {
+                essays.feedbackHistory = essays.feedbackHistory.slice(-10);
             }
             
-            localStorage.setItem(userDataKey, JSON.stringify(userData));
+            await saveEssaysToSupabase(essays);
         }
         
     } catch (error) {
@@ -854,21 +848,20 @@ async function getEssayFeedbackInline(essayContent, promptText) {
             aiFeedbackEditor.innerHTML = formatFeedbackForEditor(feedback);
         }
         
-        // Save feedback to user data
-        const user = getCurrentUser();
+        // Save feedback to essays data
+        const user = await getCurrentUser();
         if (user) {
-            const userDataKey = `bus2college_data_${user.id}`;
-            const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+            const essays = await loadEssaysFromSupabase() || {};
             
-            if (!userData.commonAppEssay) {
-                userData.commonAppEssay = {};
+            if (!essays.commonApp) {
+                essays.commonApp = {};
             }
             
-            userData.commonAppEssay.aiFeedback = aiFeedbackEditor.innerHTML;
-            userData.commonAppEssay.lastFeedback = new Date().toISOString();
-            userData.commonAppEssay.healthScore = healthScore;
+            essays.commonApp.aiFeedback = aiFeedbackEditor ? aiFeedbackEditor.innerHTML : '';
+            essays.commonApp.lastFeedback = new Date().toISOString();
+            essays.commonApp.healthScore = healthScore;
             
-            localStorage.setItem(userDataKey, JSON.stringify(userData));
+            await saveEssaysToSupabase(essays);
         }
         
     } catch (error) {
