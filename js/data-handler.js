@@ -2,18 +2,34 @@
 // Data Handler - Excel Integration
 // ===================================
 
-// Get user data from Firestore
-async function getUserDataFromFirestore() {
-    const user = getCurrentUser();
+// Get user data from Supabase
+async function getUserDataFromSupabase() {
+    const user = await getCurrentUser();
     if (!user) return null;
     
     try {
-        const doc = await db.collection('userData').doc(user.id).get();
-        if (doc.exists) {
-            return doc.data();
+        const { data, error } = await supabase
+            .from('user_data')
+            .select('*')
+            .eq('user_id', user.id)
+            .single();
+        
+        if (error && error.code !== 'PGRST116') { // PGRST116 = not found
+            throw error;
+        }
+        
+        if (data) {
+            return {
+                studentInfo: data.student_info || {},
+                colleges: data.colleges || [],
+                essays: data.essays || {},
+                activities: data.activities || [],
+                recommenders: data.recommenders || [],
+                dailyActivities: data.daily_activities || []
+            };
         } else {
-            // Initialize if doesn't exist
-            const emptyData = {
+            // Return empty data structure
+            return {
                 studentInfo: {},
                 colleges: [],
                 essays: {},
@@ -21,8 +37,6 @@ async function getUserDataFromFirestore() {
                 recommenders: [],
                 dailyActivities: []
             };
-            await db.collection('userData').doc(user.id).set(emptyData);
-            return emptyData;
         }
     } catch (error) {
         console.error('Error loading user data:', error);
@@ -30,13 +44,27 @@ async function getUserDataFromFirestore() {
     }
 }
 
-// Save user data to Firestore
-async function saveUserDataToFirestore(data) {
-    const user = getCurrentUser();
+// Save user data to Supabase
+async function saveUserDataToSupabase(data) {
+    const user = await getCurrentUser();
     if (!user) return false;
     
     try {
-        await db.collection('userData').doc(user.id).set(data, { merge: true });
+        const updateData = {
+            user_id: user.id,
+            student_info: data.studentInfo || {},
+            colleges: data.colleges || [],
+            essays: data.essays || {},
+            activities: data.activities || [],
+            recommenders: data.recommenders || [],
+            daily_activities: data.dailyActivities || []
+        };
+        
+        const { error } = await supabase
+            .from('user_data')
+            .upsert(updateData, { onConflict: 'user_id' });
+        
+        if (error) throw error;
         return true;
     } catch (error) {
         console.error('Error saving user data:', error);
@@ -46,7 +74,7 @@ async function saveUserDataToFirestore(data) {
 
 // Export data to Excel file (using SheetJS)
 async function exportToExcel(dataType) {
-    const userData = await getUserDataFromFirestore();
+    const userData = await getUserDataFromSupabase();
     if (!userData) {
         alert('No data to export');
         return;
@@ -74,13 +102,13 @@ async function exportToExcel(dataType) {
             break;
         case 'all':
             // Export all data
-            const user = getCurrentUser();
+            const user = await getCurrentUser();
             dataToExport = {
-                'User Info': [user],
+                'User Info': [user.profile],
                 'Colleges': userData.colleges || [],
                 'Activities': userData.activities || [],
                 'Recommenders': userData.recommenders || [],
-                'Daily Tracker': userData.dailyTracker || []
+                'Daily Tracker': userData.dailyActivities || []
             };
             fileName = 'bus2college_all_data.xlsx';
             break;
@@ -141,7 +169,11 @@ function importFromExcel(dataType, file) {
             const jsonData = XLSX.utils.sheet_to_json(worksheet);
             
             // Update user data
-            const userData = getUserData();
+            const userData = await getUserDataFromSupabase();
+            if (!userData) {
+                alert('Unable to load user data');
+                return;
+            }
             
             switch(dataType) {
                 case 'colleges':
@@ -154,11 +186,11 @@ function importFromExcel(dataType, file) {
                     userData.recommenders = jsonData;
                     break;
                 case 'dailyTracker':
-                    userData.dailyTracker = jsonData;
+                    userData.dailyActivities = jsonData;
                     break;
             }
             
-            saveUserData(userData);
+            await saveUserDataToSupabase(userData);
             alert('Data imported successfully!');
             
             // Reload current page data
@@ -172,13 +204,13 @@ function importFromExcel(dataType, file) {
             alert('Error importing data. Please check the file format.');
         }
     };
-    
-    reader.readAsArrayBuffer(file);
-}
-
 // Sample data generators for testing
-function generateSampleData() {
-    const userData = getUserData();
+async function generateSampleData() {
+    const userData = await getUserDataFromSupabase();
+    if (!userData) {
+        alert('Unable to load user data');
+        return;
+    }
     
     // Sample colleges
     userData.colleges = [
@@ -242,7 +274,7 @@ function generateSampleData() {
     ];
     
     // Sample daily activities
-    userData.dailyTracker = [
+    userData.dailyActivities = [
         {
             date: new Date().toISOString(),
             activity: 'Completed UC application essays',
@@ -255,6 +287,10 @@ function generateSampleData() {
         }
     ];
     
+    await saveUserDataToSupabase(userData);
+    alert('Sample data generated! Refresh the page to see it.');
+}   ];
+    
     saveUserData(userData);
     alert('Sample data generated! Refresh the page to see it.');
 }
@@ -264,18 +300,10 @@ function downloadData(data, filename, type) {
     const blob = new Blob([data], { type: type });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-}
-
 // Export data as JSON (alternative to Excel)
-function exportAsJSON() {
-    const userData = getUserData();
-    const user = getCurrentUser();
+async function exportAsJSON() {
+    const userData = await getUserDataFromSupabase();
+    const user = await getCurrentUser();
     
     if (!userData || !user) {
         alert('No data to export');
@@ -285,9 +313,9 @@ function exportAsJSON() {
     const exportData = {
         exportDate: new Date().toISOString(),
         user: {
-            name: user.name,
-            email: user.email,
-            grade: user.grade
+            name: user.profile.name,
+            email: user.profile.email,
+            grade: user.profile.grade
         },
         data: userData
     };
@@ -297,20 +325,28 @@ function exportAsJSON() {
 }
 
 // Import data from JSON
-function importFromJSON(file) {
+async function importFromJSON(file) {
     const reader = new FileReader();
     
-    reader.onload = function(e) {
+    reader.onload = async function(e) {
         try {
             const importedData = JSON.parse(e.target.result);
             
             if (importedData.data) {
-                saveUserData(importedData.data);
+                await saveUserDataToSupabase(importedData.data);
                 alert('Data imported successfully!');
                 window.location.reload();
             } else {
                 alert('Invalid data format');
             }
+        } catch (error) {
+            console.error('Error importing JSON:', error);
+            alert('Error importing data. Please check the file format.');
+        }
+    };
+    
+    reader.readAsText(file);
+}           }
         } catch (error) {
             console.error('Error importing JSON:', error);
             alert('Error importing data. Please check the file format.');
