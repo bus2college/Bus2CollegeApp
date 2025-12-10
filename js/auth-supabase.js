@@ -39,8 +39,14 @@ async function handleRegister(event) {
     const password = document.getElementById('registerPassword').value;
     const confirmPassword = document.getElementById('registerConfirmPassword').value;
     const grade = document.getElementById('registerGrade').value;
+    const agreeToTerms = document.getElementById('agreeToTerms').checked;
     
     // Validation
+    if (!agreeToTerms) {
+        showMessage('You must agree to the Terms of Service to register.', 'error');
+        return false;
+    }
+    
     if (password !== confirmPassword) {
         showMessage('Passwords do not match!', 'error');
         return false;
