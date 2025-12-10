@@ -40,17 +40,11 @@ function closeCollegeSuggestionModal() {
 }
 
 // Start the college suggestion flow
-function startCollegeSuggestionFlow() {
+async function startCollegeSuggestionFlow() {
     closeCollegeSuggestionModal();
     
-    // Get saved student info
-    const user = getCurrentUser();
-    let studentInfo = {};
-    if (user) {
-        const userDataKey = `bus2college_data_${user.id}`;
-        const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-        studentInfo = userData.studentInfo || {};
-    }
+    // Get saved student info from Supabase
+    const studentInfo = await loadStudentInfoFromSupabase() || {};
     
     // Pre-fill questionnaire data from student info if available
     questionnaireData = {
@@ -1266,23 +1260,27 @@ function saveEditCollege(event) {
 }
 
 // Delete college
-function deleteCollege(index) {
+async function deleteCollege(index) {
     if (!confirm('Are you sure you want to remove this college from your list?')) {
         return;
     }
     
-    const user = getCurrentUser();
-    if (user) {
-        const userDataKey = `bus2college_data_${user.id}`;
-        const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+    try {
+        // Load current colleges from Supabase
+        const colleges = await loadCollegesFromSupabase();
         
-        if (userData.colleges && userData.colleges[index]) {
-            userData.colleges.splice(index, 1);
-            localStorage.setItem(userDataKey, JSON.stringify(userData));
+        if (colleges && colleges[index]) {
+            colleges.splice(index, 1);
             
-            // Reload colleges list
-            loadCollegesList(userData.colleges);
+            // Save updated list back to Supabase
+            await saveCollegesToSupabase(colleges);
+            
+            // Reload colleges list in UI
+            loadCollegesList(colleges);
         }
+    } catch (error) {
+        console.error('Error deleting college:', error);
+        alert('Failed to delete college. Please try again.');
     }
 }
 

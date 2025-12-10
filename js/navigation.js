@@ -3,7 +3,7 @@
 // ===================================
 
 // Toggle left navigation panel
-function toggleNavPanel() {
+async function toggleNavPanel() {
     const navPanel = document.getElementById('leftNavPanel');
     const toggleIcon = document.getElementById('toggleNavIcon');
     const isCollapsed = navPanel.classList.toggle('collapsed');
@@ -11,16 +11,16 @@ function toggleNavPanel() {
     // Update icon
     toggleIcon.textContent = isCollapsed ? '▶' : '◀';
     
-    // Save state to Firestore
-    const user = getCurrentUser();
+    // Save state to Supabase
+    const user = await getCurrentUser();
     if (user) {
-        saveNavPanelState(isCollapsed);
+        await saveNavPanelState(isCollapsed);
     }
 }
 
 // Initialize navigation panel state on load
 async function initializeNavPanelState() {
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     if (user) {
         const isCollapsed = await loadNavPanelState();
         if (isCollapsed) {
