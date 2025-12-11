@@ -779,54 +779,34 @@ body {
 
 .action-icon-btn,
 .help-icon-btn {
-    padding: 0;
+    padding: 8px 20px;
     background-color: var(--orange);
     color: var(--white);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: 0;
     cursor: pointer;
     font-size: 14px;
-    transition: all 0.3s ease;
+    transition: all 0.2s;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
     white-space: nowrap;
-    overflow: hidden;
-    max-width: 40px;
-    min-width: 40px;
-    height: 40px;
+    border-left: 3px solid #a63d17;
+    min-width: 80px;
 }
 
 .action-icon-btn:hover,
 .action-icon-btn.expanded,
 .help-icon-btn:hover {
     background-color: #a63d17;
-    transform: translateY(-1px);
-    max-width: 200px;
-    padding: 0 12px;
-}
-
-.action-label {
-    display: inline-block;
-    max-width: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-width 0.3s ease, opacity 0.3s ease;
-}
-
-.action-icon-btn:hover .action-label,
-.action-icon-btn.expanded .action-label,
-.help-icon-btn:hover .action-label {
-    max-width: 150px;
-    opacity: 1;
-    margin-left: 4px;
+    border-left-color: #8a3312;
 }
 
 .action-icon,
-.help-icon {
-    font-size: 18px !important;
-    font-weight: 700 !important;
+.help-icon,
+.action-label {
+    font-size: 14px !important;
+    font-weight: 500 !important;
     line-height: 1 !important;
     color: white;
     display: flex !important;
