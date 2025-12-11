@@ -350,17 +350,17 @@ body {
 
 .nav-menu {
     list-style: none;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 .nav-menu li {
-    margin-bottom: 5px;
+    margin-bottom: 2px;
 }
 
 .nav-link {
     display: flex;
     align-items: center;
-    padding: 8px 8px;
+    padding: 6px 8px;
     color: var(--dark-gray);
     text-decoration: none;
     border-radius: var(--border-radius);
@@ -378,8 +378,8 @@ body {
 }
 
 .nav-icon {
-    margin-right: 10px;
-    font-size: 20px;
+    margin-right: 8px;
+    font-size: 18px;
     filter: grayscale(40%) contrast(150%);
     opacity: 0.85;
     font-weight: 300;
