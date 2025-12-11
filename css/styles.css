@@ -360,7 +360,7 @@ body {
 .nav-link {
     display: flex;
     align-items: center;
-    padding: 10px 12px;
+    padding: 8px 8px;
     color: var(--dark-gray);
     text-decoration: none;
     border-radius: var(--border-radius);
