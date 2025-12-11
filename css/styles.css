@@ -2,23 +2,18 @@
    Bus2College - Main Styles
    =================================== */
 
-/* Color Scheme - Dark Mode */
+/* Color Scheme - Original Light Theme */
 :root {
-    --navy-blue: #4A90E2;
+    --navy-blue: #002855;
     --yellow: #FFD700;
-    --orange: #FF8C42;
-    --light-gray: #1a1a1a;
-    --medium-gray: #2d2d2d;
-    --dark-gray: #e0e0e0;
-    --white: #121212;
+    --orange: #C8511F;
+    --light-gray: #f8f9fa;
+    --medium-gray: #dee2e6;
+    --dark-gray: #495057;
+    --white: #ffffff;
     --success: #28a745;
     --error: #dc3545;
     --border-radius: 8px;
-    --bg-primary: #121212;
-    --bg-secondary: #1e1e1e;
-    --bg-card: #2d2d2d;
-    --text-primary: #e0e0e0;
-    --text-secondary: #b0b0b0;
 }
 
 /* Global Styles */
@@ -31,8 +26,8 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.4;
-    color: var(--text-primary);
-    background-color: var(--bg-primary);
+    color: var(--dark-gray);
+    background-color: var(--light-gray);
 }
 
 /* ===================================
@@ -44,13 +39,13 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+    background: linear-gradient(135deg, #002855 0%, #004080 100%);
 }
 
 .login-container {
-    background: var(--bg-secondary);
+    background: var(--white);
     border-radius: var(--border-radius);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     border: 2px solid var(--medium-gray);
     max-width: 400px;
     width: 90%;
@@ -79,7 +74,7 @@ body {
 }
 
 .login-header p {
-    color: var(--text-secondary);
+    color: var(--dark-gray);
     font-size: 13px;
 }
 
@@ -295,11 +290,11 @@ body {
 /* Left Navigation Panel */
 .left-nav {
     width: 250px;
-    background-color: var(--bg-secondary);
+    background-color: var(--white);
     border-right: 2px solid var(--medium-gray);
     padding: 15px;
     overflow-y: auto;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
     transition: width 0.3s ease, padding 0.3s ease;
     position: relative;
 }
@@ -366,7 +361,7 @@ body {
     display: flex;
     align-items: center;
     padding: 10px 12px;
-    color: var(--text-primary);
+    color: var(--dark-gray);
     text-decoration: none;
     border-radius: var(--border-radius);
     transition: background-color 0.3s, color 0.3s;
@@ -374,7 +369,7 @@ body {
 }
 
 .nav-link:hover {
-    background-color: var(--bg-card);
+    background-color: var(--light-gray);
 }
 
 .nav-link.active {
@@ -399,7 +394,7 @@ body {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    background-color: var(--bg-secondary);
+    background-color: var(--white);
 }
 
 .content-page {
@@ -437,7 +432,7 @@ body {
 
 .content-section p {
     margin-bottom: 10px;
-    color: var(--text-primary);
+    color: var(--dark-gray);
 }
 
 .action-bar {
@@ -463,14 +458,14 @@ body {
 .data-list {
     margin-top: 15px;
     padding: 15px;
-    background-color: var(--bg-primary);
+    background-color: var(--light-gray);
     border-radius: var(--border-radius);
     min-height: 150px;
 }
 
 .empty-state {
     text-align: center;
-    color: var(--text-secondary);
+    color: #999;
     font-style: italic;
     padding: 30px 15px;
     font-size: 13px;
@@ -489,12 +484,12 @@ body {
 }
 
 .info-banner-grey {
-    background: var(--bg-card);
-    color: var(--text-primary);
+    background: #f5f5f5;
+    color: #333;
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 15px;
-    border: 1px solid var(--medium-gray);
+    border: 1px solid #ddd;
     font-size: 13px;
 }
 
@@ -1052,13 +1047,13 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 8px;
-    background-color: var(--bg-card);
+    background-color: var(--white);
     border-radius: var(--border-radius);
 }
 
 .stat-label {
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--dark-gray);
     font-size: 13px;
 }
 
@@ -1069,7 +1064,7 @@ body {
 }
 
 .deadlines-list {
-    background-color: var(--bg-card);
+    background-color: var(--white);
     padding: 12px;
     border-radius: var(--border-radius);
 }
@@ -1077,7 +1072,7 @@ body {
 /* Right AI Chat Panel */
 .right-chat {
     width: 350px;
-    background-color: var(--bg-secondary);
+    background-color: var(--white);
     border-left: 2px solid var(--medium-gray);
     display: flex;
     flex-direction: column;
@@ -1199,8 +1194,8 @@ body {
 }
 
 .chat-message.ai-message {
-    background-color: var(--bg-card);
-    color: var(--text-primary);
+    background-color: var(--white);
+    color: var(--dark-gray);
     border: 1px solid var(--medium-gray);
     align-self: flex-start;
 }
@@ -1237,8 +1232,8 @@ body {
     border-radius: var(--border-radius);
     font-size: 13px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-card);
-    color: var(--text-primary);
+    background-color: var(--white);
+    color: var(--dark-gray);
     resize: none;
 }
 
@@ -1364,13 +1359,12 @@ body {
 }
 
 .modal-content {
-    background-color: var(--bg-secondary);
+    background-color: var(--white);
     padding: 24px;
     border-radius: var(--border-radius);
     max-width: 450px;
     width: 90%;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-    border: 1px solid var(--medium-gray);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     position: relative;
     animation: slideIn 0.3s ease-out;
 }
@@ -1392,7 +1386,7 @@ body {
     top: 15px;
     font-size: 24px;
     font-weight: bold;
-    color: var(--text-primary);
+    color: var(--dark-gray);
     cursor: pointer;
     transition: color 0.3s;
 }
@@ -1408,7 +1402,7 @@ body {
 }
 
 .modal-content p {
-    color: var(--text-primary);
+    color: var(--dark-gray);
     margin-bottom: 15px;
     font-size: 13px;
 }
@@ -1905,17 +1899,17 @@ body {
 }
 
 .college-item {
-    background: var(--bg-card);
+    background: white;
     padding: 8px 12px;
     border-radius: var(--border-radius);
     border-left: 4px solid var(--orange);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.3s;
     margin-bottom: 8px;
 }
 
 .college-item:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .college-item-header {
@@ -2048,7 +2042,7 @@ body {
     flex-direction: column;
     gap: 3px;
     font-size: 12px;
-    color: var(--text-secondary);
+    color: #666;
 }
 
 .college-item-meta span {
