@@ -129,15 +129,17 @@ body {
     background-color: var(--orange);
     color: var(--white);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: 0;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.2s;
+    border-left: 3px solid #a63d17;
 }
 
 .btn-primary:hover {
     background-color: #a63d17;
+    border-left-color: #8a3312;
 }
 
 .form-footer {
@@ -270,14 +272,16 @@ body {
     background-color: var(--orange);
     color: var(--white);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: 0;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s;
+    transition: all 0.2s;
+    border-left: 3px solid #a63d17;
 }
 
 .btn-logout:hover {
     background-color: #a63d17;
+    border-left-color: #8a3312;
 }
 
 /* Main Container with Three Panels */
@@ -328,13 +332,15 @@ body {
     cursor: pointer;
     font-size: 14px;
     padding: 6px 10px;
-    border-radius: 4px;
-    transition: background 0.3s;
+    border-radius: 0;
+    transition: all 0.2s;
     z-index: 10;
+    border-left: 3px solid #003d6b;
 }
 
 .btn-toggle-nav:hover {
-    background: #5AA0F2;
+    background: #003d6b;
+    border-left-color: #002845;
 }
 
 .left-nav.collapsed .btn-toggle-nav {
@@ -448,15 +454,17 @@ body {
     background-color: var(--navy-blue);
     color: var(--white);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: 0;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s;
+    transition: all 0.2s;
     margin-right: 10px;
+    border-left: 3px solid #003d6b;
 }
 
 .btn-secondary:hover {
     background-color: #003d6b;
+    border-left-color: #002845;
 }
 
 .data-list {
@@ -582,16 +590,18 @@ body {
 .btn-get-feedback {
     padding: 6px 12px;
     font-size: 12px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #667eea;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 0;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.2s;
+    border-left: 3px solid #764ba2;
 }
 
 .btn-get-feedback:hover {
-    transform: translateY(-2px);
+    background: #5568d3;
+    border-left-color: #5d3a84;
 }
 
 .rich-text-editor {
@@ -1156,16 +1166,18 @@ body {
     cursor: pointer;
     font-size: 16px;
     padding: 5px 8px;
-    border-radius: 4px;
-    transition: background 0.3s;
+    border-radius: 0;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 30px;
+    border-left: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .btn-toggle-chat:hover {
     background: rgba(255, 255, 255, 0.3);
+    border-left-color: rgba(255, 255, 255, 0.5);
 }
 
 .right-chat.collapsed .btn-toggle-chat {
