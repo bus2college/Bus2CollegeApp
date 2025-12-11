@@ -6,9 +6,14 @@
     <title>Support & Contact - Bus2College</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
+        :root {
+            --navy-blue: #002855;
+            --orange: #C8511F;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #002855 0%, #004080 100%);
             margin: 0;
             padding: 20px;
             min-height: 100vh;
@@ -19,47 +24,50 @@
             margin: 0 auto;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .header h1 {
-            color: #4A90E2;
-            margin-bottom: 10px;
-            font-size: 2.5em;
+            color: var(--navy-blue);
+            margin-bottom: 8px;
+            font-size: 2em;
         }
 
         .header p {
             color: #666;
-            font-size: 1.1em;
+            font-size: 1em;
         }
 
         .back-link {
             display: inline-block;
-            margin-bottom: 20px;
-            color: #4A90E2;
+            margin-bottom: 15px;
+            color: var(--navy-blue);
             text-decoration: none;
             font-weight: 500;
+            font-size: 14px;
         }
 
         .back-link:hover {
+            color: var(--orange);
             text-decoration: underline;
         }
 
         .support-section {
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .support-section h2 {
-            color: #333;
-            border-bottom: 2px solid #4A90E2;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            color: var(--navy-blue);
+            border-bottom: 2px solid var(--orange);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
         }
 
         .contact-methods {
@@ -72,7 +80,7 @@
         .contact-card {
             background: #f8f9fa;
             border-radius: 8px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             transition: transform 0.2s, box-shadow 0.2s;
         }
@@ -84,23 +92,24 @@
 
         .contact-card i {
             font-size: 2em;
-            color: #4A90E2;
-            margin-bottom: 10px;
+            color: var(--navy-blue);
+            margin-bottom: 8px;
         }
 
         .contact-card h3 {
-            color: #333;
-            margin: 10px 0;
-            font-size: 1.2em;
+            color: var(--navy-blue);
+            margin: 8px 0;
+            font-size: 1.1em;
         }
 
         .contact-card p {
             color: #666;
-            margin: 5px 0;
+            margin: 4px 0;
+            font-size: 14px;
         }
 
         .contact-card a {
-            color: #4A90E2;
+            color: var(--orange);
             text-decoration: none;
             font-weight: 500;
         }
@@ -112,34 +121,35 @@
         .contact-form {
             background: #f8f9fa;
             border-radius: 8px;
-            padding: 30px;
+            padding: 20px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
-            color: #333;
+            color: var(--navy-blue);
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            font-size: 14px;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 6px;
-            font-size: 1em;
+            font-size: 14px;
             font-family: inherit;
             box-sizing: border-box;
         }
 
         .form-group textarea {
-            min-height: 150px;
+            min-height: 120px;
             resize: vertical;
         }
 
@@ -147,17 +157,17 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #4A90E2;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            border-color: var(--navy-blue);
+            box-shadow: 0 0 0 3px rgba(0, 40, 85, 0.1);
         }
 
         .submit-btn {
-            background: #4A90E2;
+            background: var(--orange);
             color: white;
             border: none;
-            padding: 14px 32px;
+            padding: 12px 28px;
             border-radius: 6px;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: 500;
             cursor: pointer;
             transition: background 0.3s;
@@ -165,7 +175,7 @@
         }
 
         .submit-btn:hover {
-            background: #3a7bc8;
+            background: #a63d17;
         }
 
         .submit-btn:disabled {
@@ -176,20 +186,22 @@
         .faq-item {
             background: #f8f9fa;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
         }
 
         .faq-item h3 {
-            color: #4A90E2;
+            color: var(--navy-blue);
             margin-top: 0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 1.1em;
         }
 
         .faq-item p {
             color: #666;
-            line-height: 1.6;
+            line-height: 1.5;
             margin: 0;
+            font-size: 14px;
         }
 
         .success-message {
@@ -233,21 +245,21 @@
             <h2>Get in Touch</h2>
             <div class="contact-methods">
                 <div class="contact-card">
-                    <div style="font-size: 2em; color: #4A90E2;">📧</div>
+                    <div style="font-size: 2em; color: #002855;">📧</div>
                     <h3>Email Support</h3>
                     <p>For general inquiries</p>
                     <a href="mailto:support@bus2college.com">support@bus2college.com</a>
                 </div>
                 
                 <div class="contact-card">
-                    <div style="font-size: 2em; color: #4A90E2;">💬</div>
+                    <div style="font-size: 2em; color: #002855;">💬</div>
                     <h3>Live Chat</h3>
                     <p>Available 9 AM - 5 PM EST</p>
                     <a href="#" onclick="alert('Live chat coming soon!'); return false;">Start Chat</a>
                 </div>
                 
                 <div class="contact-card">
-                    <div style="font-size: 2em; color: #4A90E2;">📱</div>
+                    <div style="font-size: 2em; color: #002855;">📱</div>
                     <h3>Social Media</h3>
                     <p>Follow us for updates</p>
                     <a href="#" onclick="alert('Social media links coming soon!'); return false;">@Bus2College</a>
