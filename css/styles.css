@@ -2,18 +2,23 @@
    Bus2College - Main Styles
    =================================== */
 
-/* Color Scheme - Bright Day Mode */
+/* Color Scheme - Dark Mode */
 :root {
     --navy-blue: #4A90E2;
     --yellow: #FFD700;
     --orange: #FF8C42;
-    --light-gray: #f8f9fa;
-    --medium-gray: #dee2e6;
-    --dark-gray: #495057;
-    --white: #ffffff;
+    --light-gray: #1a1a1a;
+    --medium-gray: #2d2d2d;
+    --dark-gray: #e0e0e0;
+    --white: #121212;
     --success: #28a745;
     --error: #dc3545;
     --border-radius: 8px;
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-card: #2d2d2d;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
 }
 
 /* Global Styles */
@@ -25,9 +30,9 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: var(--dark-gray);
-    background-color: var(--light-gray);
+    line-height: 1.4;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
 }
 
 /* ===================================
@@ -39,17 +44,17 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #f0f4f8 0%, #d9e8f5 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
 }
 
 .login-container {
-    background: var(--white);
+    background: var(--bg-secondary);
     border-radius: var(--border-radius);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     border: 2px solid var(--medium-gray);
-    max-width: 450px;
+    max-width: 400px;
     width: 90%;
-    padding: 40px;
+    padding: 30px;
 }
 
 .login-header {
@@ -69,13 +74,13 @@ body {
 
 .login-header h1 {
     color: var(--navy-blue);
-    font-size: 28px;
-    margin-bottom: 10px;
+    font-size: 24px;
+    margin-bottom: 8px;
 }
 
 .login-header p {
-    color: var(--dark-gray);
-    font-size: 14px;
+    color: var(--text-secondary);
+    font-size: 13px;
 }
 
 .auth-forms {
@@ -92,12 +97,12 @@ body {
 
 .auth-form h2 {
     color: var(--navy-blue);
-    margin-bottom: 20px;
-    font-size: 24px;
+    margin-bottom: 15px;
+    font-size: 20px;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .form-group label {
@@ -290,11 +295,11 @@ body {
 /* Left Navigation Panel */
 .left-nav {
     width: 250px;
-    background-color: var(--white);
+    background-color: var(--bg-secondary);
     border-right: 2px solid var(--medium-gray);
-    padding: 20px;
+    padding: 15px;
     overflow-y: auto;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
     transition: width 0.3s ease, padding 0.3s ease;
     position: relative;
 }
@@ -360,15 +365,16 @@ body {
 .nav-link {
     display: flex;
     align-items: center;
-    padding: 12px 15px;
-    color: var(--dark-gray);
+    padding: 10px 12px;
+    color: var(--text-primary);
     text-decoration: none;
     border-radius: var(--border-radius);
     transition: background-color 0.3s, color 0.3s;
+    font-size: 14px;
 }
 
 .nav-link:hover {
-    background-color: var(--light-gray);
+    background-color: var(--bg-card);
 }
 
 .nav-link.active {
@@ -391,9 +397,9 @@ body {
 /* Center Content Panel */
 .center-content {
     flex: 1;
-    padding: 30px;
+    padding: 20px;
     overflow-y: auto;
-    background-color: var(--white);
+    background-color: var(--bg-secondary);
 }
 
 .content-page {
@@ -418,20 +424,20 @@ body {
 
 .content-page h2 {
     color: var(--navy-blue);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     margin-top: 0;
-    font-size: 24px;
-    border-bottom: 3px solid var(--orange);
-    padding-bottom: 6px;
+    font-size: 20px;
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 4px;
 }
 
 .content-section {
-    margin-top: 15px;
+    margin-top: 12px;
 }
 
 .content-section p {
-    margin-bottom: 15px;
-    color: var(--dark-gray);
+    margin-bottom: 10px;
+    color: var(--text-primary);
 }
 
 .action-bar {
@@ -455,18 +461,19 @@ body {
 }
 
 .data-list {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: var(--light-gray);
+    margin-top: 15px;
+    padding: 15px;
+    background-color: var(--bg-primary);
     border-radius: var(--border-radius);
     min-height: 150px;
 }
 
 .empty-state {
     text-align: center;
-    color: #999;
+    color: var(--text-secondary);
     font-style: italic;
-    padding: 40px 20px;
+    padding: 30px 15px;
+    font-size: 13px;
 }
 
 /* Essay Section */
@@ -482,12 +489,13 @@ body {
 }
 
 .info-banner-grey {
-    background: #f5f5f5;
-    color: #333;
-    padding: 15px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 12px;
     border-radius: 8px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    border: 1px solid var(--medium-gray);
+    font-size: 13px;
 }
 
 .prompt-selection-container {
@@ -1043,32 +1051,33 @@ body {
 .stat-item {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
-    background-color: var(--white);
+    padding: 8px;
+    background-color: var(--bg-card);
     border-radius: var(--border-radius);
 }
 
 .stat-label {
     font-weight: 500;
-    color: var(--dark-gray);
+    color: var(--text-primary);
+    font-size: 13px;
 }
 
 .stat-value {
     font-weight: 700;
     color: var(--orange);
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .deadlines-list {
-    background-color: var(--white);
-    padding: 15px;
+    background-color: var(--bg-card);
+    padding: 12px;
     border-radius: var(--border-radius);
 }
 
 /* Right AI Chat Panel */
 .right-chat {
     width: 350px;
-    background-color: #ffffff;
+    background-color: var(--bg-secondary);
     border-left: 2px solid var(--medium-gray);
     display: flex;
     flex-direction: column;
@@ -1184,14 +1193,14 @@ body {
 
 .chat-message.user-message {
     background-color: var(--navy-blue);
-    color: var(--white);
+    color: white;
     align-self: flex-end;
     margin-left: auto;
 }
 
 .chat-message.ai-message {
-    background-color: var(--white);
-    color: var(--dark-gray);
+    background-color: var(--bg-card);
+    color: var(--text-primary);
     border: 1px solid var(--medium-gray);
     align-self: flex-start;
 }
@@ -1226,8 +1235,10 @@ body {
     padding: 10px;
     border: 1px solid var(--medium-gray);
     border-radius: var(--border-radius);
-    font-size: 14px;
+    font-size: 13px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
     resize: none;
 }
 
@@ -1353,12 +1364,13 @@ body {
 }
 
 .modal-content {
-    background-color: var(--white);
-    padding: 30px;
+    background-color: var(--bg-secondary);
+    padding: 24px;
     border-radius: var(--border-radius);
     max-width: 450px;
     width: 90%;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--medium-gray);
     position: relative;
     animation: slideIn 0.3s ease-out;
 }
@@ -1378,9 +1390,9 @@ body {
     position: absolute;
     right: 15px;
     top: 15px;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
-    color: var(--dark-gray);
+    color: var(--text-primary);
     cursor: pointer;
     transition: color 0.3s;
 }
@@ -1391,20 +1403,21 @@ body {
 
 .modal-content h2 {
     color: var(--navy-blue);
-    margin-bottom: 15px;
-    font-size: 24px;
+    margin-bottom: 12px;
+    font-size: 20px;
 }
 
 .modal-content p {
-    color: var(--dark-gray);
-    margin-bottom: 20px;
-    font-size: 14px;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    font-size: 13px;
 }
 
 .modal-content .form-group button {
     width: auto;
     margin-right: 10px;
-    padding: 10px 20px;
+    padding: 8px 16px;
+    font-size: 13px;
 }
 
 /* Modal Variations */
@@ -1892,23 +1905,24 @@ body {
 }
 
 .college-item {
-    background: white;
-    padding: 12px;
+    background: var(--bg-card);
+    padding: 8px 12px;
     border-radius: var(--border-radius);
     border-left: 4px solid var(--orange);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     transition: box-shadow 0.3s;
+    margin-bottom: 8px;
 }
 
 .college-item:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .college-item-header {
     display: flex;
     justify-content: space-between;
     align-items: start;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .college-item-title {
@@ -1916,11 +1930,11 @@ body {
 }
 
 .college-item-name {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     color: var(--navy-blue);
-    margin-bottom: 5px;
-    line-height: 1.3;
+    margin-bottom: 4px;
+    line-height: 1.2;
 }
 
 .college-link {
@@ -2032,9 +2046,9 @@ body {
 .college-item-meta {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    font-size: 13px;
-    color: #666;
+    gap: 3px;
+    font-size: 12px;
+    color: var(--text-secondary);
 }
 
 .college-item-meta span {
@@ -2370,30 +2384,31 @@ body {
 .app-footer {
     background: linear-gradient(135deg, #002855, #003d82);
     color: white;
-    padding: 40px 20px 20px;
-    margin-top: 60px;
-    border-top: 3px solid #667eea;
+    padding: 20px 20px 10px;
+    margin-top: 30px;
+    border-top: 2px solid #667eea;
 }
 
 .footer-content {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 40px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 10px;
 }
 
 .footer-section h4 {
     color: #ffd700;
-    margin-bottom: 15px;
-    font-size: 18px;
+    margin-bottom: 8px;
+    font-size: 14px;
 }
 
 .footer-section p {
-    margin: 8px 0;
-    line-height: 1.6;
+    margin: 4px 0;
+    line-height: 1.4;
     opacity: 0.9;
+    font-size: 12px;
 }
 
 .footer-section ul {
@@ -2402,7 +2417,8 @@ body {
 }
 
 .footer-section ul li {
-    margin: 8px 0;
+    margin: 4px 0;
+    font-size: 12px;
 }
 
 .footer-section ul li a {
