@@ -8,8 +8,8 @@ async function toggleNavPanel() {
     const toggleIcon = document.getElementById('toggleNavIcon');
     const isCollapsed = navPanel.classList.toggle('collapsed');
     
-    // Update icon
-    toggleIcon.textContent = isCollapsed ? '▶' : '◀';
+    // Keep hamburger icon - no change needed
+    toggleIcon.textContent = '☰';
     
     // Save state to Supabase
     const user = await getCurrentUser();
@@ -28,7 +28,7 @@ async function initializeNavPanelState() {
             const toggleIcon = document.getElementById('toggleNavIcon');
             if (navPanel && toggleIcon) {
                 navPanel.classList.add('collapsed');
-                toggleIcon.textContent = '▶';
+                toggleIcon.textContent = '☰';
             }
         }
     }
