@@ -363,18 +363,22 @@ body {
     padding: 6px 8px;
     color: var(--dark-gray);
     text-decoration: none;
-    border-radius: var(--border-radius);
-    transition: background-color 0.3s, color 0.3s;
+    border-radius: 0;
+    transition: all 0.2s;
     font-size: 14px;
+    border-left: 3px solid transparent;
 }
 
 .nav-link:hover {
-    background-color: var(--light-gray);
+    background-color: rgba(0, 40, 85, 0.05);
+    border-left-color: var(--orange);
 }
 
 .nav-link.active {
-    background-color: var(--navy-blue);
-    color: var(--white);
+    background-color: rgba(0, 40, 85, 0.08);
+    color: var(--navy-blue);
+    border-left-color: var(--navy-blue);
+    font-weight: 500;
 }
 
 .nav-icon {
