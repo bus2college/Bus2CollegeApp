@@ -9,50 +9,59 @@
     <style>
         .privacy-container {
             max-width: 900px;
-            margin: 40px auto;
-            padding: 40px;
+            margin: 20px auto;
+            padding: 20px;
             background: white;
             border-radius: 12px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.1);
         }
         .privacy-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .privacy-header img {
-            width: 80px;
-            height: 80px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
             margin-bottom: 20px;
-        }
-        .privacy-header h1 {
-            color: var(--navy-blue);
-            margin-bottom: 10px;
-        }
-        .privacy-header .last-updated {
-            color: #666;
-            font-size: 14px;
-        }
-        .privacy-content {
-            line-height: 1.8;
-            color: #333;
-        }
-        .privacy-content h2 {
-            color: var(--navy-blue);
-            margin-top: 40px;
-            margin-bottom: 20px;
-            font-size: 24px;
             border-bottom: 2px solid var(--orange);
             padding-bottom: 10px;
         }
+        .privacy-header img {
+            width: 60px;
+            height: 60px;
+        }
+        .privacy-header-text {
+            flex: 1;
+        }
+        .privacy-header h1 {
+            color: var(--navy-blue);
+            margin: 0;
+            font-size: 28px;
+        }
+        .privacy-header .last-updated {
+            color: #666;
+            font-size: 13px;
+            margin: 0;
+        }
+        .privacy-content {
+            line-height: 1.5;
+            color: #333;
+            font-size: 14px;
+        }
+        .privacy-content h2 {
+            color: var(--navy-blue);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 20px;
+            border-bottom: 2px solid var(--orange);
+            padding-bottom: 5px;
+        }
         .privacy-content p {
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
         .privacy-content ul {
-            margin-left: 30px;
-            margin-bottom: 20px;
+            margin-left: 25px;
+            margin-bottom: 10px;
         }
         .privacy-content li {
-            margin-bottom: 10px;
+            margin-bottom: 4px;
         }
         .back-button {
             display: inline-block;
@@ -73,8 +82,10 @@
     <div class="privacy-container">
         <div class="privacy-header">
             <img src="assets/bus2college_rounded_256_1.png" alt="Bus2College Logo">
-            <h1>Privacy Policy</h1>
-            <p class="last-updated">Last Updated: December 9, 2025</p>
+            <div class="privacy-header-text">
+                <h1>Privacy Policy</h1>
+                <p class="last-updated">Last Updated: December 9, 2025</p>
+            </div>
         </div>
 
         <div class="privacy-content">
