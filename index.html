@@ -125,6 +125,63 @@
         </div>
     </div>
 
+    <!-- Cookie Consent Banner -->
+    <div id="cookieConsent" class="cookie-consent" style="display: none;">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <h4>🍪 We Value Your Privacy</h4>
+                <p>We use cookies to enhance your experience, analyze site traffic, and provide personalized content. By clicking "Accept All", you consent to our use of cookies. <a href="privacy-policy.html" target="_blank">Learn more</a></p>
+            </div>
+            <div class="cookie-actions">
+                <button onclick="acceptCookies()" class="btn-accept">Accept All</button>
+                <button onclick="rejectCookies()" class="btn-reject">Reject Non-Essential</button>
+                <button onclick="showCookieSettings()" class="btn-settings">Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Settings Modal -->
+    <div id="cookieSettingsModal" class="cookie-modal" style="display: none;">
+        <div class="cookie-modal-content">
+            <div class="cookie-modal-header">
+                <h3>Cookie Settings</h3>
+                <button onclick="closeCookieSettings()" class="close-btn">&times;</button>
+            </div>
+            <div class="cookie-modal-body">
+                <div class="cookie-category">
+                    <div class="cookie-category-header">
+                        <label>
+                            <input type="checkbox" checked disabled> Essential Cookies
+                        </label>
+                    </div>
+                    <p class="cookie-category-desc">Required for the website to function properly. Cannot be disabled.</p>
+                </div>
+                <div class="cookie-category">
+                    <div class="cookie-category-header">
+                        <label>
+                            <input type="checkbox" id="analyticsConsent"> Analytics Cookies
+                        </label>
+                    </div>
+                    <p class="cookie-category-desc">Help us understand how visitors interact with our website to improve user experience.</p>
+                </div>
+                <div class="cookie-category">
+                    <div class="cookie-category-header">
+                        <label>
+                            <input type="checkbox" id="functionalConsent"> Functional Cookies
+                        </label>
+                    </div>
+                    <p class="cookie-category-desc">Enable personalized features and remember your preferences.</p>
+                </div>
+            </div>
+            <div class="cookie-modal-footer">
+                <button onclick="saveeCookiePreferences()" class="btn-save">Save Preferences</button>
+                <button onclick="closeCookieSettings()" class="btn-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/cookie-consent.js"></script>
+
     <!-- Footer -->
     <footer class="app-footer">
         <div class="footer-content">

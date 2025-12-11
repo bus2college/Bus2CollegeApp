@@ -1448,6 +1448,149 @@
         });
     </script>
 
+    <!-- Cookie Consent Script -->
+    <script>
+        // Check if user has already made a cookie choice
+        function checkCookieConsent() {
+            const consent = localStorage.getItem('cookieConsent');
+            if (!consent) {
+                document.getElementById('cookieConsent').style.display = 'block';
+            } else {
+                const preferences = JSON.parse(consent);
+                applyCookiePreferences(preferences);
+            }
+        }
+
+        function acceptCookies() {
+            const preferences = {
+                essential: true,
+                analytics: true,
+                functional: true,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('cookieConsent', JSON.stringify(preferences));
+            document.getElementById('cookieConsent').style.display = 'none';
+            applyCookiePreferences(preferences);
+        }
+
+        function rejectCookies() {
+            const preferences = {
+                essential: true,
+                analytics: false,
+                functional: false,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('cookieConsent', JSON.stringify(preferences));
+            document.getElementById('cookieConsent').style.display = 'none';
+            applyCookiePreferences(preferences);
+        }
+
+        function showCookieSettings() {
+            document.getElementById('cookieSettingsModal').style.display = 'flex';
+            // Load current preferences if they exist
+            const consent = localStorage.getItem('cookieConsent');
+            if (consent) {
+                const preferences = JSON.parse(consent);
+                document.getElementById('analyticsConsent').checked = preferences.analytics;
+                document.getElementById('functionalConsent').checked = preferences.functional;
+            } else {
+                document.getElementById('analyticsConsent').checked = true;
+                document.getElementById('functionalConsent').checked = true;
+            }
+        }
+
+        function closeCookieSettings() {
+            document.getElementById('cookieSettingsModal').style.display = 'none';
+        }
+
+        function saveeCookiePreferences() {
+            const preferences = {
+                essential: true,
+                analytics: document.getElementById('analyticsConsent').checked,
+                functional: document.getElementById('functionalConsent').checked,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('cookieConsent', JSON.stringify(preferences));
+            document.getElementById('cookieConsent').style.display = 'none';
+            document.getElementById('cookieSettingsModal').style.display = 'none';
+            applyCookiePreferences(preferences);
+        }
+
+        function applyCookiePreferences(preferences) {
+            // Apply cookie preferences based on user choice
+            console.log('Cookie preferences applied:', preferences);
+            
+            // Here you would enable/disable various tracking scripts based on preferences
+            if (preferences.analytics) {
+                // Enable analytics (e.g., Google Analytics)
+                console.log('Analytics enabled');
+            }
+            
+            if (preferences.functional) {
+                // Enable functional cookies
+                console.log('Functional cookies enabled');
+            }
+        }
+
+        // Show cookie banner on page load if no consent exists
+        window.addEventListener('DOMContentLoaded', checkCookieConsent);
+    </script>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookieConsent" class="cookie-consent" style="display: none;">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <h4>🍪 We Value Your Privacy</h4>
+                <p>We use cookies to enhance your experience, analyze site traffic, and provide personalized content. By clicking "Accept All", you consent to our use of cookies. <a href="privacy-policy.html" target="_blank">Learn more</a></p>
+            </div>
+            <div class="cookie-actions">
+                <button onclick="acceptCookies()" class="btn-accept">Accept All</button>
+                <button onclick="rejectCookies()" class="btn-reject">Reject Non-Essential</button>
+                <button onclick="showCookieSettings()" class="btn-settings">Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Settings Modal -->
+    <div id="cookieSettingsModal" class="cookie-modal" style="display: none;">
+        <div class="cookie-modal-content">
+            <div class="cookie-modal-header">
+                <h3>Cookie Settings</h3>
+                <button onclick="closeCookieSettings()" class="close-btn">&times;</button>
+            </div>
+            <div class="cookie-modal-body">
+                <div class="cookie-category">
+                    <div class="cookie-category-header">
+                        <label>
+                            <input type="checkbox" checked disabled> Essential Cookies
+                        </label>
+                    </div>
+                    <p class="cookie-category-desc">Required for the website to function properly. Cannot be disabled.</p>
+                </div>
+                <div class="cookie-category">
+                    <div class="cookie-category-header">
+                        <label>
+                            <input type="checkbox" id="analyticsConsent"> Analytics Cookies
+                        </label>
+                    </div>
+                    <p class="cookie-category-desc">Help us understand how visitors interact with our website to improve user experience.</p>
+                </div>
+                <div class="cookie-category">
+                    <div class="cookie-category-header">
+                        <label>
+                            <input type="checkbox" id="functionalConsent"> Functional Cookies
+                        </label>
+                    </div>
+                    <p class="cookie-category-desc">Enable personalized features and remember your preferences.</p>
+                </div>
+            </div>
+            <div class="cookie-modal-footer">
+                <button onclick="saveeCookiePreferences()" class="btn-save">Save Preferences</button>
+                <button onclick="closeCookieSettings()" class="btn-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="app-footer">
         <div class="footer-content">
