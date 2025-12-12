@@ -4,6 +4,31 @@
 
 let conversationHistory = [];
 
+// Get current page context
+function getCurrentPageContext() {
+    const currentPage = document.querySelector('.content-page.active');
+    const pageName = currentPage?.id || 'login';
+    const pageTitle = currentPage?.querySelector('h2')?.textContent || 'Bus2College Application';
+    
+    const pageContextMap = {
+        'student-info': 'Student Information page - where users enter their academic profile, GPA, test scores, and background',
+        'my-colleges': 'My Colleges page - where users build and manage their college list with deadlines and status tracking',
+        'common-app-essay': 'My Common App Essay page - where users write and get AI feedback on their main Common Application essay (250-650 words)',
+        'supplemental-essays': 'My Supplemental Essays page - where users manage college-specific supplemental essays',
+        'my-activities': 'My Activities page - where users document their extracurricular activities, leadership roles, and achievements',
+        'my-recommenders': 'My Recommenders page - where users track teachers and counselors for recommendation letters',
+        'daily-tracker': 'Daily Tracker page - where users log daily college application progress and tasks',
+        'admissions-status': 'Admissions Status page - where users track application status, decisions, and deadlines',
+        'login': 'Login page'
+    };
+    
+    return {
+        pageName: pageName,
+        pageTitle: pageTitle,
+        pageDescription: pageContextMap[pageName] || pageTitle
+    };
+}
+
 // Initialize chat
 function initializeChat() {
     // Load conversation history from localStorage
@@ -15,6 +40,26 @@ function initializeChat() {
             conversationHistory = JSON.parse(savedHistory);
             displayChatHistory();
         }
+    }
+    
+    // Set initial system context if conversation is empty
+    if (conversationHistory.length === 0) {
+        const pageContext = getCurrentPageContext();
+        conversationHistory.push({
+            role: 'system',
+            content: `You are an AI assistant integrated into the Bus2College web application (bus2college.app), a comprehensive college application management platform. 
+
+Current Context: The user is currently on the "${pageContext.pageTitle}" (${pageContext.pageDescription}).
+
+Your role is to:
+1. Help students with college application questions and guidance
+2. Provide specific help related to the current page they're viewing
+3. Assist with essay writing, brainstorming, and feedback
+4. Answer questions about colleges, deadlines, and application strategies
+5. Help with activity descriptions, recommendation letters, and all aspects of college applications
+
+Always be supportive, encouraging, and provide actionable advice. When relevant, reference the specific page context in your responses.`
+        });
     }
 }
 
