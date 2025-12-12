@@ -63,6 +63,50 @@ Always be supportive, encouraging, and provide actionable advice. When relevant,
     }
 }
 
+// Get current page content for AI context
+function getCurrentPageContent() {
+    const currentPage = document.querySelector('.content-page.active');
+    if (!currentPage) return null;
+    
+    const pageName = currentPage.id;
+    const pageTitle = currentPage.querySelector('h2')?.textContent || '';
+    let pageContent = {};
+    
+    // Extract content based on page type
+    switch(pageName) {
+        case 'common-app-essay':
+            const draftEditor = document.getElementById('studentDraftEditor');
+            const promptSelect = document.getElementById('commonAppPrompt');
+            pageContent = {
+                page: 'Common App Essay',
+                selected_prompt: promptSelect?.selectedOptions[0]?.text || 'None selected',
+                draft_text: draftEditor?.textContent?.trim() || 'Empty',
+                word_count: document.getElementById('essayWordCount')?.textContent || '0'
+            };
+            break;
+        case 'my-colleges':
+            const collegesList = document.getElementById('collegesList');
+            pageContent = {
+                page: 'My Colleges',
+                colleges_added: collegesList?.querySelectorAll('.college-item').length || 0
+            };
+            break;
+        case 'student-info':
+            pageContent = {
+                page: 'Student Information',
+                note: 'Student profile and academic information'
+            };
+            break;
+        default:
+            pageContent = {
+                page: pageTitle,
+                note: 'User is viewing ' + pageTitle
+            };
+    }
+    
+    return pageContent;
+}
+
 // Send chat message
 async function sendChatMessage() {
     const chatInput = document.getElementById('chatInput');
@@ -87,6 +131,15 @@ async function sendChatMessage() {
     sendButton.disabled = true;
     chatStatus.textContent = 'AI is thinking...';
     
+    // Get current page content
+    const pageContent = getCurrentPageContent();
+    let contextualMessage = userMessage;
+    
+    // Add page context to the user's message for the AI
+    if (pageContent) {
+        contextualMessage = `[Current Page Context: ${JSON.stringify(pageContent)}]\n\nUser Question: ${userMessage}`;
+    }
+    
     // Track AI prompt
     try {
         if (typeof trackAIPrompt === 'function') {
@@ -96,14 +149,14 @@ async function sendChatMessage() {
         console.error('Error tracking prompt:', e);
     }
     
-    // Add user message to chat
+    // Add user message to chat (display original message, not contextual)
     addMessageToChat('user', userMessage);
     chatInput.value = '';
     
-    // Add to conversation history
+    // Add to conversation history with context
     conversationHistory.push({
         role: 'user',
-        content: userMessage
+        content: contextualMessage
     });
     
     const startTime = Date.now();
