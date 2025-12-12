@@ -540,25 +540,25 @@ body {
 
 .prompt-description-side {
     background: #f8f9fa;
-    padding: 10px;
+    padding: 8px 10px;
     border-radius: 8px;
     border-left: 4px solid #002855;
-    font-size: 14px;
+    font-size: 13px;
     color: #555;
-    min-height: 100px;
+    min-height: 60px;
 }
 
 .prompt-description-side strong {
     display: block;
     color: var(--navy-blue);
-    margin-bottom: 4px;
-    font-size: 13px;
+    margin-bottom: 3px;
+    font-size: 12px;
     text-transform: uppercase;
 }
 
 .prompt-description-side p {
     margin: 0;
-    line-height: 1.6;
+    line-height: 1.4;
 }
 
 .dual-editor-container {
