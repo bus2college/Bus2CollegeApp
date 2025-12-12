@@ -36,6 +36,11 @@ async function logActivity(activityType, details = {}) {
         const { data: { user } } = await supabase.auth.getUser();
         const userId = user?.id;
         
+        if (!userId) {
+            console.warn('No user logged in, skipping activity tracking:', activityType);
+            return;
+        }
+        
         const activityData = {
             user_id: userId,
             activity_type: activityType,
@@ -49,15 +54,20 @@ async function logActivity(activityType, details = {}) {
             viewport_size: `${window.innerWidth}x${window.innerHeight}`
         };
 
-        const { error } = await supabase
+        console.log('Logging activity:', activityType, 'User:', userId);
+
+        const { data, error } = await supabase
             .from('user_activities')
             .insert([activityData]);
 
         if (error) {
-            console.error('Error logging activity:', error);
+            console.error('Error logging activity to Supabase:', error);
+            console.error('Activity data:', activityData);
+        } else {
+            console.log('✓ Activity logged successfully:', activityType);
         }
     } catch (error) {
-        console.error('Error in logActivity:', error);
+        console.error('Error in logActivity function:', error);
     }
 }
 
@@ -153,9 +163,17 @@ function trackPageView(pageName) {
  * Track AI prompt submission
  */
 function trackAIPrompt(prompt, context = {}) {
+    const currentPage = document.querySelector('.content-page.active');
+    const pageName = currentPage?.id || 'login';
+    const pageTitle = currentPage?.querySelector('h2')?.textContent || 'Bus2College';
+    
+    console.log('Tracking AI Prompt:', prompt.substring(0, 50));
+    
     logActivity(ActivityType.AI_PROMPT, {
         prompt: prompt,
         prompt_length: prompt.length,
+        page_name: pageName,
+        page_title: pageTitle,
         ...context
     });
 }
@@ -164,11 +182,21 @@ function trackAIPrompt(prompt, context = {}) {
  * Track AI response received
  */
 function trackAIResponse(prompt, response, responseTime = null) {
+    const currentPage = document.querySelector('.content-page.active');
+    const pageName = currentPage?.id || 'login';
+    const pageTitle = currentPage?.querySelector('h2')?.textContent || 'Bus2College';
+    
+    console.log('Tracking AI Response:', response.substring(0, 50), 'Response time:', responseTime);
+    
     logActivity(ActivityType.AI_RESPONSE, {
+        prompt: prompt,
         prompt_preview: prompt.substring(0, 200),
+        response: response,
         response_preview: response.substring(0, 200),
         response_length: response.length,
-        response_time_ms: responseTime
+        response_time_ms: responseTime,
+        page_name: pageName,
+        page_title: pageTitle
     });
 }
 
