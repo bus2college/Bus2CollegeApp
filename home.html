@@ -36,9 +36,6 @@
     <div class="main-container">
         <!-- Left Navigation Panel -->
         <nav class="left-nav" id="leftNavPanel">
-            <button class="btn-toggle-nav" id="toggleNavBtn" onclick="toggleNavPanel()" title="Collapse/Expand Navigation">
-                <span id="toggleNavIcon">☰</span>
-            </button>
             <ul class="nav-menu">
                 <li>
                     <a href="#" class="nav-link active" data-page="student-info" onclick="navigateToPage(event, 'student-info')">
@@ -933,13 +930,10 @@
 
         <!-- Right AI Chat Panel -->
         <aside class="right-chat" id="rightChatPanel">
-            <div class="chat-header" onclick="toggleChatPanel()">
+            <div class="chat-header" onclick="toggleChatPanel()" style="cursor: pointer;" title="Click to collapse/expand">
                 <h3>🤖 AI Assistant</h3>
                 <div class="chat-header-actions">
                     <button class="btn-clear-chat" onclick="event.stopPropagation(); clearChatHistory()" title="Clear chat">🗑️</button>
-                    <button class="btn-toggle-chat" id="toggleChatBtn" title="Collapse/Expand">
-                        <span id="toggleChatIcon">◀</span>
-                    </button>
                 </div>
             </div>
             <div id="chatContent" class="chat-content">

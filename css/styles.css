@@ -1083,10 +1083,14 @@ body {
 }
 
 .right-chat.collapsed .chat-header h3 {
-    display: none;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    display: block;
+    font-size: 14px;
+    white-space: nowrap;
 }
 
-.right-chat.collapsed .btn-clear-chat {
+.right-chat.collapsed .chat-header-actions {
     display: none;
 }
 
