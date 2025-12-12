@@ -109,6 +109,9 @@ async function loadPageData(pageId) {
             // TODO: Load from Supabase
             loadAdmissionsStatus({});
             break;
+        case 'settings':
+            await loadSettingsPage();
+            break;
     }
 }
 

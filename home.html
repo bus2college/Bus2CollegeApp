@@ -88,6 +88,12 @@
                         <span class="nav-text">Admissions Status Summary</span>
                     </a>
                 </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="settings" onclick="navigateToPage(event, 'settings')">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                </li>
             </ul>
         </nav>
 
@@ -946,6 +952,141 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Settings Page -->
+            <div id="settings" class="content-page">
+                <div class="page-title-with-help">
+                    <h2>Settings</h2>
+                </div>
+                
+                <div class="content-section">
+                    <h3>⚙️ Account Settings</h3>
+                    <div class="settings-section">
+                        <div class="setting-item">
+                            <label>Email</label>
+                            <input type="email" id="settingsEmail" readonly class="form-input" disabled style="background-color: #f5f5f5;">
+                        </div>
+                        <div class="setting-item">
+                            <label>Account Created</label>
+                            <input type="text" id="settingsCreatedDate" readonly class="form-input" disabled style="background-color: #f5f5f5;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section" style="margin-top: 30px;">
+                    <h3>🎓 Common App Integration</h3>
+                    <p class="help-text">Connect your Common Application account to sync your college list, essays, and application data.</p>
+                    
+                    <div id="commonAppDisconnected" class="settings-section">
+                        <div class="integration-status disconnected">
+                            <span class="status-icon">⚠️</span>
+                            <span class="status-text">Not Connected</span>
+                        </div>
+                        
+                        <div class="integration-info">
+                            <h4>Benefits of connecting:</h4>
+                            <ul>
+                                <li>✅ Sync your college list bidirectionally</li>
+                                <li>✅ Export Common App essay directly to your application</li>
+                                <li>✅ Import supplemental essay prompts automatically</li>
+                                <li>✅ Keep application status updated in real-time</li>
+                                <li>✅ Never re-enter college information</li>
+                            </ul>
+                        </div>
+
+                        <button class="btn-primary" onclick="showCommonAppConnectModal()" style="margin-top: 20px;">
+                            <span>🔗 Connect to Common App</span>
+                        </button>
+                    </div>
+
+                    <div id="commonAppConnected" class="settings-section" style="display: none;">
+                        <div class="integration-status connected">
+                            <span class="status-icon">✅</span>
+                            <span class="status-text">Connected</span>
+                        </div>
+                        
+                        <div class="connection-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Connected Account:</span>
+                                <span class="detail-value" id="connectedEmail">—</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Last Synced:</span>
+                                <span class="detail-value" id="lastSynced">—</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Connection Status:</span>
+                                <span class="detail-value status-active" id="connectionStatus">Active</span>
+                            </div>
+                        </div>
+
+                        <div class="sync-actions" style="margin-top: 20px;">
+                            <button class="btn-primary" onclick="syncFromCommonApp()">
+                                <span>⬇️ Import from Common App</span>
+                            </button>
+                            <button class="btn-primary" onclick="syncToCommonApp()">
+                                <span>⬆️ Export to Common App</span>
+                            </button>
+                            <button class="btn-secondary" onclick="disconnectCommonApp()">
+                                <span>🔌 Disconnect</span>
+                            </button>
+                        </div>
+
+                        <div class="sync-options" style="margin-top: 20px;">
+                            <h4>Automatic Sync Settings</h4>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="autoSyncEnabled" onchange="updateSyncSettings()">
+                                Enable automatic sync (every 24 hours)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="syncColleges" checked onchange="updateSyncSettings()">
+                                Sync college list
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="syncEssays" checked onchange="updateSyncSettings()">
+                                Sync Common App essay
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="syncSupplemental" checked onchange="updateSyncSettings()">
+                                Sync supplemental essay prompts
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section" style="margin-top: 30px;">
+                    <h3>🔔 Notifications</h3>
+                    <div class="settings-section">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notifyDeadlines" checked>
+                            Deadline reminders (7 days, 3 days, 1 day before)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notifySync" checked>
+                            Common App sync notifications
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notifyActivity" checked>
+                            Daily activity suggestions
+                        </label>
+                    </div>
+                </div>
+
+                <div class="content-section" style="margin-top: 30px;">
+                    <h3>🗑️ Data Management</h3>
+                    <div class="settings-section">
+                        <button class="btn-secondary" onclick="exportAllData()">
+                            <span>📥 Export All Data</span>
+                        </button>
+                        <button class="btn-secondary" onclick="importData()" style="margin-left: 10px;">
+                            <span>📤 Import Data</span>
+                        </button>
+                        <button class="btn-danger" onclick="deleteAccount()" style="margin-left: 10px;">
+                            <span>⚠️ Delete Account</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <!-- Right AI Chat Panel -->
@@ -1317,6 +1458,54 @@
         </div>
     </div>
 
+    <!-- Common App Connect Modal -->
+    <div id="commonAppConnectModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeCommonAppConnectModal()">&times;</span>
+            <h2>🔗 Connect to Common App</h2>
+            <p class="modal-subtitle">Connect your Common Application account to enable seamless data synchronization.</p>
+            
+            <div class="security-notice">
+                <span class="security-icon">🔒</span>
+                <div class="security-text">
+                    <strong>Your credentials are secure</strong>
+                    <p>We use them only to establish a temporary connection. Credentials are NOT stored on our servers.</p>
+                </div>
+            </div>
+
+            <form id="commonAppConnectForm" onsubmit="return connectToCommonApp(event)">
+                <div class="form-group">
+                    <label for="commonAppEmail">Common App Email *</label>
+                    <input type="email" id="commonAppEmail" required placeholder="your-email@example.com">
+                    <small class="form-help">Use the same email you registered with Common Application</small>
+                </div>
+                <div class="form-group">
+                    <label for="commonAppPassword">Common App Password *</label>
+                    <input type="password" id="commonAppPassword" required placeholder="Enter your password">
+                    <small class="form-help">Your password is encrypted and not stored</small>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberConnection" checked>
+                        Keep me connected (OAuth token will be stored securely)
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeCommonAppConnectModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <span id="connectBtnText">🔗 Connect</span>
+                        <span id="connectBtnLoading" style="display: none;">⏳ Connecting...</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="connection-help" style="margin-top: 20px;">
+                <h4>Don't have a Common App account?</h4>
+                <p>Create one at <a href="https://www.commonapp.org" target="_blank">commonapp.org</a> to use this feature.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Common App Integration Modal -->
     <div id="commonAppIntegrationModal" class="modal">
         <div class="modal-content modal-large">
@@ -1396,6 +1585,7 @@
     <script src="js/xlsx.full.min.js?v=1733789001"></script>
     <script src="js/college-database.js?v=1733789001"></script>
     <script src="js/common-app-integration.js?v=1733789001"></script>
+    <script src="js/commonapp-api.js?v=1733789001"></script>
     <script src="js/config.js?v=1733789001"></script>
     <script src="js/secure-api-client.js?v=1733789001"></script>
     <script src="js/supabase-data-handler.js?v=1733789001"></script>
