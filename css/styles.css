@@ -387,12 +387,18 @@ body {
     font-weight: 500;
 }
 
+.nav-link.active .nav-icon {
+    filter: brightness(0.4) saturate(0);
+    opacity: 1;
+}
+
 .nav-icon {
     margin-right: 8px;
     font-size: 18px;
-    filter: grayscale(40%) contrast(150%);
-    opacity: 0.85;
-    font-weight: 300;
+    filter: brightness(0.5) saturate(0);
+    opacity: 1;
+    font-weight: 600;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
 }
 
 .nav-text {
