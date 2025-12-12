@@ -272,16 +272,17 @@ body {
     background-color: var(--orange);
     color: var(--white);
     border: none;
-    border-radius: 0;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s;
-    border-left: 3px solid #a63d17;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .btn-logout:hover {
     background-color: #a63d17;
-    border-left-color: #8a3312;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
 }
 
 /* Main Container with Three Panels */
@@ -782,7 +783,7 @@ body {
     padding: 8px 20px;
     background-color: var(--orange);
     color: var(--white);
-    border: none;
+    border: 1px solid var(--orange);
     border-radius: 0;
     cursor: pointer;
     font-size: 14px;
@@ -791,7 +792,6 @@ body {
     align-items: center;
     justify-content: center;
     white-space: nowrap;
-    border-left: 3px solid #a63d17;
     min-width: 80px;
 }
 
@@ -799,7 +799,7 @@ body {
 .action-icon-btn.expanded,
 .help-icon-btn:hover {
     background-color: #a63d17;
-    border-left-color: #8a3312;
+    border-color: #a63d17;
 }
 
 .action-icon,
