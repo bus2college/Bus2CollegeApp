@@ -38,6 +38,17 @@ async function initializeNavPanelState() {
 function navigateToPage(event, pageId) {
     event.preventDefault();
     
+    // Get current page before switching
+    const currentPage = document.querySelector('.content-page.active')?.id || 'unknown';
+    
+    // Track navigation
+    if (typeof trackNavigation === 'function') {
+        trackNavigation(currentPage, pageId);
+    }
+    if (typeof trackPageView === 'function') {
+        trackPageView(pageId);
+    }
+    
     // Hide all content pages
     const allPages = document.querySelectorAll('.content-page');
     allPages.forEach(page => page.classList.remove('active'));

@@ -42,6 +42,11 @@ async function sendChatMessage() {
     sendButton.disabled = true;
     chatStatus.textContent = 'AI is thinking...';
     
+    // Track AI prompt
+    if (typeof trackAIPrompt === 'function') {
+        trackAIPrompt(userMessage, { source: 'ai_chat' });
+    }
+    
     // Add user message to chat
     addMessageToChat('user', userMessage);
     chatInput.value = '';
@@ -52,15 +57,22 @@ async function sendChatMessage() {
         content: userMessage
     });
     
+    const startTime = Date.now();
     try {
         // Use the secure API client
         const aiMessage = await callAI(conversationHistory);
+        const responseTime = Date.now() - startTime;
         
         // Add AI response to conversation history
         conversationHistory.push({
             role: 'assistant',
             content: aiMessage
         });
+        
+        // Track AI response
+        if (typeof trackAIResponse === 'function') {
+            trackAIResponse(userMessage, aiMessage, responseTime);
+        }
         
         // Display AI message
         addMessageToChat('ai', aiMessage);

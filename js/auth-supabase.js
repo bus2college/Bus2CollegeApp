@@ -132,6 +132,11 @@ async function handleLogin(event) {
             .update({ last_login: new Date().toISOString() })
             .eq('id', data.user.id);
         
+        // Track login
+        if (typeof trackLogin === 'function') {
+            trackLogin('email');
+        }
+        
         showMessage('Login successful! Redirecting...', 'success');
         
         // Redirect to home page
@@ -160,6 +165,11 @@ async function handleLogin(event) {
 // Handle logout
 async function handleLogout() {
     try {
+        // Track logout before signing out
+        if (typeof trackLogout === 'function') {
+            trackLogout();
+        }
+        
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
         

@@ -65,6 +65,15 @@ async function saveUserDataToSupabase(data) {
             .upsert(updateData, { onConflict: 'user_id' });
         
         if (error) throw error;
+        
+        // Track data save
+        if (typeof trackDataSave === 'function') {
+            const recordCount = (data.colleges?.length || 0) + 
+                               (data.activities?.length || 0) + 
+                               (data.recommenders?.length || 0);
+            trackDataSave('user_data', recordCount);
+        }
+        
         return true;
     } catch (error) {
         console.error('Error saving user data:', error);
