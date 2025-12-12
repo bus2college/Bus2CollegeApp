@@ -1068,19 +1068,19 @@ function createCollegeListItem(college, index) {
 }
 
 // Edit college
-function editCollege(index) {
+async function editCollege(index) {
     const user = getCurrentUser();
     if (!user) return;
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
+    // Load colleges from Supabase (same source as display)
+    const colleges = await loadCollegesFromSupabase();
     
-    if (!userData.colleges || !userData.colleges[index]) {
+    if (!colleges || !colleges[index]) {
         alert('College not found');
         return;
     }
     
-    const college = userData.colleges[index];
+    const college = colleges[index];
     
     // Populate edit form
     document.getElementById('editCollegeName').value = college.name;
@@ -1206,7 +1206,7 @@ function updateEditDeadlineBasedOnType() {
     }
 }
 
-function saveEditCollege(event) {
+async function saveEditCollege(event) {
     event.preventDefault();
     
     const user = getCurrentUser();
@@ -1217,36 +1217,43 @@ function saveEditCollege(event) {
     const deadlineType = document.getElementById('editDeadlineType').value;
     const deadline = document.getElementById('editApplicationDeadline').value;
     
-    const userDataKey = `bus2college_data_${user.id}`;
-    const userData = JSON.parse(localStorage.getItem(userDataKey) || '{}');
-    
-    if (!userData.colleges || !userData.colleges[index]) {
-        alert('College not found');
+    try {
+        // Load colleges from Supabase
+        const colleges = await loadCollegesFromSupabase();
+        
+        if (!colleges || !colleges[index]) {
+            alert('College not found');
+            return false;
+        }
+        
+        // Update status, deadline type, and deadline
+        colleges[index].status = status;
+        
+        // Update deadline type label
+        if (deadlineType === 'early') {
+            colleges[index].deadlineType = 'Early Decision/Action';
+        } else if (deadlineType === 'regular') {
+            colleges[index].deadlineType = 'Regular Decision';
+        }
+        
+        // Update deadline date
+        if (deadline) {
+            colleges[index].deadline = deadline;
+        }
+        
+        // Save back to Supabase
+        await saveCollegesToSupabase(colleges);
+        
+        // Close modal and reload list
+        closeEditCollegeModal();
+        loadCollegesList(colleges);
+        
+        return false;
+    } catch (error) {
+        console.error('Error saving college edit:', error);
+        alert('Failed to save changes. Please try again.');
         return false;
     }
-    
-    // Update status, deadline type, and deadline
-    userData.colleges[index].status = status;
-    
-    // Update deadline type label
-    if (deadlineType === 'early') {
-        userData.colleges[index].deadlineType = 'Early Decision/Action';
-    } else if (deadlineType === 'regular') {
-        userData.colleges[index].deadlineType = 'Regular Decision';
-    }
-    
-    // Update deadline date
-    if (deadline) {
-        userData.colleges[index].deadline = deadline;
-    }
-    
-    localStorage.setItem(userDataKey, JSON.stringify(userData));
-    
-    // Close modal and reload list
-    closeEditCollegeModal();
-    loadCollegesList(userData.colleges);
-    
-    return false;
 }
 
 // Delete college
