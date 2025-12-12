@@ -226,9 +226,9 @@ async function saveStudentInfo() {
     const success = await saveStudentInfoToSupabase(studentInfo);
     
     if (success) {
-        alert('Student information saved successfully!');
+        showToast('Student information saved successfully!', 'success');
     } else {
-        alert('Failed to save student information. Please try again.');
+        showToast('Failed to save student information. Please try again.', 'error');
     }
     
     // Collapse button after save
@@ -241,7 +241,7 @@ async function exportStudentInfoToCommonApp() {
     
     const user = await getCurrentUser();
     if (!user) {
-        alert('Please log in to export your information.');
+        showToast('Please log in to export your information.', 'warning');
         button.classList.remove('expanded');
         return;
     }
@@ -325,7 +325,7 @@ async function exportStudentInfoToCommonApp() {
     
     // Copy to clipboard
     navigator.clipboard.writeText(exportText).then(() => {
-        alert('Student information copied to clipboard!\n\nYou can now paste this into your Common App profile.\n\n1. Go to commonapp.org\n2. Log in to your account\n3. Navigate to Profile section\n4. Fill in the information from the clipboard');
+        showToast('Student information copied to clipboard! You can now paste this into your Common App profile at commonapp.org.', 'success', 6000);
         button.classList.remove('expanded');
     }).catch(err => {
         // Fallback: download as text file
@@ -345,7 +345,7 @@ function downloadStudentInfo(text) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    alert('Student information downloaded!\n\nOpen the file and use it to fill in your Common App profile at commonapp.org');
+    showToast('Student information downloaded! Open the file and use it to fill in your Common App profile.', 'success');
 }
 
 async function loadCommonAppEssay(essay) {
@@ -716,7 +716,7 @@ async function saveEssay(type) {
         
         // Validate prompt selection
         if (!prompt) {
-            alert('⚠️ Please select an essay prompt before saving.');
+            showToast('Please select an essay prompt before saving.', 'warning');
             button.classList.remove('expanded');
             return;
         }
@@ -747,7 +747,7 @@ async function saveEssay(type) {
         console.log('Saving Common App essay to Supabase:', essays.commonApp);
         await saveEssaysToSupabase(essays);
         console.log('Common App essay saved successfully to Supabase');
-        alert('✅ Common App essay saved to Supabase! [v2024-12-09]');
+        showToast('Common App essay saved successfully!', 'success');
     }
     
     // Collapse button after save
@@ -758,7 +758,7 @@ function clearEditors() {
     const button = event.currentTarget;
     button.classList.add('expanded');
     
-    if (confirm('Are you sure you want to clear both the draft and AI feedback? This cannot be undone.')) {
+    showConfirm('Are you sure you want to clear both the draft and AI feedback? This cannot be undone.', 'Clear Essay?', () => {
         const studentDraftEditor = document.getElementById('studentDraftEditor');
         const aiFeedbackEditor = document.getElementById('aiFeedbackEditor');
         
@@ -770,10 +770,10 @@ function clearEditors() {
         }
         
         updateWordCount();
-    }
-    
-    // Collapse button after action
-    button.classList.remove('expanded');
+        
+        // Collapse button after action
+        button.classList.remove('expanded');
+    });
 }
 
 function requestAIFeedback(type) {
@@ -785,7 +785,7 @@ function requestAIFeedback(type) {
     
     // Validate prompt selection first
     if (!promptSelect || !promptSelect.value) {
-        alert('⚠️ Please select an essay prompt before requesting AI feedback.');
+        showToast('Please select an essay prompt before requesting AI feedback.', 'warning');
         return;
     }
     
@@ -794,13 +794,13 @@ function requestAIFeedback(type) {
     const essayContent = studentDraftEditor.innerText.trim();
     
     if (!essayContent) {
-        alert('Please write some content in your essay first!');
+        showToast('Please write some content in your essay first!', 'warning');
         return;
     }
     
     // Check if any API key is configured
     if (typeof CONFIG === 'undefined' || (!CONFIG.API_ENDPOINT && !CONFIG.GEMINI_API_KEY)) {
-        alert('Please configure API in js/config.js file first!\n\nFor secure setup, deploy the backend API following instructions in bus2college-api/README.md');
+        showToast('Please configure API in js/config.js file first! For secure setup, deploy the backend API.', 'warning', 6000);
         return;
     }
     

@@ -57,7 +57,7 @@ function acceptsCommonApp(collegeName) {
 async function exportToCommonAppFormat() {
     const user = await getCurrentUser();
     if (!user) {
-        alert('Please log in to export your college list');
+        showToast('Please log in to export your college list', 'warning');
         return;
     }
     
@@ -65,7 +65,7 @@ async function exportToCommonAppFormat() {
     const colleges = await loadCollegesFromSupabase() || [];
     
     if (colleges.length === 0) {
-        alert('No colleges to export. Please add colleges to your list first.');
+        showToast('No colleges to export. Please add colleges to your list first.', 'warning');
         return;
     }
     
@@ -76,7 +76,7 @@ async function exportToCommonAppFormat() {
     });
     
     if (commonAppColleges.length === 0) {
-        alert('None of your colleges accept Common App.');
+        showToast('None of your colleges accept Common App.', 'info');
         return;
     }
     
@@ -104,7 +104,7 @@ async function exportToCommonAppFormat() {
     link.click();
     document.body.removeChild(link);
     
-    alert(`Exported ${commonAppColleges.length} Common App colleges to CSV file!`);
+    showToast(`Exported ${commonAppColleges.length} Common App colleges to CSV file!`, 'success');
 }
 
 // Export Common App essay
@@ -114,7 +114,7 @@ async function exportCommonAppEssay() {
     
     const user = await getCurrentUser();
     if (!user) {
-        alert('Please log in to export your essay');
+        showToast('Please log in to export your essay', 'warning');
         button.classList.remove('expanded');
         return;
     }
@@ -123,7 +123,7 @@ async function exportCommonAppEssay() {
     const essay = essays.commonApp || {};
     
     if (!essay.content || !essay.content.trim()) {
-        alert('No Common App essay found. Please write your essay first.');
+        showToast('No Common App essay found. Please write your essay first.', 'warning');
         button.classList.remove('expanded');
         return;
     }
@@ -136,7 +136,9 @@ async function exportCommonAppEssay() {
     
     // Check word count is within Common App limits
     if (wordCount < 250 || wordCount > 650) {
-        const proceed = confirm(`Warning: Your essay is ${wordCount} words. The Common App essay must be between 250-650 words. Do you want to continue exporting?`);
+        const proceed = await new Promise(resolve => {
+            showConfirm(`Warning: Your essay is ${wordCount} words. The Common App essay must be between 250-650 words. Do you want to continue exporting?`, 'Word Count Warning', () => resolve(true), () => resolve(false));
+        });
         if (!proceed) {
             button.classList.remove('expanded');
             return;
@@ -167,7 +169,7 @@ Exported from Bus2College - Ready to paste into Common Application`;
     // Copy to clipboard
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(plainText).then(() => {
-            alert('✅ Essay copied to clipboard!\\n\\nYour essay is ready to paste into the Common Application. Simply:\\n1. Go to commonapp.org\\n2. Navigate to the Writing section\\n3. Paste your essay (Ctrl+V or Cmd+V)\\n\\nWord count: ' + wordCount + ' words');
+            showToast(`Essay copied to clipboard! Your essay (${wordCount} words) is ready to paste into the Common Application.`, 'success', 5000);
         }).catch(err => {
             // Fallback to download if clipboard fails
             downloadEssay(essayContent, plainText);
@@ -195,7 +197,7 @@ function downloadEssay(fullContent, plainText) {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
     
-    alert('✅ Essay exported and downloaded!\\n\\nYour essay file is ready. Open it and copy the essay text to paste into the Common Application at commonapp.org.');
+    showToast('Essay exported and downloaded! Your essay file is ready to paste into the Common Application.', 'success', 5000);
 }
 
 // Import Common App essay (from file)
@@ -238,7 +240,7 @@ async function importCommonAppEssay() {
                     essayTextarea.value = essayText;
                 }
                 
-                alert('Essay imported successfully!');
+                showToast('Essay imported successfully!', 'success');
             }
         };
         

@@ -85,7 +85,7 @@ async function saveUserDataToSupabase(data) {
 async function exportToExcel(dataType) {
     const userData = await getUserDataFromSupabase();
     if (!userData) {
-        alert('No data to export');
+        showToast('No data to export', 'warning');
         return;
     }
     
@@ -124,7 +124,7 @@ async function exportToExcel(dataType) {
     }
     
     if (typeof XLSX === 'undefined') {
-        alert('Excel export library not loaded. Please refresh the page.');
+        showToast('Excel export library not loaded. Please refresh the page.', 'error');
         return;
     }
     
@@ -148,18 +148,18 @@ async function exportToExcel(dataType) {
         
         // Download file
         XLSX.writeFile(workbook, fileName);
-        alert(`Data exported successfully to ${fileName}`);
+        showToast(`Data exported successfully to ${fileName}`, 'success');
         
     } catch (error) {
         console.error('Error exporting to Excel:', error);
-        alert('Error exporting data. Please try again.');
+        showToast('Error exporting data. Please try again.', 'error');
     }
 }
 
 // Import data from Excel file
 function importFromExcel(dataType, file) {
     if (typeof XLSX === 'undefined') {
-        alert('Excel import library not loaded. Please refresh the page.');
+        showToast('Excel import library not loaded. Please refresh the page.', 'error');
         return;
     }
     
@@ -315,7 +315,7 @@ async function exportAsJSON() {
     const user = await getCurrentUser();
     
     if (!userData || !user) {
-        alert('No data to export');
+        showToast('No data to export', 'warning');
         return;
     }
     

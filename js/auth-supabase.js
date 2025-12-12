@@ -181,7 +181,7 @@ async function handleLogout() {
         window.location.href = 'index.html';
     } catch (error) {
         console.error('Logout error:', error);
-        alert('Error logging out: ' + error.message);
+        showToast('Error logging out: ' + error.message, 'error');
     }
 }
 
@@ -202,7 +202,7 @@ async function handleForgotPassword(event) {
     const email = document.getElementById('forgotPasswordEmail').value.trim();
     
     if (!email) {
-        alert('Please enter your email address.');
+        showToast('Please enter your email address.', 'warning');
         return false;
     }
     
@@ -213,12 +213,12 @@ async function handleForgotPassword(event) {
         
         if (error) throw error;
         
-        alert('Password reset email sent! Please check your inbox.');
+        showToast('Password reset email sent! Please check your inbox.', 'success');
         closeForgotPasswordModal();
         
     } catch (error) {
         console.error('Password reset error:', error);
-        alert('Error sending reset email: ' + error.message);
+        showToast('Error sending reset email: ' + error.message, 'error');
     }
     
     return false;

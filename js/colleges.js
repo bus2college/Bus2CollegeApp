@@ -132,7 +132,7 @@ function nextQuestion(currentQuestion) {
     if (currentQuestion === 1) {
         const gpa = parseFloat(document.getElementById('gpaInput').value);
         if (!gpa || gpa < 0 || gpa > 4.0) {
-            alert('Please enter a valid GPA between 0.0 and 4.0');
+            showToast('Please enter a valid GPA between 0.0 and 4.0', 'warning');
             return;
         }
         questionnaireData.gpa = gpa;
@@ -143,7 +143,7 @@ function nextQuestion(currentQuestion) {
         if (testType === 'SAT') {
             const sat = parseInt(document.getElementById('satInput').value);
             if (!sat || sat < 400 || sat > 1600) {
-                alert('Please enter a valid SAT score between 400 and 1600');
+                showToast('Please enter a valid SAT score between 400 and 1600', 'warning');
                 return;
             }
             questionnaireData.testScore = sat;
@@ -1076,7 +1076,7 @@ async function editCollege(index) {
     const colleges = await loadCollegesFromSupabase();
     
     if (!colleges || !colleges[index]) {
-        alert('College not found');
+        showToast('College not found', 'error');
         return;
     }
     
@@ -1258,27 +1258,27 @@ async function saveEditCollege(event) {
 
 // Delete college
 async function deleteCollege(index) {
-    if (!confirm('Are you sure you want to remove this college from your list?')) {
-        return;
-    }
-    
-    try {
-        // Load current colleges from Supabase
-        const colleges = await loadCollegesFromSupabase();
-        
-        if (colleges && colleges[index]) {
-            colleges.splice(index, 1);
+    showConfirm('Are you sure you want to remove this college from your list?', 'Delete College?', async () => {
+        try {
+            // Load current colleges from Supabase
+            const colleges = await loadCollegesFromSupabase();
             
-            // Save updated list back to Supabase
-            await saveCollegesToSupabase(colleges);
-            
-            // Reload colleges list in UI
-            loadCollegesList(colleges);
+            if (colleges && colleges[index]) {
+                colleges.splice(index, 1);
+                
+                // Save updated list back to Supabase
+                await saveCollegesToSupabase(colleges);
+                
+                // Reload colleges list in UI
+                loadCollegesList(colleges);
+                
+                showToast('College removed from your list', 'success');
+            }
+        } catch (error) {
+            console.error('Error deleting college:', error);
+            showToast('Failed to delete college. Please try again.', 'error');
         }
-    } catch (error) {
-        console.error('Error deleting college:', error);
-        alert('Failed to delete college. Please try again.');
-    }
+    });
 }
 
 // Close modals when clicking outside

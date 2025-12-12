@@ -122,7 +122,7 @@ async function sendChatMessage() {
     
     // Check if any API key is configured
     if (typeof CONFIG === 'undefined' || (!CONFIG.API_ENDPOINT && !CONFIG.GEMINI_API_KEY)) {
-        alert('Please configure API in js/config.js file first!\n\nFor secure setup, deploy the backend API.');
+        showToast('Please configure API in js/config.js file first! For secure setup, deploy the backend API.', 'warning', 6000);
         return;
     }
     
@@ -282,7 +282,7 @@ function saveChatHistory() {
 
 // Clear chat history
 function clearChatHistory() {
-    if (confirm('Are you sure you want to clear the chat history?')) {
+    showConfirm('Are you sure you want to clear the chat history?', 'Clear Chat?', () => {
         conversationHistory = [];
         
         const user = getCurrentUser();
@@ -305,7 +305,9 @@ function clearChatHistory() {
                 <p>Ask me anything!</p>
             </div>
         `;
-    }
+        
+        showToast('Chat history cleared', 'success');
+    });
 }
 
 // Initialize chat on page load
