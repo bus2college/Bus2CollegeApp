@@ -84,6 +84,20 @@ function initializeClickTracking() {
         const id = element.id || '';
         const text = element.textContent?.trim().substring(0, 100) || '';
         
+        // Get current page name
+        const currentPage = document.querySelector('.content-page.active');
+        const pageName = currentPage?.id || 'login';
+        const pageTitle = currentPage?.querySelector('h2')?.textContent || document.title;
+        
+        // Check if it's a button and get button name
+        let buttonName = null;
+        let buttonType = null;
+        if (tagName === 'button' || element.closest('button')) {
+            const btn = tagName === 'button' ? element : element.closest('button');
+            buttonName = btn.textContent?.trim() || btn.getAttribute('title') || btn.getAttribute('aria-label');
+            buttonType = btn.className;
+        }
+        
         const clickDetails = {
             tag: tagName,
             class: className,
@@ -91,7 +105,11 @@ function initializeClickTracking() {
             text: text,
             href: element.href || null,
             x: event.clientX,
-            y: event.clientY
+            y: event.clientY,
+            page_name: pageName,
+            page_title: pageTitle,
+            button_name: buttonName,
+            button_type: buttonType
         };
 
         logActivity(ActivityType.CLICK, clickDetails);
@@ -102,9 +120,16 @@ function initializeClickTracking() {
  * Track button clicks specifically
  */
 function trackButtonClick(buttonName, buttonId, additionalData = {}) {
+    // Get current page info
+    const currentPage = document.querySelector('.content-page.active');
+    const pageName = currentPage?.id || 'login';
+    const pageTitle = currentPage?.querySelector('h2')?.textContent || document.title;
+    
     logActivity(ActivityType.BUTTON_CLICK, {
         button_name: buttonName,
         button_id: buttonId,
+        page_name: pageName,
+        page_title: pageTitle,
         ...additionalData
     });
 }
@@ -113,8 +138,13 @@ function trackButtonClick(buttonName, buttonId, additionalData = {}) {
  * Track page navigation
  */
 function trackPageView(pageName) {
+    // Get page title from the h2 element
+    const currentPage = document.getElementById(pageName);
+    const pageTitle = currentPage?.querySelector('h2')?.textContent || pageName;
+    
     logActivity(ActivityType.PAGE_VIEW, {
         page_name: pageName,
+        page_title: pageTitle,
         referrer: document.referrer
     });
 }
