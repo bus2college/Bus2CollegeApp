@@ -36,6 +36,9 @@
     <div class="main-container">
         <!-- Left Navigation Panel -->
         <nav class="left-nav" id="leftNavPanel">
+            <button class="btn-toggle-nav" id="toggleNavBtn" onclick="toggleNavPanel()" title="Collapse/Expand Navigation">
+                <span id="toggleNavIcon">☰</span>
+            </button>
             <ul class="nav-menu">
                 <li>
                     <a href="#" class="nav-link active" data-page="student-info" onclick="navigateToPage(event, 'student-info')">
@@ -92,6 +95,9 @@
         <main class="center-content">
             <!-- Student Information Page -->
             <div id="student-info" class="content-page">
+                <p class="page-description">
+                    <span style="font-size: 14px; opacity: 0.85;">Complete your academic profile to get personalized college recommendations and track your application progress.</span>
+                </p>
                 <div class="page-title-with-help">
                     <h2>Student Information</h2>
                     <div class="page-action-icons">
@@ -99,10 +105,7 @@
                         <button class="action-icon-btn" onclick="exportStudentInfoToCommonApp()" title="Export to Common App">Export</button>
                     </div>
                 </div>
-                <p class="page-subtitle" style="margin-bottom: 8px;">
-                    <span style="font-size: 14px; opacity: 0.85;">Complete your academic profile to get personalized college recommendations and track your application progress.</span>
-                </p>
-                <p class="page-subtitle" style="margin-top: 0;">
+                <p class="page-subtitle">
                     <strong>📝 Workflow:</strong> 
                     <span style="color: #667eea;">①</span> Fill profile → 
                     <span style="color: #667eea;">②</span> Add scores → 
@@ -402,6 +405,9 @@
 
             <!-- My Colleges Page (Default) -->
             <div id="my-colleges" class="content-page">
+                <p class="page-description">
+                    <span style="font-size: 14px; opacity: 0.85;">Build and organize your college list with application deadlines and status tracking.</span>
+                </p>
                 <div class="page-title-with-help">
                     <h2>My Colleges</h2>
                     <div class="page-action-icons">
@@ -409,10 +415,7 @@
                         <button class="action-icon-btn" onclick="showCommonAppPanel()" title="Common App Integration">Import</button>
                     </div>
                 </div>
-                <p class="page-subtitle" style="margin-bottom: 8px;">
-                    <span style="font-size: 14px; opacity: 0.85;">Build and organize your college list with application deadlines and status tracking.</span>
-                </p>
-                <p class="page-subtitle" style="margin-top: 0;">
+                <p class="page-subtitle">
                     <strong>📝 Workflow:</strong> 
                     <span style="color: #667eea;">①</span> Add colleges → 
                     <span style="color: #667eea;">②</span> Categorize (Safety/Target/Reach) → 
@@ -466,6 +469,9 @@
 
             <!-- My Common App Essay Page -->
             <div id="common-app-essay" class="content-page">
+                <p class="page-description">
+                    <span style="font-size: 14px; opacity: 0.85;">Write and refine your Common Application essay with AI assistance. Word limit: 250-650 words.</span>
+                </p>
                 <div class="page-title-with-help">
                     <h2>My Common App Essay</h2>
                     <div class="page-action-icons">
@@ -474,10 +480,7 @@
                         <button class="action-icon-btn" onclick="clearEditors()" title="Clear All">Clear</button>
                     </div>
                 </div>
-                <p class="page-subtitle" style="margin-bottom: 8px;">
-                    <span style="font-size: 14px; opacity: 0.85;">Write and refine your Common Application essay with AI assistance. Word limit: 250-650 words.</span>
-                </p>
-                <p class="page-subtitle" style="margin-top: 0;">
+                <p class="page-subtitle">
                     <strong>📝 Workflow:</strong> 
                     <span style="color: #667eea;">①</span> Select a prompt → 
                     <span style="color: #667eea;">②</span> Write your draft → 
@@ -608,16 +611,16 @@
 
             <!-- My Supplemental Essays Page -->
             <div id="supplemental-essays" class="content-page">
+                <p class="page-description">
+                    <span style="font-size: 14px; opacity: 0.85;">Manage college-specific supplemental essays and track your progress on each one.</span>
+                </p>
                 <div class="page-title-with-help">
                     <h2>My Supplemental Essays</h2>
                     <div class="page-action-icons">
                         <button class="action-icon-btn" onclick="addSupplementalEssay()" title="Add Supplemental Essay">Add</button>
                     </div>
                 </div>
-                <p class="page-subtitle" style="margin-bottom: 8px;">
-                    <span style="font-size: 14px; opacity: 0.85;">Manage college-specific supplemental essays and track your progress on each one.</span>
-                </p>
-                <p class="page-subtitle" style="margin-top: 0;">
+                <p class="page-subtitle">
                     <strong>📝 Workflow:</strong> 
                     <span style="color: #667eea;">①</span> Add essay by college → 
                     <span style="color: #667eea;">②</span> Enter prompt & word limit → 
@@ -671,16 +674,16 @@
 
             <!-- My Activities Page -->
             <div id="my-activities" class="content-page">
+                <p class="page-description">
+                    <span style="font-size: 14px; opacity: 0.85;">Document extracurriculars, sports, clubs, volunteer work, and honors for college applications.</span>
+                </p>
                 <div class="page-title-with-help">
                     <h2>My Activities</h2>
                     <div class="page-action-icons">
                         <button class="action-icon-btn" onclick="addActivity()" title="Add Activity">Add</button>
                     </div>
                 </div>
-                <p class="page-subtitle" style="margin-bottom: 8px;">
-                    <span style="font-size: 14px; opacity: 0.85;">Document extracurriculars, sports, clubs, volunteer work, and honors for college applications.</span>
-                </p>
-                <p class="page-subtitle" style="margin-top: 0;">
+                <p class="page-subtitle">
                     <strong>📝 Workflow:</strong> 
                     <span style="color: #667eea;">①</span> Add activity → 
                     <span style="color: #667eea;">②</span> Define role & hours → 
@@ -734,16 +737,16 @@
 
             <!-- My Recommenders Page -->
             <div id="my-recommenders" class="content-page">
+                <p class="page-description">
+                    <span style="font-size: 14px; opacity: 0.85;">Manage your recommendation letters from teachers, counselors, and mentors.</span>
+                </p>
                 <div class="page-title-with-help">
                     <h2>My Recommenders</h2>
                     <div class="page-action-icons">
                         <button class="action-icon-btn" onclick="addRecommender()" title="Add Recommender">Add</button>
                     </div>
                 </div>
-                <p class="page-subtitle" style="margin-bottom: 8px;">
-                    <span style="font-size: 14px; opacity: 0.85;">Manage your recommendation letters from teachers, counselors, and mentors.</span>
-                </p>
-                <p class="page-subtitle" style="margin-top: 0;">
+                <p class="page-subtitle">
                     <strong>📝 Workflow:</strong> 
                     <span style="color: #667eea;">①</span> Add recommender → 
                     <span style="color: #667eea;">②</span> Enter contact info → 
@@ -797,16 +800,16 @@
 
             <!-- Daily Activity Tracker Page -->
             <div id="daily-tracker" class="content-page">
+                <p class="page-description">
+                    <span style="font-size: 14px; opacity: 0.85;">Track daily college application work to maintain momentum and see your progress over time.</span>
+                </p>
                 <div class="page-title-with-help">
                     <h2>Daily Activity Tracker</h2>
                     <div class="page-action-icons">
                         <button class="action-icon-btn" onclick="addDailyActivity()" title="Log Today's Activity">Log</button>
                     </div>
                 </div>
-                <p class="page-subtitle" style="margin-bottom: 8px;">
-                    <span style="font-size: 14px; opacity: 0.85;">Track daily college application work to maintain momentum and see your progress over time.</span>
-                </p>
-                <p class="page-subtitle" style="margin-top: 0;">
+                <p class="page-subtitle">
                     <strong>📝 Workflow:</strong> 
                     <span style="color: #667eea;">①</span> Log daily tasks → 
                     <span style="color: #667eea;">②</span> Add notes → 

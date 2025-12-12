@@ -753,6 +753,13 @@ body {
     background: rgba(114, 28, 36, 0.15);
 }
 
+/* Page Description */
+.page-description {
+    margin: 0 0 10px 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
 /* Page Title with Help Icon */
 .page-title-with-help {
     display: flex;
