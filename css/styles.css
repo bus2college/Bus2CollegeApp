@@ -1944,10 +1944,10 @@ body {
 }
 
 .colleges-column-content {
-    padding: 15px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 8px;
     min-height: 300px;
 }
 
