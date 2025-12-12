@@ -551,7 +551,7 @@ body {
 .prompt-description-side strong {
     display: block;
     color: var(--navy-blue);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     font-size: 13px;
     text-transform: uppercase;
 }
