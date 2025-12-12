@@ -41,12 +41,19 @@ async function logActivity(activityType, details = {}) {
             return;
         }
         
+        // Get the actual page title from the details or from the active page
+        let pageTitle = details.page_title;
+        if (!pageTitle) {
+            const currentPage = document.querySelector('.content-page.active');
+            pageTitle = currentPage?.querySelector('h2')?.textContent || document.title;
+        }
+        
         const activityData = {
             user_id: userId,
             activity_type: activityType,
             details: details,
             page_url: window.location.href,
-            page_title: document.title,
+            page_title: pageTitle,
             timestamp: new Date().toISOString(),
             session_id: getSessionId(),
             user_agent: navigator.userAgent,
