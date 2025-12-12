@@ -753,22 +753,19 @@ body {
     background: rgba(114, 28, 36, 0.15);
 }
 
-/* Page Description */
-.page-description {
-    margin: 0 0 10px 0;
-    padding: 0;
-    line-height: 1.5;
-}
-
 /* Page Title with Help Icon */
 .page-title-with-help {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     margin-bottom: 0;
     margin-top: 0;
     padding-bottom: 8px;
     border-bottom: 3px solid var(--orange);
+}
+
+.title-section {
+    flex: 1;
 }
 
 .page-title-with-help h2 {
@@ -777,6 +774,13 @@ body {
     font-size: 24px;
     color: var(--navy-blue);
     border-bottom: none;
+}
+
+/* Page Description */
+.page-description {
+    margin: 6px 0 0 0;
+    padding: 0;
+    line-height: 1.4;
 }
 
 .page-action-icons {
