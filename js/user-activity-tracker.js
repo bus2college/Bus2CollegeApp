@@ -162,14 +162,14 @@ function trackPageView(pageName) {
 /**
  * Track AI prompt submission
  */
-function trackAIPrompt(prompt, context = {}) {
+async function trackAIPrompt(prompt, context = {}) {
     const currentPage = document.querySelector('.content-page.active');
-    const pageName = currentPage?.id || 'login';
-    const pageTitle = currentPage?.querySelector('h2')?.textContent || 'Bus2College';
+    const pageName = currentPage?.id || 'ai-assistant';
+    const pageTitle = currentPage?.querySelector('h2')?.textContent || 'AI Assistant';
     
-    console.log('Tracking AI Prompt:', prompt.substring(0, 50));
+    console.log('🔵 Tracking AI Prompt:', prompt.substring(0, 50));
     
-    logActivity(ActivityType.AI_PROMPT, {
+    await logActivity(ActivityType.AI_PROMPT, {
         prompt: prompt,
         prompt_length: prompt.length,
         page_name: pageName,
@@ -181,19 +181,23 @@ function trackAIPrompt(prompt, context = {}) {
 /**
  * Track AI response received
  */
-function trackAIResponse(prompt, response, responseTime = null) {
+async function trackAIResponse(prompt, response, responseTime = null) {
     const currentPage = document.querySelector('.content-page.active');
-    const pageName = currentPage?.id || 'login';
-    const pageTitle = currentPage?.querySelector('h2')?.textContent || 'Bus2College';
+    const pageName = currentPage?.id || 'ai-assistant';
+    const pageTitle = currentPage?.querySelector('h2')?.textContent || 'AI Assistant';
     
-    console.log('Tracking AI Response:', response.substring(0, 50), 'Response time:', responseTime);
+    console.log('🟢 Tracking AI Response - Length:', response?.length || 0, 'Response time:', responseTime);
+    console.log('🟢 Response content:', response);
     
-    logActivity(ActivityType.AI_RESPONSE, {
-        prompt: prompt,
-        prompt_preview: prompt.substring(0, 200),
-        response: response,
-        response_preview: response.substring(0, 200),
-        response_length: response.length,
+    // Ensure response is a string
+    const responseText = typeof response === 'string' ? response : String(response || '');
+    
+    await logActivity(ActivityType.AI_RESPONSE, {
+        prompt: prompt || '',
+        prompt_preview: (prompt || '').substring(0, 200),
+        response: responseText,
+        response_preview: responseText.substring(0, 200),
+        response_length: responseText.length,
         response_time_ms: responseTime,
         page_name: pageName,
         page_title: pageTitle

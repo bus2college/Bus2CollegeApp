@@ -88,8 +88,12 @@ async function sendChatMessage() {
     chatStatus.textContent = 'AI is thinking...';
     
     // Track AI prompt
-    if (typeof trackAIPrompt === 'function') {
-        trackAIPrompt(userMessage, { source: 'ai_chat' });
+    try {
+        if (typeof trackAIPrompt === 'function') {
+            await trackAIPrompt(userMessage, { source: 'ai_chat' });
+        }
+    } catch (e) {
+        console.error('Error tracking prompt:', e);
     }
     
     // Add user message to chat
@@ -108,6 +112,9 @@ async function sendChatMessage() {
         const aiMessage = await callAI(conversationHistory);
         const responseTime = Date.now() - startTime;
         
+        console.log('AI Response received:', aiMessage?.substring(0, 100));
+        console.log('AI Response length:', aiMessage?.length);
+        
         // Add AI response to conversation history
         conversationHistory.push({
             role: 'assistant',
@@ -115,8 +122,18 @@ async function sendChatMessage() {
         });
         
         // Track AI response
-        if (typeof trackAIResponse === 'function') {
-            trackAIResponse(userMessage, aiMessage, responseTime);
+        try {
+            if (typeof trackAIResponse === 'function') {
+                console.log('Calling trackAIResponse with:', {
+                    promptLength: userMessage.length,
+                    responseLength: aiMessage?.length,
+                    responseTime: responseTime
+                });
+                await trackAIResponse(userMessage, aiMessage, responseTime);
+                console.log('✓ trackAIResponse completed');
+            }
+        } catch (e) {
+            console.error('Error tracking response:', e);
         }
         
         // Display AI message
