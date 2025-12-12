@@ -1082,12 +1082,22 @@ body {
     display: none;
 }
 
+.right-chat.collapsed .chat-header {
+    justify-content: center;
+    padding: 8px;
+}
+
 .right-chat.collapsed .chat-header h3 {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    display: block;
-    font-size: 14px;
-    white-space: nowrap;
+    gap: 0;
+}
+
+.right-chat.collapsed .chat-header h3 .ai-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.right-chat.collapsed .chat-header h3::after {
+    content: none;
 }
 
 .right-chat.collapsed .chat-header-actions {
@@ -1104,13 +1114,15 @@ body {
 .chat-header {
     background-color: var(--navy-blue);
     color: var(--white);
-    padding: 15px;
+    padding: 8px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 3px solid var(--orange);
     cursor: pointer;
     user-select: none;
+    min-height: 44px;
+    height: 44px;
 }
 
 .chat-header:hover {
@@ -1118,11 +1130,16 @@ body {
 }
 
 .chat-header h3 {
-    font-size: 18px;
+    font-size: 16px;
     margin: 0;
     display: flex;
     align-items: center;
     gap: 10px;
+    line-height: 1;
+}
+
+.right-chat.collapsed .chat-header h3 {
+    font-size: 0;
 }
 
 .ai-icon {
