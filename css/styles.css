@@ -489,10 +489,14 @@ body {
 }
 
 .page-subtitle {
-    color: #666;
-    font-size: 14px;
-    margin: 15px 0 15px 0;
-    font-style: italic;
+    color: #555;
+    font-size: 13px;
+    margin: 10px 0 15px 0;
+    padding: 10px 15px;
+    background-color: #fafafa;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    line-height: 1.6;
 }
 
 .info-banner-grey {
