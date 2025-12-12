@@ -171,10 +171,13 @@ function trackPageView(pageName) {
  */
 async function trackAIPrompt(prompt, context = {}) {
     const currentPage = document.querySelector('.content-page.active');
-    const pageName = currentPage?.id || 'ai-assistant';
-    const pageTitle = currentPage?.querySelector('h2')?.textContent || 'AI Assistant';
+    const pageName = currentPage?.id || 'unknown';
+    const pageTitle = currentPage?.querySelector('h2')?.textContent?.trim() || 'Unknown Page';
     
-    console.log('🔵 Tracking AI Prompt:', prompt.substring(0, 50));
+    console.log('🔵 Tracking AI Prompt');
+    console.log('  Current Page ID:', pageName);
+    console.log('  Current Page Title:', pageTitle);
+    console.log('  Prompt:', prompt.substring(0, 50));
     
     await logActivity(ActivityType.AI_PROMPT, {
         prompt: prompt,
@@ -190,11 +193,14 @@ async function trackAIPrompt(prompt, context = {}) {
  */
 async function trackAIResponse(prompt, response, responseTime = null) {
     const currentPage = document.querySelector('.content-page.active');
-    const pageName = currentPage?.id || 'ai-assistant';
-    const pageTitle = currentPage?.querySelector('h2')?.textContent || 'AI Assistant';
+    const pageName = currentPage?.id || 'unknown';
+    const pageTitle = currentPage?.querySelector('h2')?.textContent?.trim() || 'Unknown Page';
     
-    console.log('🟢 Tracking AI Response - Length:', response?.length || 0, 'Response time:', responseTime);
-    console.log('🟢 Response content:', response);
+    console.log('🟢 Tracking AI Response');
+    console.log('  Current Page ID:', pageName);
+    console.log('  Current Page Title:', pageTitle);
+    console.log('  Response Length:', response?.length || 0);
+    console.log('  Response time:', responseTime, 'ms');
     
     // Ensure response is a string
     const responseText = typeof response === 'string' ? response : String(response || '');
