@@ -1578,7 +1578,30 @@
         // Get them from: https://app.supabase.com/project/_/settings/api
         const supabaseUrl = 'https://yvvpqrtesmkpvtlpwaap.supabase.co'; // e.g., 'https://xxxxx.supabase.co'
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnBxcnRlc21rcHZ0bHB3YWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMTQyMDYsImV4cCI6MjA4MDg5MDIwNn0.CCCz48RjTunMGsdxD3yjNmoDtcyozIrt1MywHlIsa4E'; // Your anon/public key
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+        
+        // Ensure window.supabase is available for the SDK
+        if (typeof window.supabase === 'undefined') {
+            console.warn('Supabase SDK not yet loaded, waiting...');
+        }
+        
+        // Use the global supabase from the SDK
+        let supabase;
+        
+        // Function to initialize Supabase client
+        function initSupabase() {
+            if (typeof supabase !== 'undefined') return; // Already initialized
+            
+            if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+                supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+                console.log('Supabase client initialized successfully');
+            } else {
+                console.error('Supabase SDK not found in window object');
+                setTimeout(initSupabase, 100); // Retry after 100ms
+            }
+        }
+        
+        // Wait a moment for SDK to load then initialize
+        setTimeout(initSupabase, 100);
     </script>
     
     <script src="js/notifications.js?v=1733789001"></script>
