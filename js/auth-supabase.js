@@ -345,28 +345,34 @@ async function getCurrentUser() {
     }
 }
 
-// Initialize auth listener (with safety check for supabase availability)
-if (typeof supabase !== 'undefined' && supabase && supabase.auth) {
-    supabase.auth.onAuthStateChange((event, session) => {
-        console.log('Auth state changed:', event);
-        
-        if (event === 'SIGNED_OUT') {
-            window.location.href = 'index.html';
-        }
-    });
+// Initialize auth listener when supabase becomes available
+async function setupAuthListener() {
+    console.log('Setting up auth listener...');
+    
+    const isInitialized = await ensureSupabaseInitialized();
+    if (!isInitialized) {
+        console.error('Could not initialize Supabase for auth listener');
+        return;
+    }
+    
+    try {
+        supabase.auth.onAuthStateChange((event, session) => {
+            console.log('Auth state changed:', event);
+            
+            if (event === 'SIGNED_OUT') {
+                window.location.href = 'index.html';
+            }
+        });
+        console.log('Auth listener set up successfully');
+    } catch (error) {
+        console.error('Error setting up auth listener:', error);
+    }
+}
+
+// Call this when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupAuthListener);
 } else {
-    // If supabase isn't ready, retry after a delay
-    setTimeout(() => {
-        if (typeof supabase !== 'undefined' && supabase && supabase.auth) {
-            supabase.auth.onAuthStateChange((event, session) => {
-                console.log('Auth state changed:', event);
-                
-                if (event === 'SIGNED_OUT') {
-                    window.location.href = 'index.html';
-                }
-            });
-        } else {
-            console.error('Supabase is not initialized. Check that Supabase SDK and configuration are loaded.');
-        }
-    }, 500);
+    // DOM is already loaded
+    setupAuthListener();
 }
