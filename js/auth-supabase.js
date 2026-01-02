@@ -5,6 +5,23 @@
 // Initialize Supabase client (configured in HTML files)
 // const supabase is created in index.html and home.html
 
+// Utility function to wait for Supabase to be initialized
+async function ensureSupabaseInitialized() {
+    let attempts = 0;
+    const maxAttempts = 50; // ~5 seconds max wait
+    
+    while (attempts < maxAttempts) {
+        if (typeof supabase !== 'undefined' && supabase && supabase.auth) {
+            return true;
+        }
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+    }
+    
+    console.error('Supabase failed to initialize after 5 seconds');
+    return false;
+}
+
 // Toggle between login and register forms
 function showLoginForm() {
     document.getElementById('loginForm').classList.add('active');
@@ -34,10 +51,10 @@ function hideMessage() {
 async function handleRegister(event) {
     event.preventDefault();
     
-    // Check if supabase is initialized
-    if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
-        showMessage('Registration service is not initialized. Please refresh the page and try again.', 'error');
-        console.error('Supabase is not initialized');
+    // Wait for Supabase to initialize
+    const isInitialized = await ensureSupabaseInitialized();
+    if (!isInitialized) {
+        showMessage('Registration service is starting up. Please try again in a moment.', 'error');
         return false;
     }
     
@@ -116,10 +133,10 @@ async function handleRegister(event) {
 async function handleLogin(event) {
     event.preventDefault();
     
-    // Check if supabase is initialized
-    if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
-        showMessage('Login service is not initialized. Please refresh the page and try again.', 'error');
-        console.error('Supabase is not initialized');
+    // Wait for Supabase to initialize
+    const isInitialized = await ensureSupabaseInitialized();
+    if (!isInitialized) {
+        showMessage('Login service is starting up. Please try again in a moment.', 'error');
         return false;
     }
     
@@ -178,24 +195,19 @@ async function handleLogin(event) {
 
 // Handle logout
 async function handleLogout() {
-    // Check if supabase is initialized
-    if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
-        console.error('Supabase is not initialized');
-        // Force redirect to login even if supabase fails
-        sessionStorage.clear();
-        localStorage.removeItem('chatHistory');
-        window.location.href = 'index.html';
-        return;
-    }
-    
     try {
+        // Wait for Supabase to initialize
+        const isInitialized = await ensureSupabaseInitialized();
+        
         // Track logout before signing out
         if (typeof trackLogout === 'function') {
             trackLogout();
         }
         
-        const { error } = await supabase.auth.signOut();
-        if (error) throw error;
+        if (isInitialized) {
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+        }
         
         // Clear any local storage
         sessionStorage.clear();
@@ -205,7 +217,10 @@ async function handleLogout() {
         window.location.href = 'index.html';
     } catch (error) {
         console.error('Logout error:', error);
-        showToast('Error logging out: ' + error.message, 'error');
+        // Still redirect even if there's an error
+        sessionStorage.clear();
+        localStorage.removeItem('chatHistory');
+        window.location.href = 'index.html';
     }
 }
 
@@ -223,10 +238,10 @@ function closeForgotPasswordModal() {
 async function handleForgotPassword(event) {
     event.preventDefault();
     
-    // Check if supabase is initialized
-    if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
-        showToast('Password reset service is not initialized. Please refresh the page and try again.', 'error');
-        console.error('Supabase is not initialized');
+    // Wait for Supabase to initialize
+    const isInitialized = await ensureSupabaseInitialized();
+    if (!isInitialized) {
+        showToast('Password reset service is starting up. Please try again in a moment.', 'error');
         return false;
     }
     
@@ -258,16 +273,12 @@ async function handleForgotPassword(event) {
 // Check authentication status on page load (for home.html)
 async function checkAuthStatus() {
     try {
-        // Check if supabase is initialized
-        if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
-            console.error('Supabase is not initialized');
-            // Wait a bit and retry
-            await new Promise(resolve => setTimeout(resolve, 500));
-            if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
-                console.error('Supabase still not initialized after retry');
-                window.location.href = 'index.html';
-                return null;
-            }
+        // Wait for Supabase to initialize
+        const isInitialized = await ensureSupabaseInitialized();
+        if (!isInitialized) {
+            console.error('Supabase failed to initialize');
+            window.location.href = 'index.html';
+            return null;
         }
         
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -304,9 +315,10 @@ async function checkAuthStatus() {
 // Get current user (helper function for compatibility)
 async function getCurrentUser() {
     try {
-        // Check if supabase is initialized
-        if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
-            console.error('Supabase is not initialized');
+        // Wait for Supabase to initialize
+        const isInitialized = await ensureSupabaseInitialized();
+        if (!isInitialized) {
+            console.error('Supabase failed to initialize');
             return null;
         }
         
