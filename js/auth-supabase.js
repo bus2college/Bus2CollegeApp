@@ -34,6 +34,13 @@ function hideMessage() {
 async function handleRegister(event) {
     event.preventDefault();
     
+    // Check if supabase is initialized
+    if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
+        showMessage('Registration service is not initialized. Please refresh the page and try again.', 'error');
+        console.error('Supabase is not initialized');
+        return false;
+    }
+    
     const name = document.getElementById('registerName').value.trim();
     const email = document.getElementById('registerEmail').value.trim();
     const password = document.getElementById('registerPassword').value;
@@ -109,6 +116,13 @@ async function handleRegister(event) {
 async function handleLogin(event) {
     event.preventDefault();
     
+    // Check if supabase is initialized
+    if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
+        showMessage('Login service is not initialized. Please refresh the page and try again.', 'error');
+        console.error('Supabase is not initialized');
+        return false;
+    }
+    
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
     
@@ -164,6 +178,16 @@ async function handleLogin(event) {
 
 // Handle logout
 async function handleLogout() {
+    // Check if supabase is initialized
+    if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
+        console.error('Supabase is not initialized');
+        // Force redirect to login even if supabase fails
+        sessionStorage.clear();
+        localStorage.removeItem('chatHistory');
+        window.location.href = 'index.html';
+        return;
+    }
+    
     try {
         // Track logout before signing out
         if (typeof trackLogout === 'function') {
@@ -199,6 +223,13 @@ function closeForgotPasswordModal() {
 async function handleForgotPassword(event) {
     event.preventDefault();
     
+    // Check if supabase is initialized
+    if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
+        showToast('Password reset service is not initialized. Please refresh the page and try again.', 'error');
+        console.error('Supabase is not initialized');
+        return false;
+    }
+    
     const email = document.getElementById('forgotPasswordEmail').value.trim();
     
     if (!email) {
@@ -227,6 +258,18 @@ async function handleForgotPassword(event) {
 // Check authentication status on page load (for home.html)
 async function checkAuthStatus() {
     try {
+        // Check if supabase is initialized
+        if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
+            console.error('Supabase is not initialized');
+            // Wait a bit and retry
+            await new Promise(resolve => setTimeout(resolve, 500));
+            if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
+                console.error('Supabase still not initialized after retry');
+                window.location.href = 'index.html';
+                return null;
+            }
+        }
+        
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) throw error;
@@ -261,6 +304,12 @@ async function checkAuthStatus() {
 // Get current user (helper function for compatibility)
 async function getCurrentUser() {
     try {
+        // Check if supabase is initialized
+        if (typeof supabase === 'undefined' || !supabase || !supabase.auth) {
+            console.error('Supabase is not initialized');
+            return null;
+        }
+        
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return null;
         
@@ -284,11 +333,28 @@ async function getCurrentUser() {
     }
 }
 
-// Initialize auth listener
-supabase.auth.onAuthStateChange((event, session) => {
-    console.log('Auth state changed:', event);
-    
-    if (event === 'SIGNED_OUT') {
-        window.location.href = 'index.html';
-    }
-});
+// Initialize auth listener (with safety check for supabase availability)
+if (typeof supabase !== 'undefined' && supabase && supabase.auth) {
+    supabase.auth.onAuthStateChange((event, session) => {
+        console.log('Auth state changed:', event);
+        
+        if (event === 'SIGNED_OUT') {
+            window.location.href = 'index.html';
+        }
+    });
+} else {
+    // If supabase isn't ready, retry after a delay
+    setTimeout(() => {
+        if (typeof supabase !== 'undefined' && supabase && supabase.auth) {
+            supabase.auth.onAuthStateChange((event, session) => {
+                console.log('Auth state changed:', event);
+                
+                if (event === 'SIGNED_OUT') {
+                    window.location.href = 'index.html';
+                }
+            });
+        } else {
+            console.error('Supabase is not initialized. Check that Supabase SDK and configuration are loaded.');
+        }
+    }, 500);
+}
