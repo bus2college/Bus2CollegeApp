@@ -18,32 +18,46 @@
         // Initialize Supabase
         // IMPORTANT: Replace these with your actual Supabase project credentials
         // Get them from: https://app.supabase.com/project/_/settings/api
-        const supabaseUrl = 'https://yvvpqrtesmkpvtlpwaap.supabase.co'; // e.g., 'https://xxxxx.supabase.co'
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnBxcnRlc21rcHZ0bHB3YWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMTQyMDYsImV4cCI6MjA4MDg5MDIwNn0.CCCz48RjTunMGsdxD3yjNmoDtcyozIrt1MywHlIsa4E'; // Your anon/public key
+        const supabaseUrl = 'https://yvvpqrtesmkpvtlpwaap.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnBxcnRlc21rcHZ0bHB3YWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMTQyMDYsImV4cCI6MjA4MDg5MDIwNn0.CCCz48RjTunMGsdxD3yjNmoDtcyozIrt1MywHlIsa4E';
         
-        // Ensure window.supabase is available for the SDK
-        if (typeof window.supabase === 'undefined') {
-            console.warn('Supabase SDK not yet loaded, waiting...');
-        }
-        
-        // Use the global supabase from the SDK
-        let supabase;
+        let supabase = null;
         
         // Function to initialize Supabase client
         function initSupabase() {
-            if (typeof supabase !== 'undefined') return; // Already initialized
+            console.log('Checking for Supabase SDK...');
+            console.log('window.supabase available:', typeof window.supabase);
             
-            if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+            // Check if SDK is available
+            if (typeof window.supabase !== 'undefined' && window.supabase && window.supabase.createClient) {
+                console.log('✓ Supabase SDK found, creating client...');
                 supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-                console.log('Supabase client initialized successfully');
-            } else {
-                console.error('Supabase SDK not found in window object');
-                setTimeout(initSupabase, 100); // Retry after 100ms
+                console.log('✓ Supabase client initialized successfully');
+                return true;
             }
+            
+            console.log('✗ Supabase SDK not ready yet');
+            return false;
         }
         
-        // Wait a moment for SDK to load then initialize
-        setTimeout(initSupabase, 100);
+        // Try to initialize immediately
+        if (!initSupabase()) {
+            // If not ready, wait for it
+            let attempts = 0;
+            const interval = setInterval(() => {
+                attempts++;
+                console.log(`Retry ${attempts}: Checking for Supabase SDK...`);
+                
+                if (initSupabase()) {
+                    clearInterval(interval);
+                } else if (attempts >= 50) {
+                    // After 50 attempts (5 seconds), give up
+                    clearInterval(interval);
+                    console.error('Failed to load Supabase SDK after 5 seconds');
+                    console.error('window.supabase:', window.supabase);
+                }
+            }, 100);
+        }
     </script>
 
     <script src="js/xlsx.full.min.js"></script>
