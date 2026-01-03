@@ -97,7 +97,6 @@ window.handleRegister = function(event) {
             alert('Registration failed: ' + response.error);
         } else if (response.data.user) {
             console.log('✅ Registration successful!');
-            
             // Check if email confirmation is required
             if (response.data.user.confirmed_at) {
                 alert('Registration successful! You can now log in.');
@@ -106,7 +105,7 @@ window.handleRegister = function(event) {
             }
             
             // Switch to login form
-            switchToLogin();
+            window.switchToLogin();
         } else {
             alert('Registration failed: No user returned');
         }
@@ -116,10 +115,6 @@ window.handleRegister = function(event) {
     }).finally(() => {
         button.textContent = originalText;
         button.disabled = false;
-    if (!window.supabaseAuth) {
-        console.error('❌ Supabase Auth API not loaded');
-        return;
-    }
     });
     
     return false;
