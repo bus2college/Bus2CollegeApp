@@ -90,30 +90,38 @@ async function connectToCommonApp(event) {
             throw new Error('User not logged in');
         }
 
-        // Call backend API to establish OAuth connection
-        // This endpoint will:
-        // 1. Authenticate with Common App using provided credentials
-        // 2. Exchange credentials for OAuth tokens
-        // 3. Return access token and refresh token
-        // 4. NOT store the password
+        // DEMO MODE: Simulate Common App connection
+        // Note: Common App doesn't have a public API yet
+        // This simulates a successful connection for testing
         
-        const response = await fetch('/api/commonapp/connect', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password, // Will be used once and not stored
-                userId: userId
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to connect to Common App');
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            throw new Error('Please enter a valid email address');
         }
-
-        const result = await response.json();
+        
+        // Validate password (minimum 6 characters for demo)
+        if (password.length < 6) {
+            throw new Error('Password must be at least 6 characters');
+        }
+        
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Generate mock OAuth tokens
+        const result = {
+            accessToken: 'demo_access_token_' + Date.now(),
+            refreshToken: 'demo_refresh_token_' + Date.now(),
+            expiresAt: new Date(Date.now() + 3600000).toISOString() // 1 hour from now
+        };
+        
+        // In production, this would call:
+        // const response = await fetch('/api/commonapp/connect', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ email, password, userId })
+        // });
+        // const result = await response.json();
 
         // Store OAuth tokens in Supabase (not the password)
         const { error: saveError } = await supabase
@@ -242,21 +250,21 @@ async function refreshAccessToken() {
         throw new Error('No refresh token available');
     }
 
-    const response = await fetch('/api/commonapp/refresh', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            refreshToken: commonAppConnection.refreshToken
-        })
-    });
-
-    if (!response.ok) {
-        throw new Error('Failed to refresh token');
-    }
-
-    const result = await response.json();
+    // DEMO MODE: Simulate token refresh
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    const result = {
+        accessToken: 'demo_access_token_refreshed_' + Date.now(),
+        expiresAt: new Date(Date.now() + 3600000).toISOString() // 1 hour from now
+    };
+    
+    // In production, this would be:
+    // const response = await fetch('/api/commonapp/refresh', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ refreshToken: commonAppConnection.refreshToken })
+    // });
+    // const result = await response.json();
 
     // Update tokens in Supabase
     const userId = await getCurrentUserId();
@@ -311,25 +319,52 @@ async function syncFromCommonApp() {
         const syncEssays = document.getElementById('syncEssays')?.checked !== false;
         const syncSupplemental = document.getElementById('syncSupplemental')?.checked !== false;
 
-        // Call backend API to fetch data from Common App
-        const response = await fetch('/api/commonapp/sync/import', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                syncColleges: syncColleges,
-                syncEssays: syncEssays,
-                syncSupplemental: syncSupplemental
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to sync from Common App');
+        // DEMO MODE: Simulate importing data from Common App
+        // In production, this would fetch from actual Common App API
+        
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Generate demo data
+        const data = {};
+        
+        if (syncColleges) {
+            // Demo colleges from Common App
+            data.colleges = [
+                { name: 'Harvard University', location: 'Cambridge, MA', type: 'Reach', status: 'Not Started' },
+                { name: 'Stanford University', location: 'Stanford, CA', type: 'Reach', status: 'Not Started' },
+                { name: 'University of California, Berkeley', location: 'Berkeley, CA', type: 'Target', status: 'Not Started' }
+            ];
         }
-
-        const data = await response.json();
+        
+        if (syncEssays) {
+            // Demo essay from Common App
+            data.essay = {
+                prompt: 'Prompt 1: Background, identity, interest, or talent',
+                content: '<p>This is a demo essay imported from Common App...</p>',
+                wordCount: 350,
+                lastModified: new Date().toISOString()
+            };
+        }
+        
+        if (syncSupplemental) {
+            // Demo supplemental prompts
+            data.supplementalPrompts = [
+                { collegeName: 'Harvard University', promptText: 'Why Harvard?', wordLimit: 150 },
+                { collegeName: 'Stanford University', promptText: 'What matters to you and why?', wordLimit: 250 }
+            ];
+        }
+        
+        // In production, this would be:
+        // const response = await fetch('/api/commonapp/sync/import', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `Bearer ${accessToken}`
+        //     },
+        //     body: JSON.stringify({ syncColleges, syncEssays, syncSupplemental })
+        // });
+        // const data = await response.json();
 
         // Import colleges
         if (syncColleges && data.colleges && data.colleges.length > 0) {
@@ -398,24 +433,29 @@ async function syncToCommonApp() {
             return dbCollege && dbCollege.commonApp === true;
         });
 
-        // Call backend API to push data to Common App
-        const response = await fetch('/api/commonapp/sync/export', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                colleges: commonAppColleges,
-                essay: essays.commonApp || null
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to sync to Common App');
-        }
-
-        const result = await response.json();
+        // DEMO MODE: Simulate exporting data to Common App
+        // In production, this would push to actual Common App API
+        
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Simulate successful export
+        const result = {
+            collegesExported: commonAppColleges.length,
+            essayExported: essays.commonApp ? true : false,
+            success: true
+        };
+        
+        // In production, this would be:
+        // const response = await fetch('/api/commonapp/sync/export', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `Bearer ${accessToken}`
+        //     },
+        //     body: JSON.stringify({ colleges: commonAppColleges, essay: essays.commonApp || null })
+        // });
+        // const result = await response.json();
 
         // Update last sync time
         const userId = await getCurrentUserId();

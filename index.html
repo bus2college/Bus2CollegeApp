@@ -10,49 +10,70 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/bus2college_rounded_180.png">
     <link rel="stylesheet" href="css/styles.css">
     
-    <!-- Supabase SDK (Local) -->
-    <script src="js/supabase.min.js"></script>
-    
-    <!-- Supabase Configuration -->
+    <!-- Supabase Configuration with Local SDK Bridge -->
     <script>
-        // Initialize Supabase
-        const supabaseUrl = 'https://yvvpqrtesmkpvtlpwaap.supabase.co';
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnBxcnRlc21rcHZ0bHB3YWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMTQyMDYsImV4cCI6MjA4MDg5MDIwNn0.CCCz48RjTunMGsdxD3yjNmoDtcyozIrt1MywHlIsa4E';
+        // Supabase credentials
+        const SUPABASE_URL = 'https://yvvpqrtesmkpvtlpwaap.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnBxcnRlc21rcHZ0bHB3YWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMTQyMDYsImV4cCI6MjA4MDg5MDIwNn0.CCCz48RjTunMGsdxD3yjNmoDtcyozIrt1MywHlIsa4E';
         
-        let supabase = null;
+        // Simplified localStorage-based Supabase client wrapper
+        let supabaseClient = null;
         let supabaseInitialized = false;
         
-        // Function to initialize Supabase client
+        // Minimal Supabase client implementation for auth
+        window.supabase = window.supabase || {
+            createClient: function(url, key) {
+                return {
+                    auth: {
+                        signUp: function(options) {
+                            // Will be overridden by auth-supabase.js
+                            console.log('signUp called with:', options);
+                            return Promise.reject('Auth not initialized');
+                        },
+                        signInWithPassword: function(options) {
+                            // Will be overridden by auth-supabase.js
+                            console.log('signInWithPassword called with:', options);
+                            return Promise.reject('Auth not initialized');
+                        },
+                        signOut: function() {
+                            return Promise.reject('Auth not initialized');
+                        },
+                        getSession: function() {
+                            return Promise.resolve({ data: { session: null }, error: null });
+                        },
+                        getUser: function(token) {
+                            return Promise.reject('Auth not initialized');
+                        },
+                        onAuthStateChange: function(callback) {
+                            return { data: { subscription: null }, error: null };
+                        }
+                    }
+                };
+            }
+        };
+        
         function initSupabase() {
             if (supabaseInitialized) return true;
             
-            console.log('Attempting to initialize Supabase...');
-            
-            // Check if SDK is available
-            if (typeof window.supabase !== 'undefined' && window.supabase && typeof window.supabase.createClient === 'function') {
-                try {
-                    supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-                    supabaseInitialized = true;
-                    console.log('✓ Supabase initialized successfully');
-                    return true;
-                } catch (e) {
-                    console.error('Error creating Supabase client:', e);
-                    return false;
-                }
-            } else {
-                console.log('Supabase SDK not available yet. window.supabase:', typeof window.supabase);
-                if (window.supabase) {
-                    console.log('window.supabase keys:', Object.keys(window.supabase));
-                }
+            try {
+                // Create a minimal client that auth-supabase.js will enhance
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                supabaseInitialized = true;
+                console.log('✓ Supabase client bridge initialized');
+                window.supabaseInitialized = true;
+                return true;
+            } catch (e) {
+                console.error('❌ Error initializing Supabase:', e);
+                return false;
             }
-            return false;
         }
         
-        // Initialize immediately since SDK is now local
+        // Initialize immediately
         initSupabase();
     </script>
 
     <script src="js/xlsx.full.min.js"></script>
+    <script src="js/supabase-auth-api.js"></script>
     <script src="js/auth-supabase.js"></script>
 </head>
 <body class="login-page">

@@ -1568,47 +1568,27 @@
         </div>
     </div>
 
-    <!-- Supabase SDK (Local) -->
-    <script src="js/supabase.min.js"></script>
-    
-    <!-- Supabase Configuration -->
+    <!-- Supabase Auth API (Direct HTTP Calls) -->
     <script>
-        // Initialize Supabase
-        const supabaseUrl = 'https://yvvpqrtesmkpvtlpwaap.supabase.co';
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnBxcnRlc21rcHZ0bHB3YWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMTQyMDYsImV4cCI6MjA4MDg5MDIwNn0.CCCz48RjTunMGsdxD3yjNmoDtcyozIrt1MywHlIsa4E';
+        // Supabase configuration
+        const SUPABASE_URL = 'https://yvvpqrtesmkpvtlpwaap.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnBxcnRlc21rcHZ0bHB3YWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMTQyMDYsImV4cCI6MjA4MDg5MDIwNn0.CCCz48RjTunMGsdxD3yjNmoDtcyozIrt1MywHlIsa4E';
         
-        let supabase = null;
-        let supabaseInitialized = false;
-        
-        // Function to initialize Supabase client
-        function initSupabase() {
-            if (supabaseInitialized) return true;
-            
-            console.log('Attempting to initialize Supabase...');
-            
-            // Check if SDK is available
-            if (typeof window.supabase !== 'undefined' && window.supabase && typeof window.supabase.createClient === 'function') {
-                try {
-                    supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-                    supabaseInitialized = true;
-                    console.log('✓ Supabase initialized successfully');
-                    return true;
-                } catch (e) {
-                    console.error('Error creating Supabase client:', e);
-                    return false;
-                }
-            } else {
-                console.log('Supabase SDK not available yet. window.supabase:', typeof window.supabase);
-                if (window.supabase) {
-                    console.log('window.supabase keys:', Object.keys(window.supabase));
-                }
+        // Stub for compatibility with any code expecting window.supabase
+        window.supabase = {
+            createClient: function(url, key) {
+                return {
+                    auth: window.supabaseAuth
+                };
             }
-            return false;
-        }
+        };
         
-        // Initialize immediately since SDK is now local
-        initSupabase();
+        window.supabaseInitialized = true;
+        console.log('✓ Supabase auth bridge initialized');
     </script>
+    
+    <!-- Direct API wrapper for Supabase Auth -->
+    <script src="js/supabase-auth-api.js"></script>
     
     <script src="js/notifications.js?v=1733789001"></script>
     <script src="js/xlsx.full.min.js?v=1733789001"></script>
