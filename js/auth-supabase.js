@@ -12,6 +12,13 @@ function handleLogin(event) {
         return false;
     }
     
+    // Check if auth API is ready
+    if (!window.supabaseAuth) {
+        console.error('❌ Supabase Auth API not loaded');
+        alert('Authentication system is not ready. Please refresh the page.');
+        return false;
+    }
+    
     // Show loading state
     const button = event.target.querySelector('button');
     const originalText = button.textContent;
@@ -64,6 +71,13 @@ function handleRegister(event) {
         return false;
     }
     
+    // Check if auth API is ready
+    if (!window.supabaseAuth) {
+        console.error('❌ Supabase Auth API not loaded');
+        alert('Authentication system is not ready. Please refresh the page.');
+        return false;
+    }
+    
     // Show loading state
     const button = event.target.querySelector('button');
     const originalText = button.textContent;
@@ -89,6 +103,10 @@ function handleRegister(event) {
     }).finally(() => {
         button.textContent = originalText;
         button.disabled = false;
+    if (!window.supabaseAuth) {
+        console.error('❌ Supabase Auth API not loaded');
+        return;
+    }
     });
     
     return false;
@@ -116,7 +134,11 @@ function switchToRegister() {
 function switchToLogin() {
     document.getElementById('registerForm').classList.remove('active');
     document.getElementById('loginForm').classList.add('active');
-}
+}if (!window.supabaseAuth) {
+        console.log('⚠ Supabase Auth API not yet loaded');
+        return;
+    }
+    
 
 // Check if user is authenticated on page load
 function checkAuthStatus() {
