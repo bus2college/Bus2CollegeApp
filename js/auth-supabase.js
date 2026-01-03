@@ -126,7 +126,11 @@ window.handleRegister = function(event) {
 }
 
 // Handle logout
-function handleLogout() {
+window.handleLogout = function() {
+    if (!window.supabaseAuth) {
+        console.error('❌ Supabase Auth API not loaded');
+        return;
+    }
     console.log('Logging out...');
     window.supabaseAuth.signOut().then(response => {
         if (response.error) {
@@ -147,14 +151,14 @@ window.switchToRegister = function() {
 window.switchToLogin = function() {
     document.getElementById('registerForm').classList.remove('active');
     document.getElementById('loginForm').classList.add('active');
-}if (!window.supabaseAuth) {
+}
+
+// Check if user is authenticated on page load
+window.checkAuthStatus = function() {
+    if (!window.supabaseAuth) {
         console.log('⚠ Supabase Auth API not yet loaded');
         return;
     }
-    
-
-// Check if user is authenticated on page load
-function checkAuthStatus() {
     const user = window.supabaseAuth.getUser();
     if (user && window.supabaseAuth.isAuthenticated()) {
         console.log('✓ User is already authenticated:', user.email);
