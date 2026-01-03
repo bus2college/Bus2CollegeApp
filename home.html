@@ -1568,8 +1568,8 @@
         </div>
     </div>
 
-    <!-- Supabase SDK -->
-    <script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase SDK (Local) -->
+    <script src="js/supabase.min.js"></script>
     
     <!-- Supabase Configuration -->
     <script>
@@ -1606,20 +1606,8 @@
             return false;
         }
         
-        // Try to initialize after a delay
-        setTimeout(() => {
-            let attempts = 0;
-            const checkInterval = setInterval(() => {
-                attempts++;
-                if (initSupabase()) {
-                    clearInterval(checkInterval);
-                } else if (attempts >= 100) {
-                    clearInterval(checkInterval);
-                    console.error('❌ Failed to load Supabase SDK after 10 seconds');
-                    console.error('This likely means the CDN is blocked or unavailable');
-                }
-            }, 100);
-        }, 500);
+        // Initialize immediately since SDK is now local
+        initSupabase();
     </script>
     
     <script src="js/notifications.js?v=1733789001"></script>
