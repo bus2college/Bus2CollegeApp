@@ -1,7 +1,7 @@
 // Auth form handlers using direct Supabase Auth API
 
 // Handle login form submission
-function handleLogin(event) {
+window.handleLogin = function(event) {
     event.preventDefault();
     
     const email = document.getElementById('loginEmail').value;
@@ -55,7 +55,7 @@ function handleLogin(event) {
 }
 
 // Handle registration form submission
-function handleRegister(event) {
+window.handleRegister = function(event) {
     event.preventDefault();
     
     const email = document.getElementById('registerEmail').value;
@@ -139,12 +139,12 @@ function handleLogout() {
 }
 
 // Switch form display
-function switchToRegister() {
+window.switchToRegister = function() {
     document.getElementById('loginForm').classList.remove('active');
     document.getElementById('registerForm').classList.add('active');
 }
 
-function switchToLogin() {
+window.switchToLogin = function() {
     document.getElementById('registerForm').classList.remove('active');
     document.getElementById('loginForm').classList.add('active');
 }if (!window.supabaseAuth) {
