@@ -1,8 +1,7 @@
 // Direct Supabase Auth API calls (bypassing SDK issues)
 // This provides a lightweight authentication layer without depending on the full SDK
 
-const SUPABASE_URL = 'https://yvvpqrtesmkpvtlpwaap.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnBxcnRlc21rcHZ0bHB3YWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMTQyMDYsImV4cCI6MjA4MDg5MDIwNn0.CCCz48RjTunMGsdxD3yjNmoDtcyozIrt1MywHlIsa4E';
+// Use credentials from parent window scope (defined in HTML)
 const AUTH_URL = `${SUPABASE_URL}/auth/v1`;
 
 class SupabaseAuthAPI {

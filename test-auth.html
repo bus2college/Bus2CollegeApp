@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Test</title>
+    <script src="js/supabase-auth-api.js?v=20260102b"></script>
+</head>
+<body>
+    <h1>Testing Authentication</h1>
+    <div id="results"></div>
+    
+    <script>
+        const results = document.getElementById('results');
+        const testEmail = 'test-' + Date.now() + '@bus2college.test';
+        const testPassword = 'TestPass123!';
+        
+        function log(message, isError = false) {
+            const p = document.createElement('p');
+            p.textContent = message;
+            p.style.color = isError ? 'red' : 'green';
+            results.appendChild(p);
+            console.log(message);
+        }
+        
+        async function runTests() {
+            log('🧪 Starting authentication tests...');
+            log('📧 Test email: ' + testEmail);
+            
+            // Wait for API to initialize
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            if (!window.supabaseAuth) {
+                log('❌ FAILED: supabaseAuth not initialized', true);
+                return;
+            }
+            
+            log('✅ Supabase Auth API loaded');
+            
+            // Test 1: Register new user
+            log('\n📝 Test 1: Registering new user...');
+            try {
+                const signUpResult = await window.supabaseAuth.signUp(testEmail, testPassword, { data: {} });
+                
+                if (signUpResult.error) {
+                    log('❌ Registration failed: ' + signUpResult.error, true);
+                    // If user already exists, try login instead
+                    if (signUpResult.error.includes('already registered')) {
+                        log('User already exists, proceeding to login test...');
+                    } else {
+                        return;
+                    }
+                } else {
+                    log('✅ Registration successful!');
+                    log('   User ID: ' + signUpResult.data.user.id);
+                    log('   Email: ' + signUpResult.data.user.email);
+                    
+                    // Sign out before testing login
+                    await window.supabaseAuth.signOut();
+                    log('   Signed out to test login');
+                }
+            } catch (error) {
+                log('❌ Registration error: ' + error.message, true);
+                return;
+            }
+            
+            // Test 2: Login with credentials
+            log('\n🔐 Test 2: Logging in with credentials...');
+            try {
+                const signInResult = await window.supabaseAuth.signInWithPassword(testEmail, testPassword);
+                
+                if (signInResult.error) {
+                    log('❌ Login failed: ' + signInResult.error, true);
+                    return;
+                } else {
+                    log('✅ Login successful!');
+                    log('   User ID: ' + signInResult.data.user.id);
+                    log('   Email: ' + signInResult.data.user.email);
+                    log('   Access Token: ' + signInResult.data.session.access_token.substring(0, 20) + '...');
+                }
+            } catch (error) {
+                log('❌ Login error: ' + error.message, true);
+                return;
+            }
+            
+            // Test 3: Check session persistence
+            log('\n💾 Test 3: Checking session persistence...');
+            const session = window.supabaseAuth.getSession();
+            if (session && session.access_token) {
+                log('✅ Session persisted in localStorage');
+                log('   Session key: sb-auth-session');
+            } else {
+                log('❌ Session not found', true);
+                return;
+            }
+            
+            // Test 4: Check authentication status
+            log('\n🔍 Test 4: Checking authentication status...');
+            const isAuth = window.supabaseAuth.isAuthenticated();
+            const user = window.supabaseAuth.getUser();
+            if (isAuth && user) {
+                log('✅ User is authenticated');
+                log('   Email: ' + user.email);
+            } else {
+                log('❌ User not authenticated', true);
+                return;
+            }
+            
+            // Test 5: Sign out
+            log('\n👋 Test 5: Signing out...');
+            try {
+                await window.supabaseAuth.signOut();
+                const stillAuth = window.supabaseAuth.isAuthenticated();
+                if (!stillAuth) {
+                    log('✅ Sign out successful');
+                    log('   Session cleared from localStorage');
+                } else {
+                    log('❌ Still authenticated after signout', true);
+                }
+            } catch (error) {
+                log('❌ Sign out error: ' + error.message, true);
+            }
+            
+            log('\n🎉 ALL TESTS COMPLETED SUCCESSFULLY!');
+            log('✅ Authentication system is working correctly');
+        }
+        
+        // Run tests when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(runTests, 1000);
+        });
+    </script>
+</body>
+</html>

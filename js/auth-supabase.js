@@ -29,7 +29,13 @@ function handleLogin(event) {
     window.supabaseAuth.signInWithPassword(email, password).then(response => {
         if (response.error) {
             console.error('❌ Login failed:', response.error);
-            alert('Login failed: ' + response.error);
+            
+            // Check if it might be an unconfirmed email issue
+            if (response.error.includes('Invalid login credentials') || response.error.includes('invalid_credentials')) {
+                alert('Login failed: Invalid email or password.\n\n⚠️ If you just registered, make sure you clicked the confirmation link in your email.\n\nCheck your inbox (and spam folder) for a confirmation email from Supabase.');
+            } else {
+                alert('Login failed: ' + response.error);
+            }
         } else if (response.data.session && response.data.user) {
             console.log('✅ Login successful! Redirecting to home page...');
             // Redirect to home page
@@ -91,7 +97,14 @@ function handleRegister(event) {
             alert('Registration failed: ' + response.error);
         } else if (response.data.user) {
             console.log('✅ Registration successful!');
-            alert('Registration successful! You can now log in.');
+            
+            // Check if email confirmation is required
+            if (response.data.user.confirmed_at) {
+                alert('Registration successful! You can now log in.');
+            } else {
+                alert('Registration successful!\n\n⚠️ IMPORTANT: Please check your email inbox (including spam folder) and click the confirmation link before logging in.\n\nYou will not be able to log in until you confirm your email address.');
+            }
+            
             // Switch to login form
             switchToLogin();
         } else {
