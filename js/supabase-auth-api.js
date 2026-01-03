@@ -118,19 +118,37 @@ class SupabaseAuthAPI {
                 body: JSON.stringify(body)
             });
 
-            // Save session if signin successful
-            if (data.session) {
-                this.saveSession(data.session);
-                console.log('✅ Sign in successful, session saved');
-            }
+            console.log('📦 Full API Response:', data);
 
-            return {
-                data: {
-                    user: data.user,
-                    session: data.session || null
-                },
-                error: null
-            };
+            // The response structure from /token endpoint returns tokens directly
+            // Structure: { access_token, token_type, expires_in, refresh_token, user }
+            if (data.access_token && data.user) {
+                // Create session object from token response
+                const session = {
+                    access_token: data.access_token,
+                    token_type: data.token_type,
+                    expires_in: data.expires_in,
+                    refresh_token: data.refresh_token,
+                    user: data.user
+                };
+                
+                this.saveSession(session);
+                console.log('✅ Sign in successful, session saved');
+                
+                return {
+                    data: {
+                        user: data.user,
+                        session: session
+                    },
+                    error: null
+                };
+            } else {
+                console.error('❌ No access token in response');
+                return {
+                    data: { user: null, session: null },
+                    error: 'No access token returned'
+                };
+            }
         } catch (e) {
             console.error('❌ Sign in error:', e);
             return {
